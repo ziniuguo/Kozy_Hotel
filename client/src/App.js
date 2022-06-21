@@ -1,21 +1,29 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
 
-class App extends Component {
-  render() {
+function App() {
+    const [backendData, setBackendData] = useState([{}])
+    useEffect(() => {
+        fetch("/api").then(
+            response => response.json()
+        ).then(
+            data => {
+                setBackendData(data)
+            }
+        )
+    }, []);
+    console.log(typeof backendData);
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+        <div>
+            {/*{JSON.stringify(backendData)}*/}
+            {(typeof backendData.users === "undefined")
+                ? <p>loading</p>
+                // : (<p>fuck you</p>)
+                : backendData.users.map((user, i) =>
+                    <p key={i}>{user}</p>
+                )
+            }
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    )
 }
 
 export default App;
