@@ -48,8 +48,8 @@ class Result extends React.Component {
                     <input type="submit" value="Submit"/>
                 </form>
                 {(this.state.backendDataLoaded)
-                    ? this.state.backendData.users.map((user, i) =>
-                            <p key={i}>{user}</p>
+                    ? this.state.backendData.hotels.map((hotel, i) =>
+                            <p key={i}>{hotel}</p>
                         )
                     : <p>loading</p>
                 }
