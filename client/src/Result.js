@@ -1,43 +1,64 @@
-import React, {Component} from "react";
+import React from "react";
 
 class Result extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             backendData: [],
-            loaded: false
+            searchData: [],
+            backendDataLoaded: false,
+            searchDataLoaded: false,
         }
     }
 
     componentDidMount() {
+        // fetch all backend data
         fetch("/api")
             .then(response => response.json())
             .then((json) => {
                     this.setState({
                         backendData: json,
-                        loaded: true
+                        backendDataLoaded: true
                     })
                 }
             )
+
+        // check params
+        if (location.search) {
+            fetch("/searchapi" + location.search)
+                .then(response => response.json())
+                .then((json) => {
+                        this.setState({
+                            searchData: json,
+                            searchDataLoaded: true
+                        })
+                    }
+                )
+        }
     }
 
     render() {
-        if (!this.state.loaded) return <div>loading</div>;
-
         return (
             <div>
                 <form>
                     <label>
                         Search:
-                        <input type="text" name="name"/>
+                        <input type="text" name="q"/>
                     </label>
                     <input type="submit" value="Submit"/>
                 </form>
-                {/*{JSON.stringify(backendData)}*/}
-                {this.state.backendData.users.map((user, i) =>
-                    <p key={i}>{user}</p>
-                )}
-                <p>search result:</p>
+                {(this.state.backendDataLoaded)
+                    ? this.state.backendData.users.map((user, i) =>
+                            <p key={i}>{user}</p>
+                        )
+                    : <p>loading</p>
+                }
+                <p>search result test:</p>
+                {(this.state.searchDataLoaded)
+                    ? "From react: " + location.search +
+                    " ============= Response from express: " + JSON.stringify(this.state.searchData)
+                    : <p></p>
+                }
 
             </div>
         )

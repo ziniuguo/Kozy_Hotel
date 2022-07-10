@@ -1,22 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import Br from "./tags";
-import {render} from "react-dom";
-import { BrowserRouter as Router,Routes, Route, Link } from 'react-router-dom'
+import React from 'react';
+import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 import Result from "./Result";
 
 class App extends React.Component {
     render() {
         return (
-            <Router>
+            <BrowserRouter>
                 <Routes>
-                    <Route exact path='/' element={
+                    <Route path='/' element={
                         <p>
-                            <Link to="/result">see search page</Link>
+                            <Link to="/search">see search page</Link>
                         </p>
                     }></Route>
-                    <Route exact path='/result' element={< Result />}></Route>
+                    <Route path='/search' element={<Result/>}></Route>
+
                 </Routes>
-            </Router>
+            </BrowserRouter>
         )
     }
 
