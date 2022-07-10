@@ -1,29 +1,25 @@
 import React, {useEffect, useState} from 'react';
+import Br from "./tags";
+import {render} from "react-dom";
+import { BrowserRouter as Router,Routes, Route, Link } from 'react-router-dom'
+import Result from "./Result";
 
-function App() {
-    const [backendData, setBackendData] = useState([{}])
-    useEffect(() => {
-        fetch("/api").then(
-            response => response.json()
-        ).then(
-            data => {
-                setBackendData(data)
-            }
+class App extends React.Component {
+    render() {
+        return (
+            <Router>
+                <Routes>
+                    <Route exact path='/' element={
+                        <p>
+                            <Link to="/result">see search page</Link>
+                        </p>
+                    }></Route>
+                    <Route exact path='/result' element={< Result />}></Route>
+                </Routes>
+            </Router>
         )
-    }, []);
-    console.log(typeof backendData);
-    return (
-        <div>
-            {/*{JSON.stringify(backendData)}*/}
-            {(typeof backendData.users === "undefined")
-                ? <p>loading</p>
-                // : (<p>fuck you</p>)
-                : backendData.users.map((user, i) =>
-                    <p key={i}>{user}</p>
-                )
-            }
-        </div>
-    )
+    }
+
 }
 
 export default App;

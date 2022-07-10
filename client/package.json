@@ -6,9 +6,10 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "0.9.5"
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "0.9.5",
+    "reactstrap": "^9.1.1"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
