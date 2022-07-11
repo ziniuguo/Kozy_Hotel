@@ -6,6 +6,7 @@ class App extends React.Component {
     render() {
         return (
             <BrowserRouter>
+                <p>welcome</p>
                 <Routes>
                     <Route path='/' element={
                         <p>
