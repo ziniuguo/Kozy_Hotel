@@ -1,10 +1,10 @@
 const express = require('express')
 const app = express()
 
-// need to add session management. 
+// need to add session management?
 const myJSON = {
     hotels: [
-        'hotel one', 'hotel two', 'hotel two2',
+        'hotel one', 'hotel two', 'hotel three', 'hotel four',
         'hotel 1', 'hotel 2', 'hotel 3',
         'hotel 4', 'hotel 5', 'hotel 6',
         'hotel 7', 'hotel 8', 'hotel 9',
@@ -59,6 +59,10 @@ app.get("/searchapi", (req, res) => {
     } else {
         res.json(["undefined query params"]);
     }
+})
+
+app.get("/hotels/:hotelName", (req, res) => {
+    res.json(req.params)
 })
 
 app.listen(5000, () => {

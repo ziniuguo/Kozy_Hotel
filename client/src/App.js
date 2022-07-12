@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Result from "./Result";
 import MainPage from "./MainPage";
+import RoomDetail from "./RoomDetail";
 
 class App extends React.Component {
     render() {
@@ -12,7 +13,7 @@ class App extends React.Component {
                         <MainPage/>
                     }></Route>
                     <Route path='/search' element={<Result/>}></Route>
-
+                    <Route path='/room/:roomDetail' element={<RoomDetail/>}></Route>
                 </Routes>
             </BrowserRouter>
         )
