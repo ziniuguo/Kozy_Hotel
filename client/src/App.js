@@ -1,17 +1,15 @@
 import React from 'react';
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 import Result from "./Result";
+import MainPage from "./MainPage";
 
 class App extends React.Component {
     render() {
         return (
             <BrowserRouter>
-                <p>welcome</p>
                 <Routes>
                     <Route path='/' element={
-                        <p>
-                            <Link to="/search">see search page</Link>
-                        </p>
+                        <MainPage/>
                     }></Route>
                     <Route path='/search' element={<Result/>}></Route>
 

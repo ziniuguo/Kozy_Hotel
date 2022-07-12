@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 class Result extends React.Component {
     constructor(props) {
@@ -40,6 +41,9 @@ class Result extends React.Component {
     render() {
         return (
             <div>
+                <div>
+                    <Link to="/">back to main</Link>
+                </div>
                 <form>
                     <label>
                         Search:
@@ -56,7 +60,7 @@ class Result extends React.Component {
                 <p>search result test:</p>
                 {(this.state.searchDataLoaded)
                     ?
-                    " ============= Response from express: " + JSON.stringify(this.state.searchData)
+                    JSON.stringify(this.state.searchData)
                     : <p></p>
                 }
 

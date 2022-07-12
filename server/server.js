@@ -16,16 +16,12 @@ app.get("/api", (req, res) => {
 app.get("/searchapi", (req, res) => {
     // sample response. Someone do the search function here
     const test = req.query;
-    console.log(req.query);
-    console.log(req.query.q);
     if (typeof req.query.q !== 'undefined') {
         let result = {"hotels": []};
         let keyword = req.query.q;
         for (let i = 0; i < myJSON.hotels.length; i++) {
-            console.log(myJSON.hotels[i])
             if (myJSON.hotels[i].toUpperCase().includes(keyword.toUpperCase())) {
                 result.hotels.push(myJSON.hotels[i]);
-                console.log(myJSON.hotels[i] + " added");
             }
         }
         console.log(result);
