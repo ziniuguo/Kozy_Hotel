@@ -2,7 +2,22 @@ const express = require('express')
 const app = express()
 
 // need to add session management. 
-const myJSON = {"hotels": ["hotel one", "hotel two", "hotel two2"]};
+const myJSON = {
+    hotels: [
+        'hotel one', 'hotel two', 'hotel two2',
+        'hotel 1', 'hotel 2', 'hotel 3',
+        'hotel 4', 'hotel 5', 'hotel 6',
+        'hotel 7', 'hotel 8', 'hotel 9',
+        'hotel 10', 'hotel 11', 'hotel 12',
+        'hotel 13', 'hotel 14', 'hotel 15',
+        'hotel 16', 'hotel 17', 'hotel 18',
+        'hotel 19', 'hotel 20', 'hotel 21',
+        'hotel 22', 'hotel 23', 'hotel 24',
+        'hotel 25', 'hotel 26', 'hotel 27',
+        'hotel 28', 'hotel 29'
+    ]
+};
+
 
 function search() {
 
@@ -14,20 +29,35 @@ app.get("/api", (req, res) => {
 
 
 app.get("/searchapi", (req, res) => {
-    // sample response. Someone do the search function here
-    const test = req.query;
-    if (typeof req.query.q !== 'undefined') {
-        let result = {"hotels": []};
+    // next to implement: page number
+
+    if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page')) {
+        let pageNo;
+        let itemPerPage = 3;
+        let result = [];
         let keyword = req.query.q;
         for (let i = 0; i < myJSON.hotels.length; i++) {
             if (myJSON.hotels[i].toUpperCase().includes(keyword.toUpperCase())) {
-                result.hotels.push(myJSON.hotels[i]);
+                result.push(myJSON.hotels[i]);
             }
         }
-        console.log(result);
-        res.json(result);
+        pageNo = Math.ceil(result.length / itemPerPage);
+        if (pageNo===0) {
+            res.json(["no matches", 1]);
+        } else {
+            const reqPage = parseInt(req.query.page);
+            if (reqPage <= pageNo && reqPage >= 1) {
+                let currPage = result.slice((reqPage - 1) * itemPerPage,
+                    itemPerPage * reqPage);
+                currPage.push(pageNo)
+                console.log(currPage)
+                res.json(currPage);
+            } else {
+                res.json(['page exceeded']);
+            }
+        }
     } else {
-        res.json("undefined query params");
+        res.json(["undefined query params"]);
     }
 })
 
