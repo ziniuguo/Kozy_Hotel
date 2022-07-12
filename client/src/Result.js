@@ -55,7 +55,7 @@ class Result extends React.Component {
                 }
                 <p>search result test:</p>
                 {(this.state.searchDataLoaded)
-                    ? "From react: " + location.search +
+                    ?
                     " ============= Response from express: " + JSON.stringify(this.state.searchData)
                     : <p></p>
                 }
