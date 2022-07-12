@@ -19,9 +19,6 @@ const myJSON = {
 };
 
 
-function search() {
-
-}
 
 app.get("/api", (req, res) => {
     res.json(myJSON);
@@ -42,7 +39,10 @@ app.get("/searchapi", (req, res) => {
             }
         }
         pageNo = Math.ceil(result.length / itemPerPage);
-        if (pageNo===0) {
+        if (req.query.q === "") {
+            res.json(['Empty Search...', 1]);
+
+        }else if (pageNo===0) {
             res.json(["no matches", 1]);
         } else {
             const reqPage = parseInt(req.query.page);
