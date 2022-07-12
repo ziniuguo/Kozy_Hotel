@@ -91,10 +91,11 @@ class Result extends React.Component {
 
                 <div>
                     <h2>all data:</h2>
+                    <p>data below should not be shown / retrieved as it may be really large</p>
                 </div>
                 {(this.state.backendDataLoaded)
                     ? this.state.backendData.hotels.map((hotel, i) =>
-                        <p key={i}>{hotel}</p>
+                        <p key={i}>{i}. {hotel}</p>
                     )
                     : <p>loading</p>
                 }
