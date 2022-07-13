@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import './assets/style.css'
 
 class MainPage extends React.Component {
 
