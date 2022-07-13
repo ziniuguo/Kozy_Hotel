@@ -1,6 +1,8 @@
 import React from "react";
+import qs from 'query-string';
 
-class RoomDetail extends React.Component {
+class BookingPage extends React.Component {
+
 
     render() {
         return (
@@ -9,12 +11,6 @@ class RoomDetail extends React.Component {
                 <div>
                     {/*replace %20 and + by space. */}
                     you are visiting the room detail of {location.pathname.split('/').pop().split('%20').join(' ')}
-                </div>
-                <div>
-                    <button
-                    // disabled={}
-                    onClick={() => window.open("/booking/"+location.pathname.split('/').pop(),"_self")}>Book now!
-                    </button>
                 </div>
                 <div>
                     next step: if user input room name manually, retrieve from server, server will respond (404 or have)
@@ -28,4 +24,4 @@ class RoomDetail extends React.Component {
     }
 }
 
-export default RoomDetail;
+export default BookingPage;
