@@ -102,14 +102,15 @@ class Result extends React.Component {
                 <div>
                     <p></p>
                     <button
-                        disabled={this.state.queryParams.page <= 1 || !(typeof this.state.queryParams.page === 'number')}
+                        disabled={this.state.queryParams.page <= 1 }
                         onClick={() => window.open("/search" + this.PageBtn(0), "_self")}>prev page
                     </button>
                     page: {this.state.queryParams.page}/{this.state.pageNo}
                     <button
-                        disabled={this.state.queryParams.page >= this.state.pageNo || !(typeof this.state.queryParams.page === 'number')}
+                        disabled={this.state.queryParams.page >= this.state.pageNo }
                         onClick={() => window.open("/search" + this.PageBtn(1), "_self")}>next page
                     </button>
+
                 </div>
 
 
