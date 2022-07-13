@@ -40,10 +40,10 @@ app.get("/searchapi", (req, res) => {
         }
         pageNo = Math.ceil(result.length / itemPerPage);
         if (req.query.q === "") {
-            res.json(['Empty Search...', 1]);
+            res.json(["empty", 1]);
 
         }else if (pageNo===0) {
-            res.json(["no matches", 1]);
+            res.json(["no match", 1]);
         } else {
             const reqPage = parseInt(req.query.page);
             if (reqPage <= pageNo && reqPage >= 1) {
@@ -53,18 +53,18 @@ app.get("/searchapi", (req, res) => {
                 console.log(currPage)
                 res.json(currPage);
             } else {
-                res.json(['page exceeded']);
+                res.json(["page_exceeded", 1]);
             }
         }
     } else {
-        res.json(["undefined query params"]);
+        res.json(["undefined_query_params", 1]);
     }
 })
 
 app.get("/hotels/:hotelName", (req, res) => {
-    res.json(req.params)
+    res.json(req.params);
 })
 
 app.listen(5000, () => {
-    console.log("Server started on port 5000")
+    console.log("Server started on port 5000");
 })

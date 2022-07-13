@@ -7,7 +7,8 @@ class RoomDetail extends React.Component {
             <div>
                 <div>Welcome to detail page</div>
                 <div>
-                    you are visiting the room detail of {location.pathname}
+                    {/*replace %20 and + by space. */}
+                    you are visiting the room detail of {location.pathname.split('%20').join(' ').split('+').join(' ')}
                 </div>
                 <div>
                     next step: if user input room name manually, retrieve from server, server will respond (404 or have)

@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import qs from 'query-string';
 
 
-
 class Result extends React.Component {
     constructor(props) {
         super(props);
@@ -45,13 +44,13 @@ class Result extends React.Component {
         }
     };
 
-    PageBtn (i) {
+    PageBtn(i) {
         if (Object.hasOwnProperty.bind(this.state.queryParams)('q') &&
             Object.hasOwnProperty.bind(this.state.queryParams)('page')) {
-            if (i===1) {
-                return('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1));
+            if (i === 1) {
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1));
             } else {
-                return('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1));
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1));
             }
         } else {
             return location.search;
@@ -78,14 +77,39 @@ class Result extends React.Component {
                 <p>search result test:</p>
                 {(this.state.searchDataLoaded)
                     ?
-                    JSON.stringify(this.state.searchData)
+                    (JSON.stringify(this.state.searchData) === '["empty"]'
+                        || JSON.stringify(this.state.searchData) === '["no match"]'
+                        || JSON.stringify(this.state.searchData) === '["page_exceeded"]'
+                        || JSON.stringify(this.state.searchData) === '["undefined_query_params"]'
+                    )
+                        ?
+                        <p>{this.state.searchData}</p>
+                        :
+                        // JSON.stringify(this.state.searchData)
+                        this.state.searchData.map((hotel, i) =>
+                            // <p key={i}>{i}. {hotel}</p>
+                            <div key={i}>
+                                {/*Each child in a list should have a unique "key" prop.*/}
+                                <Link
+                                    to={{
+                                        pathname: "/room/" + {hotel}.hotel // replace by variable,
+                                    }}
+                                >{hotel}</Link>
+                            </div>
+                        )
                     : <p></p>
                 }
                 <div>
                     <p></p>
-                    <button disabled={this.state.queryParams.page <= 1 || !Number.isInteger(this.state.pageNo)} onClick={() => window.open("/search" + this.PageBtn(0),"_self")}>prev page</button>
+                    <button
+                        disabled={this.state.queryParams.page <= 1 || !(typeof this.state.queryParams.page === 'number')}
+                        onClick={() => window.open("/search" + this.PageBtn(0), "_self")}>prev page
+                    </button>
                     page: {this.state.queryParams.page}/{this.state.pageNo}
-                    <button disabled={this.state.queryParams.page >= this.state.pageNo || !Number.isInteger(this.state.pageNo)} onClick={() => window.open("/search" + this.PageBtn(1),"_self")}>next page</button>
+                    <button
+                        disabled={this.state.queryParams.page >= this.state.pageNo || !(typeof this.state.queryParams.page === 'number')}
+                        onClick={() => window.open("/search" + this.PageBtn(1), "_self")}>next page
+                    </button>
                 </div>
 
 
