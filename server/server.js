@@ -18,6 +18,18 @@ const myJSON = {
     ]
 };
 
+let myJSON2 = {
+    bookedRoom: {
+        room1: {
+            username: "",
+            phone: "",
+            email: ""
+        },
+        room2: {
+
+        }
+    }
+}
 
 
 app.get("/api", (req, res) => {
@@ -26,7 +38,6 @@ app.get("/api", (req, res) => {
 
 
 app.get("/searchapi", (req, res) => {
-    // next to implement: page number
 
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page')) {
         let pageNo;
@@ -42,7 +53,7 @@ app.get("/searchapi", (req, res) => {
         if (req.query.q === "") {
             res.json(["empty", 1]);
 
-        }else if (pageNo===0) {
+        } else if (pageNo === 0) {
             res.json(["no match", 1]);
         } else {
             const reqPage = parseInt(req.query.page);
