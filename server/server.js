@@ -1,40 +1,55 @@
 const express = require('express')
 const app = express()
 
-// need to add session management?
-const myJSON = {
-    hotels: [
-        'hotel one', 'hotel two', 'hotel three', 'hotel four',
-        'hotel 1', 'hotel 2', 'hotel 3',
-        'hotel 4', 'hotel 5', 'hotel 6',
-        'hotel 7', 'hotel 8', 'hotel 9',
-        'hotel 10', 'hotel 11', 'hotel 12',
-        'hotel 13', 'hotel 14', 'hotel 15',
-        'hotel 16', 'hotel 17', 'hotel 18',
-        'hotel 19', 'hotel 20', 'hotel 21',
-        'hotel 22', 'hotel 23', 'hotel 24',
-        'hotel 25', 'hotel 26', 'hotel 27',
-        'hotel 28', 'hotel 29'
-    ]
-};
 
-let myJSON2 = {
-    bookedRoom: {
-        room1: {
-            username: "",
-            phone: "",
-            email: ""
-        },
-        room2: {
-
-        }
+const realJSON = {
+    "room one": {
+        "room_id": "1004890",
+        "price": 100,
+        "type": "single"
+    },
+    "room two": {
+        "room_id": "1005604",
+        "price": 50,
+        "type": "single"
+    },
+    "room three": {
+        "room_id": "1004891",
+        "price": 1,
+        "type": "double"
+    },
+    "room four": {
+        "room_id": "1004894",
+        "price": 1,
+        "type": "double"
+    },
+    "room five": {
+        "room_id": "1004895",
+        "price": 1,
+        "type": "double"
+    },
+    "room six": {
+        "room_id": "1004896",
+        "price": 100,
+        "type": "single"
+    },
+    "room seven": {
+        "room_id": "1004897",
+        "price": 120,
+        "type": "double"
     }
 }
 
+let bookedJSON = {
+    bookedRoom: {
+        "1004890": {
+            name: "CatRoll",
+            phone: "81770190",
+            email: "guo.ziniu.1003@gmail.com"
+        },
+    }
+}
 
-app.get("/api", (req, res) => {
-    res.json(myJSON);
-})
 
 
 app.get("/searchapi", (req, res) => {
@@ -42,24 +57,24 @@ app.get("/searchapi", (req, res) => {
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page')) {
         let pageNo;
         let itemPerPage = 3;
-        let result = [];
-        let keyword = req.query.q;
-        for (let i = 0; i < myJSON.hotels.length; i++) {
-            if (myJSON.hotels[i].toUpperCase().includes(keyword.toUpperCase())) {
-                result.push(myJSON.hotels[i]);
+        let result = {};
+        const keyword = req.query.q;
+        for (const room of Object.entries(realJSON)) {
+            console.log(room[0]);
+            console.log(keyword);
+            if (room[0].toUpperCase().includes(keyword.toUpperCase())) {
+                result[room[0]] = room[1];
             }
         }
-        pageNo = Math.ceil(result.length / itemPerPage);
-        if (req.query.q === "") {
-            res.json(["empty", 1]);
-
-        } else if (pageNo === 0) {
+        console.log(keyword);
+        console.log(result);
+        pageNo = Math.ceil(Object.keys(result).length / itemPerPage);
+        if (pageNo === 0) {
             res.json(["no match", 1]);
         } else {
             const reqPage = parseInt(req.query.page);
             if (reqPage <= pageNo && reqPage >= 1) {
-                let currPage = result.slice((reqPage - 1) * itemPerPage,
-                    itemPerPage * reqPage);
+                let currPage = Object.entries(result).slice((reqPage - 1) * itemPerPage, itemPerPage * reqPage).map(entry => entry[0]);
                 currPage.push(pageNo)
                 console.log(currPage)
                 res.json(currPage);
@@ -74,8 +89,8 @@ app.get("/searchapi", (req, res) => {
 
 app.get("/hotels/:hotelName", (req, res) => {
     res.json(req.params);
-})
+});
 
 app.listen(5000, () => {
     console.log("Server started on port 5000");
-})
+});

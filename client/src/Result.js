@@ -7,9 +7,7 @@ class Result extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            backendData: [],
             searchData: [],
-            backendDataLoaded: false,
             searchDataLoaded: false,
             queryParams: {q: "", page: 1},
             pageNo: 1
@@ -17,16 +15,7 @@ class Result extends React.Component {
     }
 
     componentDidMount() {
-        // fetch all backend data
-        fetch("/api")
-            .then(response => response.json())
-            .then((json) => {
-                    this.setState({
-                        backendData: json,
-                        backendDataLoaded: true
-                    })
-                }
-            )
+
 
         // check params
         if (location.search) {
@@ -112,18 +101,6 @@ class Result extends React.Component {
                     </button>
 
                 </div>
-
-
-                <div>
-                    <h2>all data:</h2>
-                    <p>data below should not be shown / retrieved as it may be really large</p>
-                </div>
-                {(this.state.backendDataLoaded)
-                    ? this.state.backendData.hotels.map((hotel, i) =>
-                        <p key={i}>{i}. {hotel}</p>
-                    )
-                    : <p>loading</p>
-                }
             </div>
         )
     }
