@@ -49,9 +49,9 @@ class Result extends React.Component {
         if (Object.hasOwnProperty.bind(this.state.queryParams)('q') &&
             Object.hasOwnProperty.bind(this.state.queryParams)('page')) {
             if (i===1) {
-                return('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page) + 1));
+                return('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1));
             } else {
-                return('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page) - 1));
+                return('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1));
             }
         } else {
             return location.search;
@@ -70,7 +70,7 @@ class Result extends React.Component {
                 <form>
                     <label>
                         Search:
-                        <input type="text" defaultValue= {this.state.queryParams.q} name="q"/>
+                        <input type="text" defaultValue={this.state.queryParams.q} name="q"/>
                         <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
                     </label>
                     <input type="submit" value="Submit"/>
