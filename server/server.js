@@ -87,10 +87,6 @@ app.get("/searchapi", (req, res) => {
     }
 })
 
-app.get("/hotels/:hotelName", (req, res) => {
-    res.json(req.params);
-});
-
 app.listen(5000, () => {
     console.log("Server started on port 5000");
 });
