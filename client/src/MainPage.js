@@ -5,12 +5,27 @@ import './assets/style.css'
 class MainPage extends React.Component {
 
     render() {
-        return(
-            <div>
-                <div>Welcome to main page</div>
-                <div>
-                    <Link to="/search">see search page</Link>
+        return (
+            <div id={"mainPage"}>
+                <div id={"welcome"}>
+                    <div id={"welcomeBlock"}>
+                        <div>
+                            Welcome&nbsp;to Ascenda&nbsp;Loyalty
+                        </div>
+                        <div id={"welcomeDesc"}>
+                            Book for your travel anywhere
+                        </div>
+                        <Link to="/search">
+                            <button id={"mainPageBtn"}>
+                                Book&nbsp;Now
+                            </button>
+                        </Link>
+                    </div>
                 </div>
+                <div>
+                    About us: we are something something
+                </div>
+
             </div>
 
         )

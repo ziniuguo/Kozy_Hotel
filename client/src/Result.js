@@ -1,6 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import qs from 'query-string';
+import { Button } from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+// import Br from "./tags";
 
 
 class Result extends React.Component {
@@ -15,8 +18,10 @@ class Result extends React.Component {
     }
 
     componentDidMount() {
-
-
+        console.log(<Button/>)
+        console.log(<div/>)
+        console.log(qs)
+        console.log(<button/>)
         // check params
         if (location.search) {
             this.setState({queryParams: qs.parse(location.search)});
@@ -81,7 +86,7 @@ class Result extends React.Component {
                                 {/*Each child in a list should have a unique "key" prop.*/}
                                 <Link
                                     to={{
-                                        pathname: "/room/" + {hotel}.hotel // replace by variable,
+                                        pathname: "/hotel/" + {hotel}.hotel // replace by variable,
                                     }}
                                 >{hotel}</Link>
                             </div>
@@ -91,15 +96,24 @@ class Result extends React.Component {
                 <div>
                     <p></p>
                     <button
-                        disabled={this.state.queryParams.page <= 1 }
+                        disabled={this.state.queryParams.page <= 1}
                         onClick={() => window.open("/search" + this.PageBtn(0), "_self")}>prev page
                     </button>
                     page: {this.state.queryParams.page}/{this.state.pageNo}
                     <button
-                        disabled={this.state.queryParams.page >= this.state.pageNo }
+                        disabled={this.state.queryParams.page >= this.state.pageNo}
                         onClick={() => window.open("/search" + this.PageBtn(1), "_self")}>next page
                     </button>
 
+                </div>
+                <div>
+                    {/*<Button color="primary">primary</Button>{' '}*/}
+                    {/*/!*<Button color="secondary">secondary</Button>{' '}*!/*/}
+                    {/*/!*<Button color="success">success</Button>{' '}*!/*/}
+                    {/*/!*<Button color="info">info</Button>{' '}*!/*/}
+                    {/*<Button color="warning">warning</Button>{' '}*/}
+                    {/*<Button color="danger">danger</Button>{' '}*/}
+                    {/*<Button color="link">link</Button>*/}
                 </div>
             </div>
         )

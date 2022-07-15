@@ -1,7 +1,40 @@
-body {
-    background-color: #282c34;
-    color: white;
-    padding: 40px;
-    font-family: Arial;
-    text-align: center;
+#mainPage {
+    font-family: 'Courier New', monospace;
+}
+
+#welcome {
+    width: 100%;
+    text-align: left;
+    height: 100vh;
+
+    background-image:url("IMG_1468.JPG");
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+#welcomeBlock {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    font-size: 2.5rem;
+    font-weight: bold;
+    transform: translate(-50%, -50%);
+}
+
+#welcomeDesc {
+    font-size: 1.3rem;
+}
+
+#mainPageBtn {
+    text-align: right;
+    /*width: 10%;*/
+    background-color: black;
+    color: beige;
+    font-size: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 10px 0;
+    cursor: pointer;
 }
