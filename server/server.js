@@ -3,40 +3,37 @@ const app = express()
 
 
 const realJSON = {
-    "room one": {
-        "room_id": "1004890",
-        "price": 100,
-        "type": "single"
+    "hotel one": {
+        "hotel_id": "1004890",
+        "location": "Singapore"
     },
-    "room two": {
-        "room_id": "1005604",
-        "price": 50,
-        "type": "single"
+    "hotel two": {
+        "hotel_id": "1005604",
+        "location": "Singapore"
     },
-    "room three": {
-        "room_id": "1004891",
-        "price": 1,
-        "type": "double"
+    "hotel three": {
+        "hotel_id": "1004891",
+        "location": "Malaysia"
     },
-    "room four": {
-        "room_id": "1004894",
-        "price": 1,
-        "type": "double"
+    "hotel four": {
+        "hotel_id": "1004894",
+        "location": "Thailand"
     },
-    "room five": {
-        "room_id": "1004895",
-        "price": 1,
-        "type": "double"
+    "hotel five": {
+        "hotel_id": "1004895",
+        "location": "Malaysia"
     },
-    "room six": {
-        "room_id": "1004896",
-        "price": 100,
-        "type": "single"
+    "hotel six": {
+        "hotel_id": "1004896",
+        "location": "Thailand"
     },
-    "room seven": {
-        "room_id": "1004897",
-        "price": 120,
-        "type": "double"
+    "hotel seven": {
+        "hotel_id": "1004897",
+        "location": "Thailand"
+    },
+    "SUTD Hostel": {
+        "hotel_id": "1008888",
+        "location": "Singapore"
     }
 }
 
@@ -54,7 +51,7 @@ let bookedJSON = {
 
 app.get("/searchapi", (req, res) => {
 
-    if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page')) {
+    if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("loc")) {
         let pageNo;
         let itemPerPage = 3;
         let result = {};

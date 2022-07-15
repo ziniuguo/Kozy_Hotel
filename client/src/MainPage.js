@@ -15,7 +15,7 @@ class MainPage extends React.Component {
                         <div id={"welcomeDesc"}>
                             Book for your travel anywhere
                         </div>
-                        <Link to="/search">
+                        <Link to="/search?q=&page=1&loc=Singapore">
                             <button id={"mainPageBtn"}>
                                 Book&nbsp;Now
                             </button>

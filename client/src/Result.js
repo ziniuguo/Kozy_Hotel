@@ -1,8 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import qs from 'query-string';
-import { Button } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 // import Br from "./tags";
 
 
@@ -12,16 +11,12 @@ class Result extends React.Component {
         this.state = {
             searchData: [],
             searchDataLoaded: false,
-            queryParams: {q: "", page: 1},
-            pageNo: 1
+            queryParams: {q: "", page: 1, loc: "Singapore"},
+            pageNo: 1,
         }
     }
 
     componentDidMount() {
-        console.log(<Button/>)
-        console.log(<div/>)
-        console.log(qs)
-        console.log(<button/>)
         // check params
         if (location.search) {
             this.setState({queryParams: qs.parse(location.search)});
@@ -42,9 +37,9 @@ class Result extends React.Component {
         if (Object.hasOwnProperty.bind(this.state.queryParams)('q') &&
             Object.hasOwnProperty.bind(this.state.queryParams)('page')) {
             if (i === 1) {
-                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1));
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1) + "&loc=" + this.state.queryParams.loc);
             } else {
-                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1));
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1) + "&loc=" + this.state.queryParams.loc);
             }
         } else {
             return location.search;
@@ -56,6 +51,19 @@ class Result extends React.Component {
             <div>
                 <div>
                     <Link to="/">back to main</Link>
+                </div>
+                <div>
+                    <form id={"locForm"}>
+                        <label>You are visiting:</label>
+                        <select name="loc" value={this.state.queryParams.loc} onChange={()=>document.getElementById("locForm").submit()}>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Singapore">Singapore</option>
+                        </select>
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page} name="page"/>
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>
+
+                    </form>
                 </div>
                 <div>
                     <h2>search</h2>
@@ -107,13 +115,6 @@ class Result extends React.Component {
 
                 </div>
                 <div>
-                    {/*<Button color="primary">primary</Button>{' '}*/}
-                    {/*/!*<Button color="secondary">secondary</Button>{' '}*!/*/}
-                    {/*/!*<Button color="success">success</Button>{' '}*!/*/}
-                    {/*/!*<Button color="info">info</Button>{' '}*!/*/}
-                    {/*<Button color="warning">warning</Button>{' '}*/}
-                    {/*<Button color="danger">danger</Button>{' '}*/}
-                    {/*<Button color="link">link</Button>*/}
                 </div>
             </div>
         )
