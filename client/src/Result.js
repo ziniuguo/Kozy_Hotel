@@ -54,14 +54,15 @@ class Result extends React.Component {
                 </div>
                 <div>
                     <form id={"locForm"}>
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page} name="page"/>
                         <label>You are visiting:</label>
                         <select name="loc" value={this.state.queryParams.loc} onChange={()=>document.getElementById("locForm").submit()}>
+                            <option value="any">---</option>
                             <option value="Malaysia">Malaysia</option>
                             <option value="Thailand">Thailand</option>
                             <option value="Singapore">Singapore</option>
                         </select>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page} name="page"/>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>
 
                     </form>
                 </div>
@@ -73,6 +74,12 @@ class Result extends React.Component {
                         Search:
                         <input type="text" defaultValue={this.state.queryParams.q} name="q"/>
                         <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
+                        {/*why above is defaultValue and below is value?*/}
+                        {/*if use default value, everytime submit the form it never changes, */}
+                        {/*as it is fixed as the initial value in this.state.*/}
+                        {/*if use value, it changes according to the url query params*/}
+                        <input style={{display: 'none'}} type="text" value={this.state.queryParams.loc} name="loc"/>
+
                     </label>
                     <input type="submit" value="Submit"/>
                 </form>
