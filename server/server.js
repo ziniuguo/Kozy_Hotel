@@ -48,7 +48,7 @@ let bookedJSON = {
 }
 
 
-app.get("/searchapi", (req, res) => {
+app.get("/search", (req, res) => {
 
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("loc")) {
         let pageNo;
@@ -79,6 +79,10 @@ app.get("/searchapi", (req, res) => {
     } else {
         res.json(["undefined_query_params", 1]);
     }
+})
+
+app.get("/destination", (req, res) => {
+
 })
 
 app.listen(5000, () => {

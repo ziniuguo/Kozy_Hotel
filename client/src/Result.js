@@ -1,26 +1,37 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import qs from 'query-string';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import Br from "./tags";
+import {Autocomplete, TextField} from "@mui/material";
+
 
 
 class Result extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            destinations: [
+                'Singapore',
+                'Malaysia',
+                'Thailand'
+            ],
+            // term, uid, lat, lng, type, state
             searchData: [],
             searchDataLoaded: false,
             queryParams: {q: "", page: 1, loc: "Singapore"},
             pageNo: 1,
+            locValue: "",
+            locInputValue: ""
         }
     }
 
     componentDidMount() {
         // check params
-        if (location.search) {
-            this.setState({queryParams: qs.parse(location.search)});
-            fetch("/searchapi" + location.search)
+        if (window.location.search) {
+            this.setState({
+                queryParams: qs.parse(window.location.search),
+                locValue: qs.parse(window.location.search).loc
+            });
+            fetch("/search" + window.location.search)
                 .then(response => response.json())
                 .then((json) => {
                         this.setState({
@@ -42,7 +53,7 @@ class Result extends React.Component {
                 return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1) + "&loc=" + this.state.queryParams.loc);
             }
         } else {
-            return location.search;
+            return window.location.search;
         }
     }
 
@@ -53,19 +64,53 @@ class Result extends React.Component {
                     <Link to="/">back to main</Link>
                 </div>
                 <div>
+                    <div>{`value: ${this.state.locValue !== null ? `'${this.state.locValue}'` : 'null'}`}</div>
+                    <div>{`inputValue: '${this.state.locInputValue}'`}</div>
                     <form id={"locForm"}>
                         <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page} name="page"/>
-                        <label>You are visiting:</label>
-                        <select name="loc" value={this.state.queryParams.loc} onChange={()=>document.getElementById("locForm").submit()}>
-                            <option value="any">---</option>
-                            <option value="Malaysia">Malaysia</option>
-                            <option value="Thailand">Thailand</option>
-                            <option value="Singapore">Singapore</option>
-                        </select>
-
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page}
+                               name="page"/>
+                        <input readOnly={true} style={{display: 'none'}} type="text"
+                               value={(this.state.locValue === null) ? "" : this.state.locValue} name="loc"/>
                     </form>
+                    <Autocomplete
+                        // id="combo-box-demo"
+                        options={this.state.destinations}
+                        sx={{width: 300}}
+                        value={this.state.locValue}
+                        inputValue={this.state.locInputValue}
+                        // below need to be async because can only setState then fetch or submit form
+                        onInputChange={async (event, newInputValue) => {
+                            await this.setState({locInputValue: newInputValue});
+
+                        }
+                            }
+                        onChange={async (event: any, newValue: string | null) => {
+                            await this.setState({locValue: newValue});
+                            if (!(this.state.locValue === null)) {
+                                document.getElementById("locForm").submit();
+                            }
+                        }}
+                        renderInput={(params) => <TextField {...params} label="You are visiting: "/>}
+                    />
+
                 </div>
+                {/*<div>*/}
+                {/*    <form id={"locForm"}>*/}
+                {/*        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>*/}
+                {/*        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page}*/}
+                {/*               name="page"/>*/}
+                {/*        <label>You are visiting:</label>*/}
+                {/*        <select name="loc" value={this.state.queryParams.loc}*/}
+                {/*                onChange={() => document.getElementById("locForm").submit()}>*/}
+                {/*            <option value="any">---</option>*/}
+                {/*            <option value="Malaysia">Malaysia</option>*/}
+                {/*            <option value="Thailand">Thailand</option>*/}
+                {/*            <option value="Singapore">Singapore</option>*/}
+                {/*        </select>*/}
+
+                {/*    </form>*/}
+                {/*</div>*/}
                 <div>
                     <h2>search</h2>
                 </div>
@@ -75,10 +120,11 @@ class Result extends React.Component {
                         <input type="text" defaultValue={this.state.queryParams.q} name="q"/>
                         <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
                         {/*why above is defaultValue and below is value?*/}
-                        {/*if use default value, everytime submit the form it never changes, */}
+                        {/*if you use default value, everytime submit the form it never changes, */}
                         {/*as it is fixed as the initial value in this.state.*/}
-                        {/*if use value, it changes according to the url query params*/}
-                        <input style={{display: 'none'}} type="text" value={this.state.queryParams.loc} name="loc"/>
+                        {/*if you use value, it changes according to the url query params*/}
+                        <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.loc}
+                               name="loc"/>
 
                     </label>
                     <input type="submit" value="Submit"/>
