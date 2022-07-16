@@ -1,4 +1,6 @@
+const http = require('http')
 const express = require('express')
+const WebSocket = require('ws')
 const app = express()
 
 
@@ -59,7 +61,6 @@ app.get("/search", (req, res) => {
             if (room[0].toUpperCase().includes(keyword.toUpperCase())
                 && ((req.query.loc === 'any') ? true : (req.query.loc === room[1].location))) {
                 result[room[0]] = room[1];
-                console.log(room)
             }
         }
 
@@ -81,10 +82,32 @@ app.get("/search", (req, res) => {
     }
 })
 
-app.get("/destination", (req, res) => {
+const server = http.createServer(app);
+const wss = new WebSocket.Server({server})
 
+
+wss.on('connection', ws => {
+
+    ws.on('message', message => {
+        console.log(`Received message => ${message}`)
+
+        if (true) {
+                const data = ["singa", "sinGap", "singapore", "malaysia"];
+                console.log("SENT: " + data);
+                ws.send(JSON.stringify(data));
+
+        }
+    })
+
+    // ws.on('close', function close() {
+    //     clearInterval(interval);
+    // });
 })
 
-app.listen(5000, () => {
-    console.log("Server started on port 5000");
-});
+
+server.listen(5000, () => {
+    console.log(`Listening at http://localhost:5000`)
+})
+// app.listen(5000, () => {
+//     console.log("Server started on port 5000");
+// });

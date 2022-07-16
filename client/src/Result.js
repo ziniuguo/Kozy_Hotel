@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import qs from 'query-string';
 import {Autocomplete, TextField} from "@mui/material";
 
+const socket = new WebSocket('ws://localhost:5000')
 
 
 class Result extends React.Component {
@@ -10,9 +11,9 @@ class Result extends React.Component {
         super(props);
         this.state = {
             destinations: [
-                'Singapore',
-                'Malaysia',
-                'Thailand'
+                // 'Singapore',
+                // 'Malaysia',
+                // 'Thailand'
             ],
             // term, uid, lat, lng, type, state
             searchData: [],
@@ -25,6 +26,14 @@ class Result extends React.Component {
     }
 
     componentDidMount() {
+        socket.onmessage = ev => {
+
+            console.log(JSON.parse(ev.data))
+            console.log(typeof JSON.parse(ev.data))
+            this.setState({
+                destinations: JSON.parse(ev.data)
+            })
+        }
         // check params
         if (window.location.search) {
             this.setState({
@@ -57,6 +66,14 @@ class Result extends React.Component {
         }
     }
 
+    handleSocketSend(ws, msg) {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(msg)
+        } else {
+            ws.addEventListener('open', () => this.handleSocketSend(ws, msg))
+        }
+    }
+
     render() {
         return (
             <div>
@@ -82,9 +99,16 @@ class Result extends React.Component {
                         // below need to be async because can only setState then fetch or submit form
                         onInputChange={async (event, newInputValue) => {
                             await this.setState({locInputValue: newInputValue});
+                            if (this.state.locInputValue.length >= 3) {
 
-                        }
+                                // don't forget to change this localhost:5000 if implement irl...
+                                // socket.onmessage = event => {
+                                //     console.log(event.data);
+                                // }
+                                console.log("asking for destination JSON");
+                                this.handleSocketSend(socket, newInputValue);
                             }
+                        }}
                         onChange={async (event: any, newValue: string | null) => {
                             await this.setState({locValue: newValue});
                             if (!(this.state.locValue === null)) {
