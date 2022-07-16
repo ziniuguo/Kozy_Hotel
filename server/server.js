@@ -48,7 +48,6 @@ let bookedJSON = {
 }
 
 
-
 app.get("/searchapi", (req, res) => {
 
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("loc")) {
@@ -57,14 +56,13 @@ app.get("/searchapi", (req, res) => {
         let result = {};
         const keyword = req.query.q;
         for (const room of Object.entries(realJSON)) {
-            console.log(room[0]);
-            console.log(keyword);
-            if (room[0].toUpperCase().includes(keyword.toUpperCase())) {
+            if (room[0].toUpperCase().includes(keyword.toUpperCase())
+                && ((req.query.loc === 'any') ? true : (req.query.loc === room[1].location))) {
                 result[room[0]] = room[1];
+                console.log(room)
             }
         }
-        console.log(keyword);
-        console.log(result);
+
         pageNo = Math.ceil(Object.keys(result).length / itemPerPage);
         if (pageNo === 0) {
             res.json(["no match", 1]);
@@ -73,7 +71,6 @@ app.get("/searchapi", (req, res) => {
             if (reqPage <= pageNo && reqPage >= 1) {
                 let currPage = Object.entries(result).slice((reqPage - 1) * itemPerPage, itemPerPage * reqPage).map(entry => entry[0]);
                 currPage.push(pageNo)
-                console.log(currPage)
                 res.json(currPage);
             } else {
                 res.json(["page_exceeded", 1]);
