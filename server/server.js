@@ -1,7 +1,9 @@
-const http = require('http')
-const express = require('express')
-const WebSocket = require('ws')
-const app = express()
+const http = require('http');
+const express = require('express');
+const WebSocket = require('ws');
+const app = express();
+const fs = require('fs');
+const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
 const realJSON = {
@@ -39,15 +41,15 @@ const realJSON = {
     }
 }
 
-let bookedJSON = {
-    bookedRoom: {
-        "1004890": {
-            name: "CatRoll",
-            phone: "81770190",
-            email: "guo.ziniu.1003@gmail.com"
-        },
-    }
-}
+// let bookedJSON = {
+//     bookedRoom: {
+//         "1004890": {
+//             name: "CatRoll",
+//             phone: "81770190",
+//             email: "guo.ziniu.1003@gmail.com"
+//         },
+//     }
+// }
 
 
 app.get("/search", (req, res) => {
@@ -90,12 +92,12 @@ wss.on('connection', ws => {
 
     ws.on('message', message => {
         console.log(`Received message => ${message}`)
-
-        if (true) {
-                const data = ["singa", "sinGap", "singapore", "malaysia"];
-                console.log("SENT: " + data);
-                ws.send(JSON.stringify(data));
-
+        let searchResult = [];
+        for (let i = 0; i < destination.length; i++) {
+            if ((typeof destination[i]["term"]==='undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
+                searchResult.push(destination[i]["term"])
+                ws.send(JSON.stringify(searchResult));
+            }
         }
     })
 
