@@ -57,6 +57,36 @@ const realJSON = {
 // }
 
 
+app.get("/hotel/:hotelName", (req, res) => {
+    let keyword = req.url.split('/').pop().split('%20').join(' ').split('+').join(' ');
+    console.log(keyword)
+    let result =[];
+    for(let i=0; i<hotels_sg.length; i++){
+        if(keyword === hotels_sg[i]["name"]){
+            result.push(hotels_sg[i]["latitude"])
+            result.push(hotels_sg[i]["longitude"])
+            result.push(hotels_sg[i]["address"])
+            result.push(hotels_sg[i]["rating"])
+            result.push(hotels_sg[i]["description"])
+            result.push(hotels_sg[i]["amenities"])
+        }
+    }
+    if(result.length===0){
+        for(let i=0; i<hotels_my.length; i++){
+            if(keyword === hotels_my[i]["name"]){
+                result.push(hotels_my[i]["latitude"])
+                result.push(hotels_my[i]["longitude"])
+                result.push(hotels_my[i]["address"])
+                result.push(hotels_my[i]["rating"])
+                result.push(hotels_my[i]["description"])
+                result.push(hotels_my[i]["amenities"])
+            }
+        }
+    }
+    console.log(result)
+    res.json(result)
+})
+
 app.get("/search", (req, res) => {
 
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("locID")) {
