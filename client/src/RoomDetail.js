@@ -11,18 +11,21 @@ class RoomDetail extends React.Component {
                         id:"001",
                         type:"single",
                         price:"1000",
+
                         
                     },
                     {
                         id:"002",
                         type:"single",
                         price:"1000",
+                
                         
                     },
                     {
                         id:"003",
                         type:"single",
                         price:"1000",
+            
                         
                     },
                 ]

@@ -1,0 +1,65 @@
+{
+  "completed": true,
+  "rooms": [
+    {
+      "key": "4A0E650547B2BEB93E9163B786F5F849",
+      "price": 568.66
+    },
+    {
+      "key": "400C4CDC461AF1DE54B976E30ADB595F",
+      "price": 580.05
+    },
+    {
+      "key": "FE1610EDB049D7C0DE7B8528BC7B68EA",
+      "price": 630.55
+    },
+    {
+      "key": "a19B343DC6BE5449847C1450621F5C419",
+      "price": 639.55
+    },
+    {
+      "key": "987EF4FCF2270541803E994D54D027C4",
+      "price": 686.49
+    },
+    {
+      "key": "4B21270C445C4A0BCD51D9539842E2FF",
+      "price": 738.44
+    },
+    {
+      "key": "A7C355A2D30885C47B37BD3DF4C60D28",
+      "price": 738.44
+    },
+    {
+      "key": "845344508516A6D09160A9F9F04B474B",
+      "price": 739.99
+    },
+    {
+      "key": "A62DEEC5AE49104225302F2A56DCAD66",
+      "price": 766.36
+    },
+    {
+      "key": "9387BB21935FBBC9512E895107A679F6",
+      "price": 800.99
+    },
+    {
+      "key": "64BC421D2872085E7B6080FB2C7E8798",
+      "price": 810.99
+    },
+    {
+      "key": "C2A1C2928866AA2A53866A79B5647F2C",
+      "price": 900.99
+    },
+    {
+      "key": "0F2B8848D10A387C6A7D2E7FE754D0B5",
+      "price": 900.99
+    },
+    {
+      "key": "798CB567A4A09753EBEF93BF1250FD84",
+      "price": 900.99
+    },
+    {
+      "key": "D3D13383037F6FF625BDA2A4C02E0E79",
+      "price": 969.99
+    }
+  ]
+}
