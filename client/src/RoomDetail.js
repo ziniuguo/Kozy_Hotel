@@ -68,6 +68,8 @@ class RoomDetail extends React.Component {
                 mapsrc: "https://maps.google.com/maps?q="+json[0]+","+json[1]+"&z=15&output=embed",
             })
         })
+
+
     }
 
     render() {

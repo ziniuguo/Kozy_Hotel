@@ -166,10 +166,6 @@ wss.on('connection', ws => {
 
         ws.send(JSON.stringify(searchResult));
     })
-
-    // ws.on('close', function close() {
-    //     clearInterval(interval);
-    // });
 })
 
 

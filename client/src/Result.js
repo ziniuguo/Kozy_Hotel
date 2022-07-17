@@ -28,11 +28,11 @@ class Result extends React.Component {
 
     componentDidMount() {
         socket.onmessage = async ev => {
-            console.log(JSON.parse(ev.data).length)
+            console.log(JSON.parse(ev.data).length);
             await this.setState({
                 destinations: JSON.parse(ev.data),
-            })
-            console.log("set success")
+            });
+            console.log("set success");
         }
         // check params
         if (window.location.search) {
