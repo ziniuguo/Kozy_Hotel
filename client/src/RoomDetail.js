@@ -8,12 +8,12 @@ class RoomDetail extends React.Component {
                 <div>Welcome to detail page</div>
                 <div>
                     {/*replace %20 and + by space. */}
-                    you are visiting the room detail of {location.pathname.split('/').pop().split('%20').join(' ')}
+                    you are visiting the room detail of {window.location.pathname.split('/').pop().split('%20').join(' ')}
                 </div>
                 <div>
                     <button
                     // disabled={}
-                    onClick={() => window.open("/booking/"+location.pathname.split('/').pop(),"_self")}>Book now!
+                    onClick={() => window.open("/booking/"+window.location.pathname.split('/').pop(),"_self")}>Book now!
                     </button>
                 </div>
                 <div>
