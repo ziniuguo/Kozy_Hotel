@@ -3,6 +3,7 @@ const express = require('express');
 const WebSocket = require('ws');
 const app = express();
 const fs = require('fs');
+const hotel = JSON.parse(fs.readFileSync('hotels.json'))
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
