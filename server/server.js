@@ -60,6 +60,22 @@ app.use(express.urlencoded({extended: false}));
 app.post('/booking', function(req, res){
     let myJson = req.body;
     console.log('received!');
+    fs.readFile('bookings.json', 'utf8', function readFileCallback(err, data) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            fs.writeFile('bookings.json', JSON.stringify(myJson, null, 4), 'utf8', function(err){
+                if(err) throw err;
+                console.log("writing done.");
+            });
+    
+    
+        }
+    });
+
+
+
     res.send(myJson);
 });
 
