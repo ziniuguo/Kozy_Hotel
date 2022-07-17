@@ -6,10 +6,25 @@ export default function BookingPage() {
 
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
-    const onSubmit = data => {
+    const onSubmit = async (data) => {
         console.log(data);
-        var bookData = JSON.stringify(data, null, 4);
-        alert(bookData);
+
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }
+        const response = await fetch('http://localhost:5000/booking', requestOptions)
+        .catch((error) => {
+          console.log(error)
+        });
+        console.log("done")
+        const jsonData = await response.json();
+        console.log(jsonData);
+
+
+        // var bookData = JSON.stringify(data, null, 4);
+        // alert(bookData);
 
         reset();
     }

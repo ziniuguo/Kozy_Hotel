@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const WebSocket = require('ws');
 const app = express();
+const cors = require('cors');
 const fs = require('fs');
 const hotel = JSON.parse(fs.readFileSync('hotels.json'))
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
@@ -51,6 +52,16 @@ const realJSON = {
 //         },
 //     }
 // }
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
+app.post('/booking', function(req, res){
+    let myJson = req.body;
+    console.log('received!');
+    res.send(myJson);
+});
 
 
 app.get("/search", (req, res) => {
