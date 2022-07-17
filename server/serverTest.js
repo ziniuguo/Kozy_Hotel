@@ -6,10 +6,19 @@ console.log(destination[destination.length - 1]["term"])
 console.log(typeof destination[0]["term"])
 
 let searchResult= [];
-const message = "Guan"
 for (let i = 0; i < destination.length; i++) {
-    if ((typeof destination[i]["term"]==='undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toUpperCase())) {
-        searchResult.push(destination[i]["term"])
-        console.log(JSON.stringify(searchResult));
+    if ((typeof destination[i]["term"]!=='undefined') && !checkList(destination[i]["term"])) {
+        searchResult.push(destination[i])
     }
 }
+
+function checkList(item) {
+    for (let i = 0; i < searchResult.length; i++) {
+        if ((searchResult[i]["term"]).toUpperCase().includes(item.toUpperCase())) {
+            return true;
+        }
+    }
+    return false;
+}
+
+console.log(searchResult)

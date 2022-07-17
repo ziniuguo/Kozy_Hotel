@@ -95,10 +95,13 @@ wss.on('connection', ws => {
         let searchResult = [];
         for (let i = 0; i < destination.length; i++) {
             if ((typeof destination[i]["term"]==='undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
-                searchResult.push(destination[i]["term"])
-                ws.send(JSON.stringify(searchResult));
+                if (!searchResult.includes(destination[i]["term"])){
+                    searchResult.push(destination[i]["term"])
+                }
             }
         }
+
+        ws.send(JSON.stringify(searchResult));
     })
 
     // ws.on('close', function close() {

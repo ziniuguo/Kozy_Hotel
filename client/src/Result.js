@@ -26,13 +26,12 @@ class Result extends React.Component {
     }
 
     componentDidMount() {
-        socket.onmessage = ev => {
-
-            console.log(JSON.parse(ev.data))
-            console.log(typeof JSON.parse(ev.data))
-            this.setState({
-                destinations: JSON.parse(ev.data)
+        socket.onmessage = async ev => {
+            console.log(JSON.parse(ev.data).length)
+            await this.setState({
+                destinations: JSON.parse(ev.data),
             })
+            console.log("set success")
         }
         // check params
         if (window.location.search) {
@@ -92,6 +91,8 @@ class Result extends React.Component {
                     </form>
                     <Autocomplete
                         // id="combo-box-demo"
+                        loading={true}
+                        loadingText={"There is nothing..."}
                         options={this.state.destinations}
                         sx={{width: 300}}
                         value={this.state.locValue}
