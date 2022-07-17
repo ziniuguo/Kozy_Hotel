@@ -3,7 +3,11 @@ const express = require('express');
 const WebSocket = require('ws');
 const app = express();
 const fs = require('fs');
-const hotel = JSON.parse(fs.readFileSync('hotels.json'))
+const RsBU = JSON.parse(fs.readFileSync('destination_RsBU.json'))
+const WDOM = JSON.parse(fs.readFileSync('destination_WD0M.json'))
+const EzoR = JSON.parse(fs.readFileSync('destination_EzoR.json'))
+const hotels_sg = JSON.parse(fs.readFileSync('hotels_sg.json'))
+const hotels_my = JSON.parse(fs.readFileSync('hotels_my.json'))
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
@@ -55,18 +59,45 @@ const realJSON = {
 
 app.get("/search", (req, res) => {
 
-    if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("loc")) {
+    if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("locID")) {
         let pageNo;
-        let itemPerPage = 3;
-        let result = {};
+        let itemPerPage = 10;
+        let result = [];
         const keyword = req.query.q;
-        for (const room of Object.entries(realJSON)) {
-            if (room[0].toUpperCase().includes(keyword.toUpperCase())
-                && ((req.query.loc === 'any') ? true : (req.query.loc === room[1].location))) {
-                result[room[0]] = room[1];
+        let idList = [];
+        if (req.query.locID === "RsBU") { // Singapore
+            for (let i = 0; i < RsBU["hotels"].length; i++) {
+                idList.push(RsBU["hotels"][i]["id"]);
             }
-        }
+            for (let i = 0; i < hotels_sg.length; i++) {
+                if (idList.includes(hotels_sg[i]["id"])
+                    && hotels_sg[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
+                    result[[hotels_sg[i]["name"]]] = hotels_sg[i]["id"];
+                }
+            }
+        } else if (req.query.locID === "WD0M") { // C airport
+            for (let i = 0; i < WDOM["hotels"].length; i++) {
+                idList.push(WDOM["hotels"][i]["id"]);
+            }
+            for (let i = 0; i < hotels_sg.length; i++) {
+                if (idList.includes(hotels_sg[i]["id"])
+                    && hotels_sg[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
+                    result[[hotels_sg[i]["name"]]] = hotels_sg[i]["id"];
+                }
+            }
+        } else if (req.query.locID === "EzoR") { // my
+            for (let i = 0; i < EzoR["hotels"].length; i++) {
+                idList.push(EzoR["hotels"][i]["id"]);
+            }
+            for (let i = 0; i < hotels_my.length; i++) {
+                if (idList.includes(hotels_my[i]["id"])
+                    && hotels_my[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
+                    result[[hotels_my[i]["name"]]] = hotels_my[i]["id"];
+                }
+            }
+        } else { // no match
 
+        }
         pageNo = Math.ceil(Object.keys(result).length / itemPerPage);
         if (pageNo === 0) {
             res.json(["no match", 1]);
@@ -95,9 +126,10 @@ wss.on('connection', ws => {
         console.log(`Received message => ${message}`)
         let searchResult = [];
         for (let i = 0; i < destination.length; i++) {
-            if ((typeof destination[i]["term"]==='undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
-                if (!searchResult.includes(destination[i]["term"])){
-                    searchResult.push(destination[i]["term"])
+            if ((typeof destination[i]["term"] === 'undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
+                if (!searchResult.some(el => el.label === destination[i]["term"])) {
+                    // searchResult.push(destination[i]["term"])
+                    searchResult.push({"label": destination[i]["term"], "id": destination[i]["uid"]})
                 }
             }
         }

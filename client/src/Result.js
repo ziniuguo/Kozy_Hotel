@@ -18,9 +18,10 @@ class Result extends React.Component {
             // term, uid, lat, lng, type, state
             searchData: [],
             searchDataLoaded: false,
-            queryParams: {q: "", page: 1, loc: "Singapore"},
+            queryParams: {q: "", page: 1, loc: "Singapore%2C+Singapore", locID: "RsBU"},
             pageNo: 1,
             locValue: "",
+            locID: "",
             locInputValue: ""
         }
     }
@@ -37,7 +38,8 @@ class Result extends React.Component {
         if (window.location.search) {
             this.setState({
                 queryParams: qs.parse(window.location.search),
-                locValue: qs.parse(window.location.search).loc
+                locValue: qs.parse(window.location.search).loc,
+                locID: qs.parse(window.location.search).locID
             });
             fetch("/search" + window.location.search)
                 .then(response => response.json())
@@ -56,9 +58,9 @@ class Result extends React.Component {
         if (Object.hasOwnProperty.bind(this.state.queryParams)('q') &&
             Object.hasOwnProperty.bind(this.state.queryParams)('page')) {
             if (i === 1) {
-                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1) + "&loc=" + this.state.queryParams.loc);
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1) + "&loc=" + this.state.queryParams.loc + "&locID=" + this.state.queryParams.locID);
             } else {
-                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1) + "&loc=" + this.state.queryParams.loc);
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1) + "&loc=" + this.state.queryParams.loc + "&locID=" + this.state.queryParams.locID);
             }
         } else {
             return window.location.search;
@@ -80,17 +82,16 @@ class Result extends React.Component {
                     <Link to="/">back to main</Link>
                 </div>
                 <div>
-                    <div>{`value: ${this.state.locValue !== null ? `'${this.state.locValue}'` : 'null'}`}</div>
-                    <div>{`inputValue: '${this.state.locInputValue}'`}</div>
                     <form id={"locForm"}>
                         <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>
                         <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page}
                                name="page"/>
                         <input readOnly={true} style={{display: 'none'}} type="text"
-                               value={(this.state.locValue === null) ? "" : this.state.locValue} name="loc"/>
+                               value={this.state.locValue} name="loc"/>
+                        <input readOnly={true} style={{display: 'none'}} type="text"
+                               value={this.state.locID} name="locID"/>
                     </form>
                     <Autocomplete
-                        // id="combo-box-demo"
                         loading={true}
                         loadingText={"There is nothing..."}
                         filterOptions={(x) => x}
@@ -104,16 +105,16 @@ class Result extends React.Component {
                             if (this.state.locInputValue.length >= 3) {
 
                                 // don't forget to change this localhost:5000 if implement irl...
-                                // socket.onmessage = event => {
-                                //     console.log(event.data);
-                                // }
                                 console.log("asking for destination JSON");
                                 this.handleSocketSend(socket, newInputValue);
                             }
                         }}
                         onChange={async (event: any, newValue: string | null) => {
-                            await this.setState({locValue: newValue});
-                            if (!(this.state.locValue === null)) {
+                            await this.setState({
+                                locValue: (newValue) ? newValue["label"] : "",
+                                locID: (newValue) ? newValue["id"] : ""
+                            });
+                            if (!(this.state.locValue === "")) {
                                 document.getElementById("locForm").submit();
                             }
                         }}
@@ -121,22 +122,6 @@ class Result extends React.Component {
                     />
 
                 </div>
-                {/*<div>*/}
-                {/*    <form id={"locForm"}>*/}
-                {/*        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>*/}
-                {/*        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page}*/}
-                {/*               name="page"/>*/}
-                {/*        <label>You are visiting:</label>*/}
-                {/*        <select name="loc" value={this.state.queryParams.loc}*/}
-                {/*                onChange={() => document.getElementById("locForm").submit()}>*/}
-                {/*            <option value="any">---</option>*/}
-                {/*            <option value="Malaysia">Malaysia</option>*/}
-                {/*            <option value="Thailand">Thailand</option>*/}
-                {/*            <option value="Singapore">Singapore</option>*/}
-                {/*        </select>*/}
-
-                {/*    </form>*/}
-                {/*</div>*/}
                 <div>
                     <h2>search</h2>
                 </div>
@@ -151,6 +136,8 @@ class Result extends React.Component {
                         {/*if you use value, it changes according to the url query params*/}
                         <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.loc}
                                name="loc"/>
+                        <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.locID}
+                               name="locID"/>
 
                     </label>
                     <input type="submit" value="Submit"/>
