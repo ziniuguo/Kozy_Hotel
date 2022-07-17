@@ -1,5 +1,10 @@
-const express = require('express')
-const app = express()
+const http = require('http');
+const express = require('express');
+const WebSocket = require('ws');
+const app = express();
+const fs = require('fs');
+const hotel = JSON.parse(fs.readFileSync('hotels.json'))
+const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
 const realJSON = {
@@ -37,18 +42,18 @@ const realJSON = {
     }
 }
 
-let bookedJSON = {
-    bookedRoom: {
-        "1004890": {
-            name: "CatRoll",
-            phone: "81770190",
-            email: "guo.ziniu.1003@gmail.com"
-        },
-    }
-}
+// let bookedJSON = {
+//     bookedRoom: {
+//         "1004890": {
+//             name: "CatRoll",
+//             phone: "81770190",
+//             email: "guo.ziniu.1003@gmail.com"
+//         },
+//     }
+// }
 
 
-app.get("/searchapi", (req, res) => {
+app.get("/search", (req, res) => {
 
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("loc")) {
         let pageNo;
@@ -59,7 +64,6 @@ app.get("/searchapi", (req, res) => {
             if (room[0].toUpperCase().includes(keyword.toUpperCase())
                 && ((req.query.loc === 'any') ? true : (req.query.loc === room[1].location))) {
                 result[room[0]] = room[1];
-                console.log(room)
             }
         }
 
@@ -81,6 +85,35 @@ app.get("/searchapi", (req, res) => {
     }
 })
 
-app.listen(5000, () => {
-    console.log("Server started on port 5000");
-});
+const server = http.createServer(app);
+const wss = new WebSocket.Server({server})
+
+
+wss.on('connection', ws => {
+
+    ws.on('message', message => {
+        console.log(`Received message => ${message}`)
+        let searchResult = [];
+        for (let i = 0; i < destination.length; i++) {
+            if ((typeof destination[i]["term"]==='undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
+                if (!searchResult.includes(destination[i]["term"])){
+                    searchResult.push(destination[i]["term"])
+                }
+            }
+        }
+
+        ws.send(JSON.stringify(searchResult));
+    })
+
+    // ws.on('close', function close() {
+    //     clearInterval(interval);
+    // });
+})
+
+
+server.listen(5000, () => {
+    console.log(`Listening at http://localhost:5000`)
+})
+// app.listen(5000, () => {
+//     console.log("Server started on port 5000");
+// });
