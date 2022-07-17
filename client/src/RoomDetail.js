@@ -4,6 +4,7 @@ class RoomDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            hotelDesc: "",
             mapsrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d144307.84416915863!2d103.77665436338572!3d1.3499666076124137!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da1767b42b8ec9%3A0x400f7acaedaa420!2sSingapore!5e0!3m2!1sen!2ssg!4v1656903566371!5m2!1sen!2ssg",
             details: {
                 roomList:[
@@ -39,6 +40,11 @@ class RoomDetail extends React.Component {
         this.setState({
             mapsrc: "https://maps.google.com/maps?q="+this.state.lat+","+this.state.lng+"&z=15&output=embed"
         })
+        console.log(window.location.pathname)
+        fetch(window.location.pathname).then(response => response.json())
+        .then((json)=> {
+            console.log("i know you received" + json);
+        })
     }
 
     render() {
@@ -55,7 +61,7 @@ class RoomDetail extends React.Component {
                 <div><h1>Welcome to detail page</h1></div>
                 <div>
                     {/*replace %20 and + by space. */}
-                    You are visiting the room detail of {window.location.pathname.split('/').pop().split('%20').join(' ')}
+                    You are visiting the room detail of {window.location.pathname.split('/').pop().split('%20').join(' ').split('+').join(' ')}
                     {this.state.details.roomList.map(room=> (
                         <div className="list-room" key={room.id}>
                             <div className="id">Room ID: {room.id}</div>
