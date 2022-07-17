@@ -3,8 +3,7 @@ import {useForm} from "react-hook-form";
 
 
 export default function BookingPage() {
-    // const {register, handleSubmit, formstate: {errors}, reset} = useForm();
-    
+
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
     const onSubmit = data => {
