@@ -93,6 +93,7 @@ class Result extends React.Component {
                         // id="combo-box-demo"
                         loading={true}
                         loadingText={"There is nothing..."}
+                        filterOptions={(x) => x}
                         options={this.state.destinations}
                         sx={{width: 300}}
                         value={this.state.locValue}
