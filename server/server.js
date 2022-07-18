@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const WebSocket = require('ws');
 const app = express();
+const cors = require('cors');
 const fs = require('fs');
 const RsBU = JSON.parse(fs.readFileSync('destination_RsBU.json'))
 const WDOM = JSON.parse(fs.readFileSync('destination_WD0M.json'))
@@ -55,6 +56,32 @@ const realJSON = {
 //         },
 //     }
 // }
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
+app.post('/booking', function(req, res){
+    let myJson = req.body;
+    console.log('received!');
+    fs.readFile('bookings.json', 'utf8', function readFileCallback(err, data) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            fs.writeFile('bookings.json', JSON.stringify(myJson, null, 4), 'utf8', function(err){
+                if(err) throw err;
+                console.log("writing done.");
+            });
+    
+    
+        }
+    });
+
+
+
+    res.send(myJson);
+});
 
 
 app.get("/hotel/:hotelName", (req, res) => {
