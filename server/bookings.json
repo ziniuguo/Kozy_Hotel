@@ -1,8 +1,26 @@
-{
-    "firstName": "splish",
-    "lastName": "splash",
-    "phoneNumber": "5544",
-    "emailAddress": "plip.plop@gmail.com",
-    "specialRequests": "water",
-    "creditCardNumber": "44556677"
-}
+[
+    {
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "5544",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "nah",
+        "creditCardNumber": "5544"
+    },
+    {
+        "firstName": "Splish",
+        "lastName": "splash",
+        "phoneNumber": "11223344",
+        "emailAddress": "plip.plop@gmail.com",
+        "specialRequests": "water",
+        "creditCardNumber": "55443322"
+    },
+    {
+        "firstName": "William",
+        "lastName": "Lee",
+        "phoneNumber": "98989898",
+        "emailAddress": "william@gmail.com",
+        "specialRequests": "extra pillows",
+        "creditCardNumber": "54545454545454"
+    }
+]

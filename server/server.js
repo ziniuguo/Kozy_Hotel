@@ -69,7 +69,9 @@ app.post('/booking', function(req, res){
             console.log(err);
         }
         else{
-            fs.writeFile('bookings.json', JSON.stringify(myJson, null, 4), 'utf8', function(err){
+            let currentJSON = JSON.parse(data);
+            currentJSON.push(myJson);
+            fs.writeFile('bookings.json', JSON.stringify(currentJSON, null, 4), 'utf8', function(err){
                 if(err) throw err;
                 console.log("writing done.");
             });

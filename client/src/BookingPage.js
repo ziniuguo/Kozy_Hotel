@@ -21,6 +21,7 @@ export default function BookingPage() {
         console.log("done")
         const jsonData = await response.json();
         console.log(jsonData);
+        alert("Booking confirmed! Enjoy your trip!");
 
 
         // var bookData = JSON.stringify(data, null, 4);
