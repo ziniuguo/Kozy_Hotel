@@ -2,6 +2,8 @@ import React from "react";
 import {Link} from "react-router-dom";
 import qs from 'query-string';
 import {Autocomplete, TextField} from "@mui/material";
+import errImg from './assets/error-image-generic.png';
+import {Button, Input} from "reactstrap";
 
 const socket = new WebSocket('ws://localhost:5000')
 
@@ -17,7 +19,6 @@ class Result extends React.Component {
             ],
             // term, uid, lat, lng, type, state
             searchData: [],
-            searchDataLoaded: false,
             queryParams: {q: "", page: 1, loc: "Singapore%2C+Singapore", locID: "RsBU"},
             pageNo: 1,
             locValue: "",
@@ -46,7 +47,6 @@ class Result extends React.Component {
                 .then((json) => {
                         this.setState({
                             searchData: json.slice(0, -1),
-                            searchDataLoaded: true,
                             pageNo: json.pop()
                         })
                     }
@@ -122,13 +122,10 @@ class Result extends React.Component {
                     />
 
                 </div>
-                <div>
-                    <h2>search</h2>
-                </div>
-                <form>
+                <form id={"HotelSearchBar"}>
                     <label>
-                        Search:
-                        <input type="text" defaultValue={this.state.queryParams.q} name="q"/>
+                        Search Hotel:
+                        <Input type="search" defaultValue={this.state.queryParams.q} name="q"/>
                         <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
                         {/*why above is defaultValue and below is value?*/}
                         {/*if you use default value, everytime submit the form it never changes, */}
@@ -136,15 +133,15 @@ class Result extends React.Component {
                         {/*if you use value, it changes according to the url query params*/}
                         <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.loc}
                                name="loc"/>
-                        <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.locID}
+                        <input readOnly={true} style={{display: 'none'}} type="text"
+                               value={this.state.queryParams.locID}
                                name="locID"/>
 
                     </label>
-                    <input type="submit" value="Submit"/>
+                    <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
                 </form>
-                <p>search result test:</p>
-                {(this.state.searchDataLoaded)
-                    ?
+                <p>search result:</p>
+                {
                     (JSON.stringify(this.state.searchData) === '["empty"]'
                         || JSON.stringify(this.state.searchData) === '["no match"]'
                         || JSON.stringify(this.state.searchData) === '["page_exceeded"]'
@@ -153,19 +150,25 @@ class Result extends React.Component {
                         ?
                         <p>{this.state.searchData}</p>
                         :
-                        // JSON.stringify(this.state.searchData)
                         this.state.searchData.map((hotel, i) =>
-                            // <p key={i}>{i}. {hotel}</p>
                             <div key={i}>
-                                {/*Each child in a list should have a unique "key" prop.*/}
+
+                                <img id={"img" + i}
+                                    style={{"height": "100px", "width": "100px", "objectFit": "cover"}}
+                                    src={hotel[1][1]}
+                                    alt={"image of hotel ID " + hotel[1][0]}
+                                    onError={() => document.getElementById("img"+i).src=errImg}
+                                />
+
+
                                 <Link
+
                                     to={{
-                                        pathname: "/hotel/" + {hotel}.hotel // replace by variable,
+                                        pathname: "/hotel/" + hotel[0] // replace by variable,
                                     }}
-                                >{hotel}</Link>
+                                >{hotel[0]}</Link>
                             </div>
                         )
-                    : <p></p>
                 }
                 <div>
                     <p></p>

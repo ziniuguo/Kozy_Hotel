@@ -118,7 +118,7 @@ app.get("/search", (req, res) => {
 
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("locID")) {
         let pageNo;
-        let itemPerPage = 10;
+        let itemPerPage = 5;
         let result = [];
         const keyword = req.query.q;
         let idList = [];
@@ -129,7 +129,7 @@ app.get("/search", (req, res) => {
             for (let i = 0; i < hotels_sg.length; i++) {
                 if (idList.includes(hotels_sg[i]["id"])
                     && hotels_sg[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
-                    result[[hotels_sg[i]["name"]]] = hotels_sg[i]["id"];
+                    result[[hotels_sg[i]["name"]]] = [hotels_sg[i]["id"], hotels_sg[i]["cloudflare_image_url"] + "/" + hotels_sg[i]["id"] + "/i" + hotels_sg[i]["default_image_index"] + ".jpg"];
                 }
             }
         } else if (req.query.locID === "WD0M") { // C airport
@@ -139,7 +139,7 @@ app.get("/search", (req, res) => {
             for (let i = 0; i < hotels_sg.length; i++) {
                 if (idList.includes(hotels_sg[i]["id"])
                     && hotels_sg[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
-                    result[[hotels_sg[i]["name"]]] = hotels_sg[i]["id"];
+                    result[[hotels_sg[i]["name"]]] = [hotels_sg[i]["id"], hotels_sg[i]["cloudflare_image_url"] + "/" + hotels_sg[i]["id"] + "/i" + hotels_sg[i]["default_image_index"] + ".jpg"];
                 }
             }
         } else if (req.query.locID === "EzoR") { // my
@@ -149,7 +149,7 @@ app.get("/search", (req, res) => {
             for (let i = 0; i < hotels_my.length; i++) {
                 if (idList.includes(hotels_my[i]["id"])
                     && hotels_my[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
-                    result[[hotels_my[i]["name"]]] = hotels_my[i]["id"];
+                    result[[hotels_my[i]["name"]]] = [hotels_my[i]["id"], hotels_my[i]["cloudflare_image_url"] + "/" + hotels_my[i]["id"] + "/i" + hotels_my[i]["default_image_index"] + ".jpg"];
                 }
             }
         } else { // no match
@@ -161,8 +161,11 @@ app.get("/search", (req, res) => {
         } else {
             const reqPage = parseInt(req.query.page);
             if (reqPage <= pageNo && reqPage >= 1) {
-                let currPage = Object.entries(result).slice((reqPage - 1) * itemPerPage, itemPerPage * reqPage).map(entry => entry[0]);
-                currPage.push(pageNo)
+                let currPage = Object.entries(result)
+                    .slice((reqPage - 1) * itemPerPage, itemPerPage * reqPage)
+                    // .map(entry => entry[0]);
+                currPage.push(pageNo);
+                // console.log(currPage)
                 res.json(currPage);
             } else {
                 res.json(["page_exceeded", 1]);
