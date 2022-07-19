@@ -16,11 +16,27 @@
         "creditCardNumber": "55443322"
     },
     {
-        "firstName": "William",
-        "lastName": "Lee",
-        "phoneNumber": "98989898",
-        "emailAddress": "william@gmail.com",
-        "specialRequests": "extra pillows",
-        "creditCardNumber": "54545454545454"
+        "firstName": "bleh",
+        "lastName": "blugh",
+        "phoneNumber": "54566",
+        "emailAddress": "lmao@hotmail.com",
+        "specialRequests": "potatoes",
+        "creditCardNumber": "ihiuhiu"
+    },
+    {
+        "firstName": "iu",
+        "lastName": "u",
+        "phoneNumber": "pou",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "uhp",
+        "creditCardNumber": "55"
+    },
+    {
+        "firstName": "Tim",
+        "lastName": "Louis",
+        "phoneNumber": "234723",
+        "emailAddress": "louis@gmail.com",
+        "specialRequests": "one more mattress",
+        "creditCardNumber": "24324"
     }
 ]
