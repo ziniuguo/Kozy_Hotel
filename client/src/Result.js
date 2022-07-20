@@ -2,6 +2,8 @@ import React from "react";
 import {Link} from "react-router-dom";
 import qs from 'query-string';
 import {Autocomplete, TextField} from "@mui/material";
+import errImg from './assets/error-image-generic.png';
+import {Button, Card, CardBody, CardSubtitle, CardText, CardTitle, Input, ListGroup, ListGroupItem} from "reactstrap";
 
 const socket = new WebSocket('ws://localhost:5000')
 
@@ -17,7 +19,6 @@ class Result extends React.Component {
             ],
             // term, uid, lat, lng, type, state
             searchData: [],
-            searchDataLoaded: false,
             queryParams: {q: "", page: 1, loc: "Singapore%2C+Singapore", locID: "RsBU"},
             pageNo: 1,
             locValue: "",
@@ -46,7 +47,6 @@ class Result extends React.Component {
                 .then((json) => {
                         this.setState({
                             searchData: json.slice(0, -1),
-                            searchDataLoaded: true,
                             pageNo: json.pop()
                         })
                     }
@@ -122,13 +122,10 @@ class Result extends React.Component {
                     />
 
                 </div>
-                <div>
-                    <h2>search</h2>
-                </div>
-                <form>
+                <form id={"HotelSearchBar"}>
                     <label>
-                        Search:
-                        <input type="text" defaultValue={this.state.queryParams.q} name="q"/>
+                        Search Hotel:
+                        <Input type="search" defaultValue={this.state.queryParams.q} name="q"/>
                         <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
                         {/*why above is defaultValue and below is value?*/}
                         {/*if you use default value, everytime submit the form it never changes, */}
@@ -136,15 +133,14 @@ class Result extends React.Component {
                         {/*if you use value, it changes according to the url query params*/}
                         <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.loc}
                                name="loc"/>
-                        <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.locID}
+                        <input readOnly={true} style={{display: 'none'}} type="text"
+                               value={this.state.queryParams.locID}
                                name="locID"/>
 
                     </label>
-                    <input type="submit" value="Submit"/>
+                    <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
                 </form>
-                <p>search result test:</p>
-                {(this.state.searchDataLoaded)
-                    ?
+                {
                     (JSON.stringify(this.state.searchData) === '["empty"]'
                         || JSON.stringify(this.state.searchData) === '["no match"]'
                         || JSON.stringify(this.state.searchData) === '["page_exceeded"]'
@@ -153,21 +149,65 @@ class Result extends React.Component {
                         ?
                         <p>{this.state.searchData}</p>
                         :
-                        // JSON.stringify(this.state.searchData)
-                        this.state.searchData.map((hotel, i) =>
-                            // <p key={i}>{i}. {hotel}</p>
-                            <div key={i}>
-                                {/*Each child in a list should have a unique "key" prop.*/}
-                                <Link
-                                    to={{
-                                        pathname: "/hotel/" + {hotel}.hotel // replace by variable,
-                                    }}
-                                >{hotel}</Link>
-                            </div>
-                        )
-                    : <p></p>
+                        <ListGroup>
+                            {this.state.searchData.map((hotel, i) =>
+                                <ListGroupItem key={i}>
+                                    <div>
+                                        <div
+                                            style={{
+                                                "display": "flex",
+                                                "alignItems": "center",
+                                                "justifyContent": "center",
+                                                "flexDirection": "row",
+                                                "width": "100%"
+                                            }}
+                                        >
+                                            <div style={{"textAlign": "left"}}>
+                                                <img id={"img" + i}
+                                                     style={{"height": "200px", "width": "200px", "objectFit": "cover"}}
+                                                     src={hotel[4]}
+                                                     alt={"image of hotel ID " + hotel[0]}
+                                                     onError={() => document.getElementById("img" + i).src = errImg}
+                                                />
+                                            </div>
+                                            <div style={{
+                                                width: "100%"
+                                            }}>
+                                                <Card
+                                                    style={{
+                                                        height: '200px'
+                                                    }}
+                                                >
+                                                    <CardBody>
+                                                        <CardTitle tag="h5">
+                                                            {hotel[1]}
+                                                        </CardTitle>
+                                                        <CardSubtitle
+                                                            className="mb-2 text-muted"
+                                                            tag="h6"
+                                                        >
+                                                            {"Rating: " + hotel[2]}
+                                                        </CardSubtitle>
+                                                        <CardText>
+                                                            {"Address" + hotel[3]}
+                                                        </CardText>
+                                                        <Button href={"hotel/" + hotel[1]}>
+                                                            Book
+                                                        </Button>
+                                                    </CardBody>
+                                                </Card>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </ListGroupItem>
+                            )}
+                        </ListGroup>
+
                 }
-                <div>
+                <div style={{"textAlign": "center"}}>
                     <p></p>
                     <button
                         disabled={this.state.queryParams.page <= 1}

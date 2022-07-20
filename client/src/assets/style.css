@@ -2,6 +2,11 @@
     font-family: 'Courier New', monospace;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+}
+
 #welcome {
     width: 100%;
     text-align: left;
@@ -37,4 +42,9 @@
     border-radius: 5px;
     margin: 10px 0;
     cursor: pointer;
+}
+
+#HotelSearchBar {
+    text-align: center;
+    font-size: large;
 }

@@ -1,8 +1,168 @@
-{
-    "firstName": "splish",
-    "lastName": "splash",
-    "phoneNumber": "5544",
-    "emailAddress": "plip.plop@gmail.com",
-    "specialRequests": "water",
-    "creditCardNumber": "44556677"
-}
+[
+    {
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "5544",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "nah",
+        "creditCardNumber": "5544"
+    },
+    {
+        "firstName": "Splish",
+        "lastName": "splash",
+        "phoneNumber": "11223344",
+        "emailAddress": "plip.plop@gmail.com",
+        "specialRequests": "water",
+        "creditCardNumber": "55443322"
+    },
+    {
+        "firstName": "bleh",
+        "lastName": "blugh",
+        "phoneNumber": "54566",
+        "emailAddress": "lmao@hotmail.com",
+        "specialRequests": "potatoes",
+        "creditCardNumber": "ihiuhiu"
+    },
+    {
+        "firstName": "iu",
+        "lastName": "u",
+        "phoneNumber": "pou",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "uhp",
+        "creditCardNumber": "55"
+    },
+    {
+        "firstName": "Tim",
+        "lastName": "Louis",
+        "phoneNumber": "234723",
+        "emailAddress": "louis@gmail.com",
+        "specialRequests": "one more mattress",
+        "creditCardNumber": "24324"
+    },
+    {
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "90910599",
+        "emailAddress": "christy.lau599@gmail.com",
+        "specialRequests": "sd",
+        "creditCardNumber": "55",
+        "dateInput": "2022-07-21T16:00:00.000Z"
+    },
+    {
+        "firstName": "ij",
+        "lastName": "ij",
+        "phoneNumber": "5",
+        "emailAddress": "e@gmail.com",
+        "specialRequests": "asdf",
+        "creditCardNumber": "5",
+        "dateInput": "2022-07-26T16:00:00.000Z"
+    },
+    {
+        "firstName": "asdf",
+        "lastName": "sdf",
+        "phoneNumber": "33",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "d",
+        "creditCardNumber": "2",
+        "dateInput": "2022-07-26T16:00:00.000Z"
+    },
+    {
+        "firstName": "sgfd",
+        "lastName": "dfg",
+        "phoneNumber": "33",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "fg",
+        "creditCardNumber": "3",
+        "dateInput": "2022-07-26T16:00:00.000Z"
+    },
+    {
+        "firstName": "asdf",
+        "lastName": "dsf",
+        "phoneNumber": "23",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "sadf",
+        "creditCardNumber": "3",
+        "dateInput": "2022-07-25T16:00:00.000Z"
+    },
+    {
+        "firstName": "zxccv",
+        "lastName": "cv",
+        "phoneNumber": "e3",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "jij",
+        "creditCardNumber": "jnj",
+        "dateInput": "2022-07-26T16:00:00.000Z"
+    },
+    {
+        "firstName": "asdf",
+        "lastName": "asdf",
+        "phoneNumber": "21",
+        "emailAddress": "asfd@gmail.com",
+        "specialRequests": "masdf",
+        "creditCardNumber": "asfd",
+        "dateInput": "2022-07-30T16:00:00.000Z"
+    },
+    {
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "90910599",
+        "emailAddress": "sdfdlasf@gmail.com",
+        "specialRequests": "23",
+        "creditCardNumber": "asdf",
+        "dateInput": "2022-07-24T16:00:00.000Z"
+    },
+    {
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "55",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "asdf",
+        "creditCardNumber": "23",
+        "dateInput": "2022-07-27T16:00:00.000Z"
+    },
+    {
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "555",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "asdf",
+        "creditCardNumber": "33",
+        "dateInput": "2022-07-25T16:00:00.000Z"
+    },
+    {
+        "firstName": "hbh",
+        "lastName": "hbb",
+        "phoneNumber": "2",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "sdf",
+        "creditCardNumber": "212",
+        "dateInput": "2022-11-08T16:00:00.000Z"
+    },
+    {
+        "firstName": "asdf",
+        "lastName": "sfdfd",
+        "phoneNumber": "11",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "sdaf",
+        "creditCardNumber": "33",
+        "dateInput": "2022-11-02T16:00:00.000Z"
+    },
+    {
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "321",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "sdf",
+        "creditCardNumber": "33",
+        "dateInput": "2022-12-06T16:00:00.000Z"
+    },
+    {
+        "firstName": "sasdf",
+        "lastName": "asdf",
+        "phoneNumber": "32",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "asf",
+        "creditCardNumber": "3",
+        "dateInput": "2022-07-06"
+    }
+]
