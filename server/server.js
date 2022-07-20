@@ -62,7 +62,10 @@ const realJSON = {
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-app.get('/getprices', function(req, res){
+
+
+
+app.get('/hotelsprices_givendest', function(req, res){
 
 /*
     These are hardcoded for now, just to show the API works. Do use these things to figure out how to link to your side of 

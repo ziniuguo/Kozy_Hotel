@@ -1,34 +1,41 @@
 import React from "react";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 
 export default function BookingPage() {
 
-    const { register, formState: { errors }, handleSubmit, reset } = useForm();
+    const { control, register, formState: { errors }, handleSubmit, reset } = useForm();
 
     const onSubmit = async (data) => {
+        console.log(data.dateInput.getFullYear(), data.dateInput.getMonth() + 1, data.dateInput.getDate());
+        let formatMonth = `${data.dateInput.getMonth() + 1}`.length == 1? `0${data.dateInput.getMonth() + 1}`:`${data.dateInput.getMonth() + 1}`;
+        let formatDay = `${data.dateInput.getDate()}`.length == 1? `0${data.dateInput.getDate()}`: `${data.dateInput.getDate()}`;
+        data.dateInput = `${data.dateInput.getFullYear()}-${formatMonth}-${formatDay}`;
         console.log(data);
 
-        // const requestOptions = {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(data)
-        // }
-        // const response = await fetch('/booking', requestOptions)
-        // .catch((error) => {
-        //   console.log(error)
-        // });
-        // console.log("done")
-        // const jsonData = await response.json();
-        // console.log(jsonData);
-
-        const response = await fetch('/getprices')
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }
+        const response = await fetch('/booking', requestOptions)
         .catch((error) => {
           console.log(error)
         });
         console.log("done")
         const jsonData = await response.json();
         console.log(jsonData);
+
+
+        // const response = await fetch('/hotelsprices_givendest')
+        // .catch((error) => {
+        //   console.log(error)
+        // });
+        // console.log("done")
+        // const jsonData = await response.json();
+        // console.log(jsonData);
 
 
         alert("Booking confirmed! Enjoy your trip!");
@@ -55,6 +62,20 @@ export default function BookingPage() {
 
           <br/><input type="password" placeholder="Credit Card Number" {...register("creditCardNumber", {required: true, maxLength: 16})} /><br/>
           {errors.creditCardNumber && <p>Credit card number is required<br/></p>}
+          <br/>
+
+          <Controller
+            control={control}
+            name='dateInput'
+            render={({field}) => (
+              <DatePicker
+                placeholderText="Select start date"
+                onChange={(date) => field.onChange(date)}
+                selected={field.value}
+              />
+            )}
+          />
+          <br/>
 
     
           <input type="submit" />
