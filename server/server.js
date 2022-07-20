@@ -1,9 +1,11 @@
 const http = require('http');
 const express = require('express');
+const axios = require('axios');
 const WebSocket = require('ws');
 const app = express();
 const cors = require('cors');
 const fs = require('fs');
+const e = require("express");
 const RsBU = JSON.parse(fs.readFileSync('destination_RsBU.json'))
 const WDOM = JSON.parse(fs.readFileSync('destination_WD0M.json'))
 const EzoR = JSON.parse(fs.readFileSync('destination_EzoR.json'))
@@ -12,72 +14,25 @@ const hotels_my = JSON.parse(fs.readFileSync('hotels_my.json'))
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
-const realJSON = {
-    "hotel one": {
-        "hotel_id": "1004890",
-        "location": "Singapore"
-    },
-    "hotel two": {
-        "hotel_id": "1005604",
-        "location": "Singapore"
-    },
-    "hotel three": {
-        "hotel_id": "1004891",
-        "location": "Malaysia"
-    },
-    "hotel four": {
-        "hotel_id": "1004894",
-        "location": "Thailand"
-    },
-    "hotel five": {
-        "hotel_id": "1004895",
-        "location": "Malaysia"
-    },
-    "hotel six": {
-        "hotel_id": "1004896",
-        "location": "Thailand"
-    },
-    "hotel seven": {
-        "hotel_id": "1004897",
-        "location": "Thailand"
-    },
-    "SUTD Hostel": {
-        "hotel_id": "1008888",
-        "location": "Singapore"
-    }
-}
-
-// let bookedJSON = {
-//     bookedRoom: {
-//         "1004890": {
-//             name: "CatRoll",
-//             phone: "81770190",
-//             email: "guo.ziniu.1003@gmail.com"
-//         },
-//     }
-// }
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-app.post('/booking', function(req, res){
+app.post('/booking', function (req, res) {
     let myJson = req.body;
     console.log('received!');
     fs.readFile('bookings.json', 'utf8', function readFileCallback(err, data) {
-        if (err){
+        if (err) {
             console.log(err);
-        }
-        else{
-            fs.writeFile('bookings.json', JSON.stringify(myJson, null, 4), 'utf8', function(err){
-                if(err) throw err;
+        } else {
+            fs.writeFile('bookings.json', JSON.stringify(myJson, null, 4), 'utf8', function (err) {
+                if (err) throw err;
                 console.log("writing done.");
             });
-    
-    
+
+
         }
     });
-
 
 
     res.send(myJson);
@@ -87,9 +42,9 @@ app.post('/booking', function(req, res){
 app.get("/hotel/:hotelName", (req, res) => {
     let keyword = req.url.split('/').pop().split('%20').join(' ').split('+').join(' ');
     console.log(keyword)
-    let result =[];
-    for(let i=0; i<hotels_sg.length; i++){
-        if(keyword === hotels_sg[i]["name"]){
+    let result = [];
+    for (let i = 0; i < hotels_sg.length; i++) {
+        if (keyword === hotels_sg[i]["name"]) {
             result.push(hotels_sg[i]["latitude"])
             result.push(hotels_sg[i]["longitude"])
             result.push(hotels_sg[i]["address"])
@@ -98,9 +53,9 @@ app.get("/hotel/:hotelName", (req, res) => {
             result.push(hotels_sg[i]["amenities"])
         }
     }
-    if(result.length===0){
-        for(let i=0; i<hotels_my.length; i++){
-            if(keyword === hotels_my[i]["name"]){
+    if (result.length === 0) {
+        for (let i = 0; i < hotels_my.length; i++) {
+            if (keyword === hotels_my[i]["name"]) {
                 result.push(hotels_my[i]["latitude"])
                 result.push(hotels_my[i]["longitude"])
                 result.push(hotels_my[i]["address"])
@@ -114,47 +69,28 @@ app.get("/hotel/:hotelName", (req, res) => {
     res.json(result)
 })
 
-app.get("/search", (req, res) => {
-
+app.get("/search", async (req, res) => {
     if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("locID")) {
         let pageNo;
         let itemPerPage = 5;
         let result = [];
+        let apiResult;
         const keyword = req.query.q;
-        let idList = [];
-        if (req.query.locID === "RsBU") { // Singapore
-            for (let i = 0; i < RsBU["hotels"].length; i++) {
-                idList.push(RsBU["hotels"][i]["id"]);
-            }
-            for (let i = 0; i < hotels_sg.length; i++) {
-                if (idList.includes(hotels_sg[i]["id"])
-                    && hotels_sg[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
-                    result[[hotels_sg[i]["name"]]] = [hotels_sg[i]["id"], hotels_sg[i]["cloudflare_image_url"] + "/" + hotels_sg[i]["id"] + "/i" + hotels_sg[i]["default_image_index"] + ".jpg"];
-                }
-            }
-        } else if (req.query.locID === "WD0M") { // C airport
-            for (let i = 0; i < WDOM["hotels"].length; i++) {
-                idList.push(WDOM["hotels"][i]["id"]);
-            }
-            for (let i = 0; i < hotels_sg.length; i++) {
-                if (idList.includes(hotels_sg[i]["id"])
-                    && hotels_sg[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
-                    result[[hotels_sg[i]["name"]]] = [hotels_sg[i]["id"], hotels_sg[i]["cloudflare_image_url"] + "/" + hotels_sg[i]["id"] + "/i" + hotels_sg[i]["default_image_index"] + ".jpg"];
-                }
-            }
-        } else if (req.query.locID === "EzoR") { // my
-            for (let i = 0; i < EzoR["hotels"].length; i++) {
-                idList.push(EzoR["hotels"][i]["id"]);
-            }
-            for (let i = 0; i < hotels_my.length; i++) {
-                if (idList.includes(hotels_my[i]["id"])
-                    && hotels_my[i]["name"].toUpperCase().includes(keyword.toUpperCase())) {
-                    result[[hotels_my[i]["name"]]] = [hotels_my[i]["id"], hotels_my[i]["cloudflare_image_url"] + "/" + hotels_my[i]["id"] + "/i" + hotels_my[i]["default_image_index"] + ".jpg"];
-                }
-            }
-        } else { // no match
-
+        const getOptions = {
+            url: 'https://hotelapi.loyalty.dev/api/hotels?' + new URLSearchParams({
+                destination_id: req.query.locID,
+            }),
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
         }
+        await axios(getOptions)
+            .then(response => {
+                apiResult = response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        result = apiResult.map(e => [e["id"], e["name"], e["rating"], e["address"], e["cloudflare_image_url"] + "/" + e["id"] + "/i" + e["default_image_index"] + ".jpg"])
         pageNo = Math.ceil(Object.keys(result).length / itemPerPage);
         if (pageNo === 0) {
             res.json(["no match", 1]);
@@ -163,9 +99,9 @@ app.get("/search", (req, res) => {
             if (reqPage <= pageNo && reqPage >= 1) {
                 let currPage = Object.entries(result)
                     .slice((reqPage - 1) * itemPerPage, itemPerPage * reqPage)
-                    // .map(entry => entry[0]);
+                    .map(entry => entry[1]); // 如果不加这行 前面会自动加个参数 因为他好像是要json object, idk why
                 currPage.push(pageNo);
-                // console.log(currPage)
+                console.log(currPage)
                 res.json(currPage);
             } else {
                 res.json(["page_exceeded", 1]);

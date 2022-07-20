@@ -1,4 +1,21 @@
-const fs = require('fs');
-const hotel = JSON.parse(fs.readFileSync('destination_WD0M.json'))
+const axios = require('axios');
 
-console.log(hotel)
+let tryURL = 'https://hotelapi.loyalty.dev/api/hotels?' + new URLSearchParams({
+    destination_id: "RsBU",
+
+})
+console.log(tryURL);
+const getOptions = {
+    url: tryURL,
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+}
+axios(getOptions)
+    .then(response => {
+        console.log("It's done!");
+        console.log(JSON.stringify(response.data));
+
+    })
+    .catch((error) => {
+        console.log(error);
+    });

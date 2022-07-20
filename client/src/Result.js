@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import qs from 'query-string';
 import {Autocomplete, TextField} from "@mui/material";
 import errImg from './assets/error-image-generic.png';
-import {Button, Input} from "reactstrap";
+import {Button, Card, CardBody, CardSubtitle, CardText, CardTitle, Input, ListGroup, ListGroupItem} from "reactstrap";
 
 const socket = new WebSocket('ws://localhost:5000')
 
@@ -140,7 +140,6 @@ class Result extends React.Component {
                     </label>
                     <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
                 </form>
-                <p>search result:</p>
                 {
                     (JSON.stringify(this.state.searchData) === '["empty"]'
                         || JSON.stringify(this.state.searchData) === '["no match"]'
@@ -150,27 +149,65 @@ class Result extends React.Component {
                         ?
                         <p>{this.state.searchData}</p>
                         :
-                        this.state.searchData.map((hotel, i) =>
-                            <div key={i}>
+                        <ListGroup>
+                            {this.state.searchData.map((hotel, i) =>
+                                <ListGroupItem key={i}>
+                                    <div>
+                                        <div
+                                            style={{
+                                                "display": "flex",
+                                                "alignItems": "center",
+                                                "justifyContent": "center",
+                                                "flexDirection": "row",
+                                                "width": "100%"
+                                            }}
+                                        >
+                                            <div style={{"textAlign": "left"}}>
+                                                <img id={"img" + i}
+                                                     style={{"height": "200px", "width": "200px", "objectFit": "cover"}}
+                                                     src={hotel[4]}
+                                                     alt={"image of hotel ID " + hotel[0]}
+                                                     onError={() => document.getElementById("img" + i).src = errImg}
+                                                />
+                                            </div>
+                                            <div style={{
+                                                width: "100%"
+                                            }}>
+                                                <Card
+                                                    style={{
+                                                        height: '200px'
+                                                    }}
+                                                >
+                                                    <CardBody>
+                                                        <CardTitle tag="h5">
+                                                            {hotel[1]}
+                                                        </CardTitle>
+                                                        <CardSubtitle
+                                                            className="mb-2 text-muted"
+                                                            tag="h6"
+                                                        >
+                                                            {"Rating: " + hotel[2]}
+                                                        </CardSubtitle>
+                                                        <CardText>
+                                                            {"Address" + hotel[3]}
+                                                        </CardText>
+                                                        <Button href={"hotel/" + hotel[1]}>
+                                                            Book
+                                                        </Button>
+                                                    </CardBody>
+                                                </Card>
+                                            </div>
 
-                                <img id={"img" + i}
-                                    style={{"height": "100px", "width": "100px", "objectFit": "cover"}}
-                                    src={hotel[1][1]}
-                                    alt={"image of hotel ID " + hotel[1][0]}
-                                    onError={() => document.getElementById("img"+i).src=errImg}
-                                />
 
+                                        </div>
+                                    </div>
 
-                                <Link
+                                </ListGroupItem>
+                            )}
+                        </ListGroup>
 
-                                    to={{
-                                        pathname: "/hotel/" + hotel[0] // replace by variable,
-                                    }}
-                                >{hotel[0]}</Link>
-                            </div>
-                        )
                 }
-                <div>
+                <div style={{"textAlign": "center"}}>
                     <p></p>
                     <button
                         disabled={this.state.queryParams.page <= 1}
