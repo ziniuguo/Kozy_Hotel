@@ -15,17 +15,14 @@ class MainPage extends React.Component {
                         <div id={"welcomeDesc"}>
                             Book for your travel anywhere
                         </div>
-                        <Link to="/search?q=&page=1&loc=Singapore%2C+Singapore&locID=RsBU">
-                            <button id={"mainPageBtn"}>
-                                Book&nbsp;Now
-                            </button>
-                        </Link>
+                        <button id={"mainPageBtn"}
+                                onClick={() => window.open("/search?q=&page=1&loc=Singapore%2C+Singapore&locID=RsBU", "_self")}>
+                            Book&nbsp;Now
+                        </button>
+
+
                     </div>
                 </div>
-                <div>
-                    About us: we are something something
-                </div>
-
             </div>
 
         )
