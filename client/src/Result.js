@@ -191,7 +191,7 @@ class Result extends React.Component {
                                                         <CardText>
                                                             {"Address" + hotel[3]}
                                                         </CardText>
-                                                        <Button href={"hotel/" + hotel[1]}>
+                                                        <Button href={"hotel/" + "qO6Y"}>
                                                             Book
                                                         </Button>
                                                     </CardBody>

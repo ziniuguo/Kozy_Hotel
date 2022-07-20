@@ -102,32 +102,62 @@ app.post('/booking', function (req, res) {
 });
 
 
-app.get("/hotel/:hotelName", (req, res) => {
-    let keyword = req.url.split('/').pop().split('%20').join(' ').split('+').join(' ');
-    console.log(keyword)
-    let result = [];
-    for (let i = 0; i < hotels_sg.length; i++) {
-        if (keyword === hotels_sg[i]["name"]) {
-            result.push(hotels_sg[i]["latitude"])
-            result.push(hotels_sg[i]["longitude"])
-            result.push(hotels_sg[i]["address"])
-            result.push(hotels_sg[i]["rating"])
-            result.push(hotels_sg[i]["description"])
-            result.push(hotels_sg[i]["amenities"])
-        }
+// app.get("/hotel/:hotelName", (req, res) => {
+//     let keyword = req.url.split('/').pop().split('%20').join(' ').split('+').join(' ');
+//     console.log(keyword)
+//     let result = [];
+//     for (let i = 0; i < hotels_sg.length; i++) {
+//         if (keyword === hotels_sg[i]["name"]) {
+//             result.push(hotels_sg[i]["latitude"])
+//             result.push(hotels_sg[i]["longitude"])
+//             result.push(hotels_sg[i]["address"])
+//             result.push(hotels_sg[i]["rating"])
+//             result.push(hotels_sg[i]["description"])
+//             result.push(hotels_sg[i]["amenities"])
+//         }
+//     }
+//     if (result.length === 0) {
+//         for (let i = 0; i < hotels_my.length; i++) {
+//             if (keyword === hotels_my[i]["name"]) {
+//                 result.push(hotels_my[i]["latitude"])
+//                 result.push(hotels_my[i]["longitude"])
+//                 result.push(hotels_my[i]["address"])
+//                 result.push(hotels_my[i]["rating"])
+//                 result.push(hotels_my[i]["description"])
+//                 result.push(hotels_my[i]["amenities"])
+//             }
+//         }
+//     }
+//     console.log(result)
+//     res.json(result)
+// })
+
+app.get("/hotel/:hotelName", async function(req, res) {
+    let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/' + req.url.split('/').pop();
+    let apiResult;
+    let result =[];
+    console.log(tryURL)
+    const getOptions = {
+        url: tryURL,
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
     }
-    if (result.length === 0) {
-        for (let i = 0; i < hotels_my.length; i++) {
-            if (keyword === hotels_my[i]["name"]) {
-                result.push(hotels_my[i]["latitude"])
-                result.push(hotels_my[i]["longitude"])
-                result.push(hotels_my[i]["address"])
-                result.push(hotels_my[i]["rating"])
-                result.push(hotels_my[i]["description"])
-                result.push(hotels_my[i]["amenities"])
-            }
-        }
-    }
+    
+    await axios(getOptions)
+    .then(response => {
+        apiResult = response.data;
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+    result.push(apiResult["name"])
+    result.push(apiResult["latitude"])
+    result.push(apiResult["longitude"])
+    result.push(apiResult["address"])
+    result.push(apiResult["rating"])
+    result.push(apiResult["description"])
+    result.push(apiResult["cloudflare_image_url"] + "/" + apiResult["id"] + "/i")
+    result.push(apiResult["number_of_images"])
     console.log(result)
     res.json(result)
 })
