@@ -1,12 +1,24 @@
 import React from "react";
-import parse from "html-react-parser"
+import parse from "html-react-parser";
+import "./RoomDetail.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import coverImg from "./assets/coverImg.jpg";
+import testImg1 from "./assets/test1.jpg" ;
+import testImg2 from "./assets/test2.jpg" 
+import testImg3 from "./assets/EVA.jfif" 
 // function NewlineText(props){
 //     const text=props.text;
 //     return text.split("\n").map(str=><div>{str}</div>);
 // }
-class RoomDetail extends React.Component {
-    
 
+class RoomDetail extends React.Component {
+    state = {
+        display: true,
+        width: 200,
+        height:200,
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -73,18 +85,63 @@ class RoomDetail extends React.Component {
     }
 
     render() {
+        const settings = {
+            dots: true,
+            infinite: true,
+            fade: true,
+            speed: 500,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+        };
         return (
-            <div 
-            style={{ height: 100 + 'vh', width: '100%' }}
-            >
-                
-                <iframe
-                src={this.state.mapsrc}
-                width={600} height={450} style={{border:0}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade">
-                </iframe>
+            <div style={{ 
+                height: 120 + 'vh', 
+                width: '100%',
+                }}>
+
+                {/* <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+                className="ImgContainer">
+                <img className = "Cover" src={coverImg} alt="test"/>
+                </div> */}
+
+                <div className="float-container"
+                style={{
+                    // backgroundImage: 'url('+coverImg+')',
+                    backgroundSize: "cover",
+                    height: "200vh",
+                    // color: "#f5f5f5"
+                    }}>
+
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"}}
+                    >
+                <h1>Welcome to {window.location.pathname.split('/').pop().split('%20').join(' ').split('+').join(' ')}</h1>
+                </div>
                 <div>
+                    <Slider {...settings}>
+                    <div>
+                        <h3><img className = "Cover" src={coverImg} alt="test"/></h3>
+                    </div>
+                    <div>
+                        <h3><img className = "Cover" src={testImg1} alt="test1"/></h3>
+                    </div>
+                    <div>
+                        <h3><img className = "Cover" src={testImg2} alt="test2"/></h3>
+                    </div>
+                    <div>
+                        <h3><img className = "Cover" src={testImg3} alt="test3"/></h3>
+                    </div>
+                    </Slider>
+                </div>
+
+                <div className="Info" >
                     {/*replace %20 and + by space. */}
-                    <div><h1>Welcome to {window.location.pathname.split('/').pop().split('%20').join(' ').split('+').join(' ')}</h1></div>
                     <br/>
                     <div><b>Address:</b> {this.state.address}</div>
                     <br/>
@@ -102,7 +159,7 @@ class RoomDetail extends React.Component {
                             <div>Room type: {room.type}</div>
                             <div>Room price: {room.price}</div>
                             <div>
-                                <button
+                                <button className = "btn-custom"
                                 // disabled={}
                                 onClick={() => window.open("/booking/"+window.location.pathname.split('/').pop(),"_self")}>Book Now
                                 </button>
@@ -111,7 +168,14 @@ class RoomDetail extends React.Component {
                     ))}
 
                 </div>
-                
+                <div  className="Map">
+                <div><h3>Location on Google Map</h3></div>
+                <iframe
+                src={this.state.mapsrc}
+                height={450} style={{ width: '100%',border:0}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade">
+                </iframe>
+                </div>
+                </div>
                 <div>
                     {/* next step: if user input room name manually, retrieve from server, server will respond (404 or have) */}
                 </div>
