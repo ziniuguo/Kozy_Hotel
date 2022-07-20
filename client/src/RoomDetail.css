@@ -1,0 +1,45 @@
+body {
+    background-color: #ffffff;
+    color: black;
+    /* padding: 200px; */
+    font-family: Arial;
+    /* text-align: center; */
+  }
+.float-container {
+    border: 0px solid #fff;
+    padding: 0px;
+}
+
+
+.Info {
+    width: 35%;
+    float: left;
+    margin-left:250px;
+    /* padding: 150px; */
+    border: 0px solid red;
+}  
+.Map {
+    width: 35%;
+    float: left;
+    margin-top: 100px;
+    margin-left:50px;
+    margin-right:250px;
+    /* padding: 150px; */
+    border: 0px solid red;
+}  
+
+.btn-custom {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-family: cursive;
+    font-size: 1em;
+}
+
+.ImgContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
