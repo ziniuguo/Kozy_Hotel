@@ -12,14 +12,14 @@ body {
 
 
 .Info {
-    width: 35%;
+    width: 30%;
     float: left;
     margin-left:250px;
     /* padding: 150px; */
     border: 0px solid red;
 }  
 .Map {
-    width: 35%;
+    width: 30%;
     float: left;
     margin-top: 100px;
     margin-left:50px;
@@ -37,9 +37,46 @@ body {
     font-size: 1em;
 }
 
-.ImgContainer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.center-image{
+    display:flex;
+    justify-content:center; 
+    /* horizontally center */
+    align-items:center;    
+    /* vertically center */
+    position:relative;
+    height:700px;
+    width:1000px;
+}
+.center-image img{
+    max-width:100%;
+    max-height:100%;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+.roomInfo {
+    width: 100%;
+    float: left;
+    margin-left:250px;
+    /* padding: 150px; */
+    border: 0px solid red;
+}  
+.centerLoc{
+    display:flex;
+    justify-content:center; 
+    /* horizontally center */
+    align-items:center;    
+    /* vertically center */
+    width: "100%"
+}
+
+.roomBooking{
+    display:flex;
+    justify-content:center; 
+    /* horizontally center */
+    align-items:center;    
+    /* vertically center */
+    width: "500px"
 }
 
