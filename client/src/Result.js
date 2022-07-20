@@ -4,30 +4,46 @@ import qs from 'query-string';
 import {Autocomplete, TextField} from "@mui/material";
 import errImg from './assets/error-image-generic.png';
 import {Button, Card, CardBody, CardSubtitle, CardText, CardTitle, Input, ListGroup, ListGroupItem} from "reactstrap";
+import Ratings from "react-ratings-declarative/build/ratings";
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
 const socket = new WebSocket('ws://localhost:5000')
 
+
+function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+}
+
+function formatDate(date) {
+    return [
+        date.getFullYear(),
+        padTo2Digits(date.getMonth() + 1),
+        padTo2Digits(date.getDate()),
+    ].join('-');
+}
 
 class Result extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            destinations: [
-                // 'Singapore',
-                // 'Malaysia',
-                // 'Thailand'
-            ],
-            // term, uid, lat, lng, type, state
-            searchData: [],
-            queryParams: {q: "", page: 1, loc: "Singapore%2C+Singapore", locID: "RsBU"},
+            destinations: [],
+            searchData: ["loading..."],
+            queryParams: {
+                q: "", page: 1, loc: "", locID: "",
+                checkin: "", checkout: "", guests: ""
+            },
             pageNo: 1,
             locValue: "",
             locID: "",
-            locInputValue: ""
+            locInputValue: "",
+            date1: new Date(),
+            date2: new Date(),
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         socket.onmessage = async ev => {
             console.log(JSON.parse(ev.data).length);
             await this.setState({
@@ -40,7 +56,13 @@ class Result extends React.Component {
             this.setState({
                 queryParams: qs.parse(window.location.search),
                 locValue: qs.parse(window.location.search).loc,
-                locID: qs.parse(window.location.search).locID
+                locID: qs.parse(window.location.search).locID,
+                date1: new Date(qs.parse(window.location.search).checkin.split('-')[0],
+                    qs.parse(window.location.search).checkin.split('-')[1] - 1,
+                    qs.parse(window.location.search).checkin.split('-')[2]),
+                date2: new Date(qs.parse(window.location.search).checkout.split('-')[0],
+                    qs.parse(window.location.search).checkout.split('-')[1] - 1,
+                    qs.parse(window.location.search).checkout.split('-')[2]),
             });
             fetch("/search" + window.location.search)
                 .then(response => response.json())
@@ -58,9 +80,21 @@ class Result extends React.Component {
         if (Object.hasOwnProperty.bind(this.state.queryParams)('q') &&
             Object.hasOwnProperty.bind(this.state.queryParams)('page')) {
             if (i === 1) {
-                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1) + "&loc=" + this.state.queryParams.loc + "&locID=" + this.state.queryParams.locID);
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) + 1)
+                    + "&loc=" + this.state.queryParams.loc
+                    + "&locID=" + this.state.queryParams.locID
+                    + "&checkin=" + this.state.queryParams.checkin
+                    + "&checkout=" + this.state.queryParams.checkout
+                    + "&guests=" + this.state.queryParams.guests
+                );
             } else {
-                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1) + "&loc=" + this.state.queryParams.loc + "&locID=" + this.state.queryParams.locID);
+                return ('?q=' + this.state.queryParams.q + '&page=' + (parseInt(this.state.queryParams.page, 10) - 1)
+                    + "&loc=" + this.state.queryParams.loc
+                    + "&locID=" + this.state.queryParams.locID
+                    + "&checkin=" + this.state.queryParams.checkin
+                    + "&checkout=" + this.state.queryParams.checkout
+                    + "&guests=" + this.state.queryParams.guests
+                );
             }
         } else {
             return window.location.search;
@@ -74,6 +108,8 @@ class Result extends React.Component {
             ws.addEventListener('open', () => this.handleSocketSend(ws, msg))
         }
     }
+
+
 
     render() {
         return (
@@ -90,6 +126,12 @@ class Result extends React.Component {
                                value={this.state.locValue} name="loc"/>
                         <input readOnly={true} style={{display: 'none'}} type="text"
                                value={this.state.locID} name="locID"/>
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.checkin}
+                               name={"checkin"}/>
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.checkout}
+                               name={"checkout"}/>
+                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.guests}
+                               name={"guests"}/>
                     </form>
                     <Autocomplete
                         loading={true}
@@ -123,21 +165,48 @@ class Result extends React.Component {
 
                 </div>
                 <form id={"HotelSearchBar"}>
-                    <label>
-                        Search Hotel:
-                        <Input type="search" defaultValue={this.state.queryParams.q} name="q"/>
-                        <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
-                        {/*why above is defaultValue and below is value?*/}
-                        {/*if you use default value, everytime submit the form it never changes, */}
-                        {/*as it is fixed as the initial value in this.state.*/}
-                        {/*if you use value, it changes according to the url query params*/}
-                        <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.loc}
-                               name="loc"/>
-                        <input readOnly={true} style={{display: 'none'}} type="text"
-                               value={this.state.queryParams.locID}
-                               name="locID"/>
-
-                    </label>
+                    <label
+                        style={{display: 'none'}} // temporarily remove search by keyword
+                    >Search Hotel:</label>
+                    <Input
+                        style={{display: 'none'}} // temporarily remove search by keyword
+                        type="search" defaultValue={this.state.queryParams.q} name="q"/>
+                    <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
+                    <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.loc}
+                           name="loc"/>
+                    <input readOnly={true} style={{display: 'none'}} type="text"
+                           value={this.state.queryParams.locID}
+                           name="locID"/>
+                    <label>Check-in Date:</label>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            label="Check-in Date"
+                            value={this.state.date1}
+                            onChange={(newValue) => {
+                                this.setState({
+                                    date1: newValue,
+                                })
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date1)} name="checkin"/>
+                    <label>Check-out Date:</label>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            label="Check-out Date"
+                            value={this.state.date2}
+                            onChange={(newValue) => {
+                                this.setState({
+                                    date2: newValue,
+                                })
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date2)} name="checkout"/>
+                    <label>No. of Guests:</label>
+                    <Input type="text" defaultValue={this.state.queryParams.guests} name="guests"/>
                     <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
                 </form>
                 {
@@ -145,6 +214,7 @@ class Result extends React.Component {
                         || JSON.stringify(this.state.searchData) === '["no match"]'
                         || JSON.stringify(this.state.searchData) === '["page_exceeded"]'
                         || JSON.stringify(this.state.searchData) === '["undefined_query_params"]'
+                        || JSON.stringify(this.state.searchData) === '["loading..."]'
                     )
                         ?
                         <p>{this.state.searchData}</p>
@@ -186,22 +256,32 @@ class Result extends React.Component {
                                                             className="mb-2 text-muted"
                                                             tag="h6"
                                                         >
-                                                            {"Rating: " + hotel[2]}
+                                                            {"S$: " + hotel[2]}
+                                                            <br/>
+                                                            <Ratings
+                                                                widgetDimensions="20px"
+                                                                widgetSpacings="0px"
+                                                                rating={hotel[5]}
+                                                                // widgetRatedColors="blue"
+                                                            >
+                                                                <Ratings.Widget/>
+                                                                <Ratings.Widget/>
+                                                                <Ratings.Widget/>
+                                                                <Ratings.Widget/>
+                                                                <Ratings.Widget/>
+                                                            </Ratings>
                                                         </CardSubtitle>
                                                         <CardText>
-                                                            {"Address" + hotel[3]}
+                                                            {"Address: " + hotel[3]}
                                                         </CardText>
-                                                        <Button href={"hotel/" + hotel[1]}>
+                                                        <Button href={"hotel/" + hotel[0]}>
                                                             Book
                                                         </Button>
                                                     </CardBody>
                                                 </Card>
                                             </div>
-
-
                                         </div>
                                     </div>
-
                                 </ListGroupItem>
                             )}
                         </ListGroup>
