@@ -1,6 +1,17 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import './assets/style.css'
+
+function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+}
+
+function formatDate(date) {
+    return [
+        date.getFullYear(),
+        padTo2Digits(date.getMonth() + 1),
+        padTo2Digits(date.getDate()),
+    ].join('-');
+}
 
 class MainPage extends React.Component {
 
@@ -16,7 +27,11 @@ class MainPage extends React.Component {
                             Book for your travel anywhere
                         </div>
                         <button id={"mainPageBtn"}
-                                onClick={() => window.open("/search?q=&page=1&loc=Singapore%2C+Singapore&locID=RsBU&checkin=2022-07-20&checkout=2022-07-22&guests=2", "_self")}>
+                                onClick={() => window.open("/search?q=&page=1&loc=Singapore%2C+Singapore&locID=RsBU&checkin=" +
+                                    formatDate(new Date()) +
+                                    "&checkout=" +
+                                    formatDate(new Date((new Date()).valueOf() + 1000 * 3600 * 24)) +
+                                    "&guests=2", "_self")}>
                             Book&nbsp;Now
                         </button>
 

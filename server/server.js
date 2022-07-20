@@ -4,11 +4,7 @@ const axios = require('axios');
 const WebSocket = require('ws');
 const app = express();
 const fs = require('fs');
-const {satisfies} = require("nodemon/lib/utils");
 
-
-const hotels_sg = JSON.parse(fs.readFileSync('hotels_sg.json'))
-const hotels_my = JSON.parse(fs.readFileSync('hotels_my.json'))
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
@@ -129,24 +125,24 @@ app.post('/booking', function (req, res) {
 //     res.json(result)
 // })
 
-app.get("/hotel/:hotelName", async function(req, res) {
+app.get("/hotel/:hotelName", async function (req, res) {
     let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/' + req.url.split('/').pop();
     let apiResult;
-    let result =[];
+    let result = [];
     console.log(tryURL)
     const getOptions = {
         url: tryURL,
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
     }
-    
+
     await axios(getOptions)
-    .then(response => {
-        apiResult = response.data;
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+        .then(response => {
+            apiResult = response.data;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     result.push(apiResult["name"])
     result.push(apiResult["latitude"])
     result.push(apiResult["longitude"])
@@ -189,7 +185,7 @@ app.get("/search", async (req, res) => {
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
         }
-        while (!searchComplete && searchTime <= 6) {
+        while (!searchComplete && searchTime <= 10) {
             console.log("=== searching ===")
             console.log(searchTime + " times")
             await axios(getOptions)
@@ -198,17 +194,23 @@ app.get("/search", async (req, res) => {
                 })
                 .catch((error) => {
                     console.log("error @ getting hotel ID by filters");
-                    searchComplete = true;
+                    searchTime += 1;
                 });
-            if (apiResult["hotels"].length !== 0) {
-                console.log("got hotel list! length: " + apiResult["hotels"].length)
-                searchComplete = true;
-            } else {
+            if (typeof apiResult === 'undefined' || apiResult["hotels"].length === 0) {
                 console.log("empty hotel list...")
                 searchTime += 1;
+            } else {
+                console.log("got hotel list! length: " + apiResult["hotels"].length)
+                searchComplete = true;
+                // searchTime += 1;
             }
         }
-        result = apiResult["hotels"]
+        if (searchComplete) {
+            result = apiResult["hotels"];
+        } else {
+            result = [];
+        }
+
         pageNo = Math.ceil(Object.keys(result).length / itemPerPage);
         if (pageNo === 0) {
             console.log("no match")
@@ -222,31 +224,52 @@ app.get("/search", async (req, res) => {
                 // 前面只记录id不处理，在这再处理数据
                 currPageRawData = currPageRawData.map(e => [e["id"], e["lowest_price"] + " - " + e["price"]])
                 let resResult = []
-                for (let i = 0; i < currPageRawData.length; i++) {
+                for (let i = 0;
+                     i < itemPerPage;
+                     // namely currPageRawData.length
+                     i++) {
                     let currID = currPageRawData[i][0];
                     let opt = {
                         url: "https://hotelapi.loyalty.dev/api/hotels/" + currID,
                         method: 'GET',
                         headers: {'Content-Type': 'application/json'},
                     }
-                    await axios(opt)
-                        .then(response => {
-                            let currResult = [];
-                            currResult.push(currID);
-                            currResult.push(response.data["name"])
-                            currResult.push([currPageRawData[i][1]]) // price
-                            currResult.push(response.data["address"])
-                            currResult.push(response.data["cloudflare_image_url"] + "/" + response.data["id"] + "/i" + response.data["default_image_index"] + ".jpg")
-                            currResult.push(response.data["rating"])
-                            resResult.push(currResult)
-                        })
-                        .catch((error) => {
-                            console.log("error @ getting hotel detail by ID");
-                        });
+                    let loadComplete = false;
+                    let loadTime = 0;
+                    while (!loadComplete && loadTime <= 10) {
+                        await axios(opt)
+                            .then(response => {
+                                let currResult = [];
+                                currResult.push(currID);
+                                currResult.push(response.data["name"])
+                                currResult.push([currPageRawData[i][1]]) // price
+                                currResult.push(response.data["address"])
+                                currResult.push(response.data["cloudflare_image_url"] + "/" + response.data["id"] + "/i" + response.data["default_image_index"] + ".jpg")
+                                currResult.push(response.data["rating"])
+                                resResult.push(currResult)
+                            })
+                            .catch((error) => {
+                                console.log("error @ getting hotel detail by ID");
+                                loadTime += 1;
+                            });
+                        if (typeof resResult === 'undefined' || resResult.length === 0) {
+                            console.log("wrong")
+                            loadTime += 1;
+                        } else {
+                            console.log("get detail by id success! length: " + resResult.length)
+                            loadComplete = true;
+                        }
+                    }
                 }
-                resResult.push(pageNo);
-                // console.log(resResult)
-                res.json(resResult);
+                if (resResult.length === itemPerPage) {
+                    resResult.push(pageNo);
+                    res.json(resResult);
+                } else {
+                    console.log("error_loading_detail_by_ID");
+                    res.json(["error_loading_detail_by_ID", 1]);
+                }
+
+
             } else {
                 res.json(["page_exceeded", 1]);
             }
