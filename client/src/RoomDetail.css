@@ -1,10 +1,4 @@
-body {
-    background-color: #ffffff;
-    color: black;
-    /* padding: 200px; */
-    font-family: Arial;
-    /* text-align: center; */
-  }
+
 .float-container {
     border: 0px solid #fff;
     padding: 0px;
@@ -17,7 +11,7 @@ body {
     margin-left:250px;
     /* padding: 150px; */
     border: 0px solid red;
-}  
+}
 .Map {
     width: 30%;
     float: left;
@@ -26,7 +20,7 @@ body {
     margin-right:250px;
     /* padding: 150px; */
     border: 0px solid red;
-}  
+}
 
 .btn-custom {
     color: rgb(0, 0, 0);
@@ -39,9 +33,9 @@ body {
 
 .center-image{
     display:flex;
-    justify-content:center; 
+    justify-content:center;
     /* horizontally center */
-    align-items:center;    
+    align-items:center;
     /* vertically center */
     position:relative;
     height:700px;
@@ -61,22 +55,22 @@ body {
     margin-left:250px;
     /* padding: 150px; */
     border: 0px solid red;
-}  
+}
 .centerLoc{
     display:flex;
-    justify-content:center; 
+    justify-content:center;
     /* horizontally center */
-    align-items:center;    
+    align-items:center;
     /* vertically center */
-    width: "100%"
+    width: 100%
 }
 
 .roomBooking{
     display:flex;
-    justify-content:center; 
+    justify-content:center;
     /* horizontally center */
-    align-items:center;    
+    align-items:center;
     /* vertically center */
-    width: "500px"
+    width: 500px
 }
 

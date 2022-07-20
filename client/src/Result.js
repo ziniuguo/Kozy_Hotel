@@ -110,7 +110,6 @@ class Result extends React.Component {
     }
 
 
-
     render() {
         return (
             <div>
@@ -190,7 +189,8 @@ class Result extends React.Component {
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </LocalizationProvider>
-                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date1)} name="checkin"/>
+                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date1)}
+                           name="checkin"/>
                     <label>Check-out Date:</label>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
@@ -204,7 +204,8 @@ class Result extends React.Component {
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </LocalizationProvider>
-                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date2)} name="checkout"/>
+                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date2)}
+                           name="checkout"/>
                     <label>No. of Guests:</label>
                     <Input type="text" defaultValue={this.state.queryParams.guests} name="guests"/>
                     <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
@@ -213,6 +214,7 @@ class Result extends React.Component {
                     (JSON.stringify(this.state.searchData) === '["empty"]'
                         || JSON.stringify(this.state.searchData) === '["no match"]'
                         || JSON.stringify(this.state.searchData) === '["page_exceeded"]'
+                        || JSON.stringify(this.state.searchData) === '["error_loading_detail_by_ID"]'
                         || JSON.stringify(this.state.searchData) === '["undefined_query_params"]'
                         || JSON.stringify(this.state.searchData) === '["loading..."]'
                     )
