@@ -63,13 +63,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
-
-
-app.get('/hotelsprices_givendest', function(req, res){
-
-/*
+app.get('/searchhotels', function(req, res)){
+    /*
     These are hardcoded for now, just to show the API works. Do use these things to figure out how to link to your side of 
-    the project. Add more app.get() for different parts of the API perhaps. This one is '/getprices' for hotel prices.
+    the project. Add more app.get() for different parts of the API perhaps. This one is '/searchhotels' for hotels given a destination id.
 
     You can see the output results of the queries below by submitting a booking form first, then opening console to see the output.
     Imma continue working tomorrow because it's 3am.
@@ -78,6 +75,13 @@ app.get('/hotelsprices_givendest', function(req, res){
     //This is for searching hotels given a destination id. Hardcoded to have id WD0M.
     // let tryURL = 'https://hotelapi.loyalty.dev/api/hotels?destination_id=WD0M';
 
+
+    // to be implemented
+}
+
+
+
+app.get('/hotelsprices_givendest', function(req, res){
 
     //This is for searching for hotel prices given the parameters below. Also hardcoded for now.
     let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/prices?' + new URLSearchParams({
