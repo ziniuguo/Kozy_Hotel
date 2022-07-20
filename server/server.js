@@ -34,8 +34,8 @@ app.get('/hotelsprices_givendest', function (req, res) {
     //This is for searching for hotel prices given the parameters below. Also hardcoded for now.
     let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/prices?' + new URLSearchParams({
         destination_id: "WD0M",
-        checkin: "2022-07-20",
-        checkout: "2022-07-22",
+        checkin: "2022-07-22",
+        checkout: "2022-07-25",
         lang: "en_US",
         currency: "SGD",
         country_code: "SG",
@@ -52,21 +52,18 @@ app.get('/hotelsprices_givendest', function (req, res) {
     }
 
     axios(getOptions)
-        .then(response => {
-            console.log("It's done!");
-            console.log(JSON.stringify(response.data));
-            res.status(200).json({
-                data: JSON.parse(JSON.stringify(response.data))
-            })
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    .then(response => {
+        console.log("It's done!");
+        const jsonData = JSON.stringify(response.data);    
+        console.log(jsonData);
+        res.send(jsonData);
 
-    // console.log("GET done!")
-    // const jsonData = response.json();
-    // console.log(jsonData);
-    // res.send(jsonData);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+
 
 
 })
@@ -80,7 +77,9 @@ app.post('/booking', function (req, res) {
             console.log(err);
 
         } else {
-            fs.writeFile('bookings.json', JSON.stringify(myJson, null, 4), 'utf8', function (err) {
+            let currentJSON = JSON.parse(data);
+            currentJSON.push(myJson);
+            fs.writeFile('bookings.json', JSON.stringify(currentJSON, null, 4), 'utf8', function (err) {
                 if (err) throw err;
 
                 console.log("writing done.");

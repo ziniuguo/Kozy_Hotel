@@ -1,9 +1,28 @@
-{
-    "firstName": "Christy",
-    "lastName": "Lau",
-    "phoneNumber": "3333",
-    "emailAddress": "testing.out@gmail.com",
-    "specialRequests": "More pillows",
-    "creditCardNumber": "555",
-    "dateInput": "2022-07-27"
-}
+[
+    {
+        "salutation": "Miss",
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "55553333",
+        "emailAddress": "ddfas@gmail.com",
+        "specialRequests": "more pillows",
+        "creditCardNumber": "5555666655556666",
+        "cardExpiry": "09/9999",
+        "CVV_CVC": "222",
+        "billingAddress": "blegh road",
+        "dateInput": "2022-08-03"
+    },
+    {
+        "salutation": "Miss",
+        "firstName": "Christy",
+        "lastName": "Lau",
+        "phoneNumber": "77778888",
+        "emailAddress": "testing.out@gmail.com",
+        "specialRequests": "More blankets",
+        "creditCardNumber": "2222333366663333",
+        "cardExpiry": "02/2222",
+        "CVV_CVC": "333",
+        "billingAddress": "blugh road",
+        "dateInput": "2022-08-06"
+    }
+]
