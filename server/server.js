@@ -63,7 +63,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
-app.get('/searchhotels', function(req, res)){
+app.get('/searchhotels', function(req, res){
     /*
     These are hardcoded for now, just to show the API works. Do use these things to figure out how to link to your side of 
     the project. Add more app.get() for different parts of the API perhaps. This one is '/searchhotels' for hotels given a destination id.
@@ -77,7 +77,7 @@ app.get('/searchhotels', function(req, res)){
 
 
     // to be implemented
-}
+})
 
 
 
