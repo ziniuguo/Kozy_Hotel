@@ -3,20 +3,81 @@ const express = require('express');
 const axios = require('axios');
 const WebSocket = require('ws');
 const app = express();
-const cors = require('cors');
 const fs = require('fs');
-const e = require("express");
-const RsBU = JSON.parse(fs.readFileSync('destination_RsBU.json'))
-const WDOM = JSON.parse(fs.readFileSync('destination_WD0M.json'))
-const EzoR = JSON.parse(fs.readFileSync('destination_EzoR.json'))
+
+
+
 const hotels_sg = JSON.parse(fs.readFileSync('hotels_sg.json'))
 const hotels_my = JSON.parse(fs.readFileSync('hotels_my.json'))
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
-app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+
+app.get('/searchhotels', function(req, res){
+    /*
+    These are hardcoded for now, just to show the API works. Do use these things to figure out how to link to your side of 
+    the project. Add more app.get() for different parts of the API perhaps. This one is '/searchhotels' for hotels given a destination id.
+
+    You can see the output results of the queries below by submitting a booking form first, then opening console to see the output.
+    Imma continue working tomorrow because it's 3am.
+*/
+
+    //This is for searching hotels given a destination id. Hardcoded to have id WD0M.
+    // let tryURL = 'https://hotelapi.loyalty.dev/api/hotels?destination_id=WD0M';
+
+
+    // to be implemented
+})
+
+
+
+app.get('/hotelsprices_givendest', function(req, res){
+
+    //This is for searching for hotel prices given the parameters below. Also hardcoded for now.
+    let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/prices?' + new URLSearchParams({
+        destination_id: "WD0M",
+        checkin: "2022-07-20",
+        checkout: "2022-07-22",
+        lang: "en_US",
+        currency: "SGD",
+        country_code: "SG",
+        guests: 2,
+        partner_id: 1
+    })
+
+    console.log(tryURL);
+
+    const getOptions = {
+        url: tryURL,
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+    }
+    
+    axios(getOptions)
+    .then(response => {
+        console.log("It's done!");
+        console.log(JSON.stringify(response.data));
+        res.status(200).json({
+            data: JSON.parse(JSON.stringify(response.data))
+         })
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+    // console.log("GET done!")
+    // const jsonData = response.json();
+    // console.log(jsonData);
+    // res.send(jsonData);
+
+
+
+})
+
 
 app.post('/booking', function (req, res) {
     let myJson = req.body;
@@ -24,9 +85,11 @@ app.post('/booking', function (req, res) {
     fs.readFile('bookings.json', 'utf8', function readFileCallback(err, data) {
         if (err) {
             console.log(err);
+
         } else {
             fs.writeFile('bookings.json', JSON.stringify(myJson, null, 4), 'utf8', function (err) {
                 if (err) throw err;
+
                 console.log("writing done.");
             });
 
