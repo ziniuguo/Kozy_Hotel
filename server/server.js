@@ -4,7 +4,7 @@ const axios = require('axios');
 const WebSocket = require('ws');
 const app = express();
 const fs = require('fs');
-
+const {satisfies} = require("nodemon/lib/utils");
 
 
 const hotels_sg = JSON.parse(fs.readFileSync('hotels_sg.json'))
@@ -12,12 +12,11 @@ const hotels_my = JSON.parse(fs.readFileSync('hotels_my.json'))
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
-
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
-app.get('/searchhotels', function(req, res){
+app.get('/searchhotels', function (req, res) {
     /*
     These are hardcoded for now, just to show the API works. Do use these things to figure out how to link to your side of 
     the project. Add more app.get() for different parts of the API perhaps. This one is '/searchhotels' for hotels given a destination id.
@@ -34,8 +33,7 @@ app.get('/searchhotels', function(req, res){
 })
 
 
-
-app.get('/hotelsprices_givendest', function(req, res){
+app.get('/hotelsprices_givendest', function (req, res) {
 
     //This is for searching for hotel prices given the parameters below. Also hardcoded for now.
     let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/prices?' + new URLSearchParams({
@@ -56,24 +54,23 @@ app.get('/hotelsprices_givendest', function(req, res){
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
     }
-    
+
     axios(getOptions)
-    .then(response => {
-        console.log("It's done!");
-        console.log(JSON.stringify(response.data));
-        res.status(200).json({
-            data: JSON.parse(JSON.stringify(response.data))
-         })
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+        .then(response => {
+            console.log("It's done!");
+            console.log(JSON.stringify(response.data));
+            res.status(200).json({
+                data: JSON.parse(JSON.stringify(response.data))
+            })
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 
     // console.log("GET done!")
     // const jsonData = response.json();
     // console.log(jsonData);
     // res.send(jsonData);
-
 
 
 })
@@ -163,39 +160,93 @@ app.get("/hotel/:hotelName", async function(req, res) {
 })
 
 app.get("/search", async (req, res) => {
-    if (req.query.hasOwnProperty('q') && req.query.hasOwnProperty('page') && req.query.hasOwnProperty("locID")) {
+    if (req.query.hasOwnProperty('q') &&
+        req.query.hasOwnProperty('page') &&
+        req.query.hasOwnProperty("loc") &&
+        req.query.hasOwnProperty('locID') &&
+        req.query.hasOwnProperty('checkin') &&
+        req.query.hasOwnProperty('checkout') &&
+        req.query.hasOwnProperty('guests')) {
         let pageNo;
         let itemPerPage = 5;
-        let result = [];
+        let result;
         let apiResult;
-        const keyword = req.query.q;
+        let searchComplete = false;
+        let searchTime = 0;
+
+        // 先通过api选出来所有符合filter要求的hotel，（地点时间人数）
         const getOptions = {
-            url: 'https://hotelapi.loyalty.dev/api/hotels?' + new URLSearchParams({
+            url: 'https://hotelapi.loyalty.dev/api/hotels/prices?' + new URLSearchParams({
                 destination_id: req.query.locID,
+                checkin: req.query.checkin,
+                checkout: req.query.checkout,
+                lang: "en_US",
+                currency: "SGD",
+                country_code: "SG",
+                guests: req.query.guests,
+                partner_id: 1,
             }),
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
         }
-        await axios(getOptions)
-            .then(response => {
-                apiResult = response.data;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        result = apiResult.map(e => [e["id"], e["name"], e["rating"], e["address"], e["cloudflare_image_url"] + "/" + e["id"] + "/i" + e["default_image_index"] + ".jpg"])
+        while (!searchComplete && searchTime <= 6) {
+            console.log("=== searching ===")
+            console.log(searchTime + " times")
+            await axios(getOptions)
+                .then(response => {
+                    apiResult = response.data;
+                })
+                .catch((error) => {
+                    console.log("error @ getting hotel ID by filters");
+                    searchComplete = true;
+                });
+            if (apiResult["hotels"].length !== 0) {
+                console.log("got hotel list! length: " + apiResult["hotels"].length)
+                searchComplete = true;
+            } else {
+                console.log("empty hotel list...")
+                searchTime += 1;
+            }
+        }
+        result = apiResult["hotels"]
         pageNo = Math.ceil(Object.keys(result).length / itemPerPage);
         if (pageNo === 0) {
+            console.log("no match")
             res.json(["no match", 1]);
         } else {
             const reqPage = parseInt(req.query.page);
             if (reqPage <= pageNo && reqPage >= 1) {
-                let currPage = Object.entries(result)
+                let currPageRawData = Object.entries(result)
                     .slice((reqPage - 1) * itemPerPage, itemPerPage * reqPage)
                     .map(entry => entry[1]); // 如果不加这行 前面会自动加个参数 因为他好像是要json object, idk why
-                currPage.push(pageNo);
-                console.log(currPage)
-                res.json(currPage);
+                // 前面只记录id不处理，在这再处理数据
+                currPageRawData = currPageRawData.map(e => [e["id"], e["lowest_price"] + " - " + e["price"]])
+                let resResult = []
+                for (let i = 0; i < currPageRawData.length; i++) {
+                    let currID = currPageRawData[i][0];
+                    let opt = {
+                        url: "https://hotelapi.loyalty.dev/api/hotels/" + currID,
+                        method: 'GET',
+                        headers: {'Content-Type': 'application/json'},
+                    }
+                    await axios(opt)
+                        .then(response => {
+                            let currResult = [];
+                            currResult.push(currID);
+                            currResult.push(response.data["name"])
+                            currResult.push([currPageRawData[i][1]]) // price
+                            currResult.push(response.data["address"])
+                            currResult.push(response.data["cloudflare_image_url"] + "/" + response.data["id"] + "/i" + response.data["default_image_index"] + ".jpg")
+                            currResult.push(response.data["rating"])
+                            resResult.push(currResult)
+                        })
+                        .catch((error) => {
+                            console.log("error @ getting hotel detail by ID");
+                        });
+                }
+                resResult.push(pageNo);
+                // console.log(resResult)
+                res.json(resResult);
             } else {
                 res.json(["page_exceeded", 1]);
             }
@@ -222,7 +273,6 @@ wss.on('connection', ws => {
                 }
             }
         }
-
         ws.send(JSON.stringify(searchResult));
     })
 })
