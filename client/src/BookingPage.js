@@ -8,6 +8,16 @@ import { emphasize } from "@mui/material";
 
 const Styles = styled.div`
 
+  h1 {
+    color: #3d3d3d;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+
   form {
     border:1px solid #ffffff;
     background: white;
@@ -15,14 +25,20 @@ const Styles = styled.div`
     flex-direction: column;
     justify-content: space-around;
     margin: 0 auto;
-    max-width: 600px;
+    max-width: 700px;
     padding: 30px 40px;
   }
+
+  #checkin, #checkout, #guestNum, #destID, #hotelID{
+    display: none;
+  }
+
+
 
   input {
     border: 2px solid #737373;
     border-radius: 7px;
-    padding: 6px;
+    padding: 7px;
     width: 100%;
   }
 
@@ -38,13 +54,13 @@ const Styles = styled.div`
     display: block;
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 
   .error {
     color: red;
     font-size: 12px;
-    height: 12px;
+    height: 10px;
     display: flex;
 
   }
@@ -52,29 +68,31 @@ const Styles = styled.div`
   .submitButton {
     background-color: #6976d9;
     color: white;
-    font-family: sans-serif;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 500;
     margin: 20px 0px;
 
 `;
+
 
 export default function BookingPage() {
 
     const { control, register, formState: { errors }, handleSubmit, reset } = useForm();
 
-    
-
     function Error({ errors }) {
       return  <div className={"error"}>{errors ? errors.message : " "}</div>;
     }
 
+    const destID = sessionStorage.getItem("destID");
+    const hotelID = sessionStorage.getItem("hotelID")
+    const displayCheckin = sessionStorage.getItem("displayCheckin");
+    const checkinDate = sessionStorage.getItem("checkinDate");
+    const displayCheckout = sessionStorage.getItem("displayCheckout")
+    const checkoutDate = sessionStorage.getItem("checkoutDate");
+    const guests = sessionStorage.getItem("guestCount");
+
 
     const onSubmit = async (data) => {
-        console.log(data.dateInput.getFullYear(), data.dateInput.getMonth() + 1, data.dateInput.getDate());
-        let formatMonth = `${data.dateInput.getMonth() + 1}`.length == 1? `0${data.dateInput.getMonth() + 1}`:`${data.dateInput.getMonth() + 1}`;
-        let formatDay = `${data.dateInput.getDate()}`.length == 1? `0${data.dateInput.getDate()}`: `${data.dateInput.getDate()}`;
-        data.dateInput = `${data.dateInput.getFullYear()}-${formatMonth}-${formatDay}`;
-        console.log(data);
 
         const requestOptions = {
           method: 'POST',
@@ -85,29 +103,53 @@ export default function BookingPage() {
         .catch((error) => {
           console.log(error)
         });
-        console.log("done")
+        console.log("POST done!")
         const jsonData = await response.json();
         console.log(jsonData);
 
-
-        // const response = await fetch('/hotelsprices_givendest')
-        // .catch((error) => {
-        //   console.log(error)
-        // });
-        // console.log("done")
-        // const jsonData = await response.json();
-        // console.log(jsonData);
-
-
         alert("Booking confirmed! Enjoy your trip!");
-
         reset();
     }
 
     return (
       <Styles>
-        <div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+
+        <br/><h1>Hotel booking form</h1>
+
+          <div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+            
+            <div>
+              <input id="destID" type="text" value={destID} {...register("destinationID")} readOnly/>
+              <input id="hotelID" type="text" value={hotelID} {...register("hotelID")} readOnly/>
+            </div>
+
+            <table id="dispTable">
+                <tbody>
+                  <tr>
+                    <td>
+                      <label>Check-In date:</label>
+                      <div>&nbsp;<b>{displayCheckin}</b></div>
+                      <input id="checkin" type="text" value={checkinDate} {...register("checkinDate")} readOnly/>
+                    </td>
+
+                    <td>
+                      <label>Check-Out date:</label>
+                      <div>&nbsp;<b>{displayCheckout}</b></div>
+                      <input id="checkout" type="text" value={checkoutDate} {...register("checkoutDate")} readOnly/>
+                    </td>
+
+                    <td>
+                      <label>Number of guests: &nbsp;<b>{guests}</b></label>
+                      <input id="guestNum" type="text" value={guests} {...register("guests")} readOnly/>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table><br/>
+
+              
+          
 
             <table>
               <tbody>
@@ -154,26 +196,40 @@ export default function BookingPage() {
               </tbody>
             </table>
 
+            <table>
+              <tbody>
+                <tr>
+                    <td>
+                      <div>
+                        <label>Phone number: &nbsp;</label>
+                        <input type="text" size="14" {...register("phoneNumber", {
+                          required: "Phone number is required"}
+                          
+                          )} />
+                        <Error errors={errors.phoneNumber} />
+                      </div><br/>
+                    </td>
+
+                    <td>
+                      <div>
+                        <label>Email address: &nbsp;</label>
+                        <input type="text" size="26" {...register("emailAddress", {
+                          required: "Email address is required", 
+                          pattern: {value: /^\S+@\S+$/i, message: "Invalid email address!"}}
+                          
+                          )} />
+                        <Error errors={errors.emailAddress} />
+                      </div><br/>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+
             
 
-            <div>
-              <label>Phone number: &nbsp;</label>
-              <input type="text" size="20" {...register("phoneNumber", {
-                required: "Phone number is required"}
-                
-                )} />
-              <Error errors={errors.phoneNumber} />
-            </div><br/>
 
-            <div>
-              <label>Email address: &nbsp;</label>
-              <input type="text" size="20" {...register("emailAddress", {
-                required: "Email address is required", 
-                pattern: {value: /^\S+@\S+$/i, message: "Invalid email address!"}}
-                
-                )} />
-              <Error errors={errors.emailAddress} />
-            </div><br/>
+
+
 
             <div>
               <label>Special requests (if any):  &nbsp;</label>
@@ -234,24 +290,9 @@ export default function BookingPage() {
                 )} />
               <Error errors={errors.billingAddress} />
             </div><br/>
-            
-            
-
-            <Controller
-              control={control}
-              name='dateInput'
-              render={({field}) => (
-                <DatePicker
-                  placeholderText="Select start date"
-                  onChange={(date) => field.onChange(date)}
-                  selected={field.value}
-                />
-              )}
-            />
-            <br/><br/>
 
       
-            <input type="submit" className="submitButton"/>
+            <input type="submit" className="submitButton" value="Make Booking"/>
           </form>
         </div>
         <p> </p>
