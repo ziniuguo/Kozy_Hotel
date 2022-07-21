@@ -32,5 +32,22 @@
         "cardExpiry": "05/2555",
         "CVV_CVC": "555",
         "billingAddress": "55 Fake Road"
+    },
+    {
+        "destinationID": "RsBU",
+        "hotelID": "WaXd",
+        "checkinDate": "2022-07-22",
+        "checkoutDate": "2022-07-23",
+        "guests": "2",
+        "salutation": "Mr",
+        "firstName": "Billy",
+        "lastName": "Yeo",
+        "phoneNumber": "88883333",
+        "emailAddress": "billy.yeo@hotmail.com",
+        "specialRequests": "An extra blanket",
+        "creditCardNumber": "3333333355556666",
+        "cardExpiry": "02/2022",
+        "CVV_CVC": "222",
+        "billingAddress": "55 SendHelp Road"
     }
 ]
