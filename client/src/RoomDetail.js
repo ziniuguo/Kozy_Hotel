@@ -72,7 +72,10 @@ class RoomDetail extends React.Component {
 
     componentDidMount() {
         
-        console.log(window.location.pathname)
+        console.log(window.location.pathname);
+        sessionStorage.setItem("hotelID", window.location.pathname.split('/').at(-1));
+
+
         fetch(window.location.pathname).then(response => response.json())
         .then((json)=> {
             console.log(json)

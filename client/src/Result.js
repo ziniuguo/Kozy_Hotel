@@ -24,6 +24,10 @@ function formatDate(date) {
     ].join('-');
 }
 
+function displayedDate(date){
+    return date.toString().split(" ").slice(1, 4).join(" ");
+}
+
 class Result extends React.Component {
     constructor(props) {
         super(props);
@@ -75,6 +79,18 @@ class Result extends React.Component {
                 )
         }
     };
+
+    getBookingInfo(){
+        sessionStorage.setItem("destID", this.state.locID);
+        sessionStorage.setItem("checkinDate", formatDate(this.state.date1));
+        sessionStorage.setItem("displayCheckin", displayedDate(this.state.date1));
+        sessionStorage.setItem("checkoutDate", formatDate(this.state.date2));
+        sessionStorage.setItem("displayCheckout", displayedDate(this.state.date2));
+        sessionStorage.setItem("guestCount", this.state.queryParams.guests);
+    }
+
+
+
 
     PageBtn(i) {
         if (Object.hasOwnProperty.bind(this.state.queryParams)('q') &&
@@ -276,7 +292,7 @@ class Result extends React.Component {
                                                         <CardText>
                                                             {"Address: " + hotel[3]}
                                                         </CardText>
-                                                        <Button href={"hotel/" + hotel[0]}>
+                                                        <Button href={"hotel/" + hotel[0]} onClick={() => this.getBookingInfo()}>
                                                             Book
                                                         </Button>
                                                     </CardBody>
