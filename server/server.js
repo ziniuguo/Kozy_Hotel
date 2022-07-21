@@ -184,16 +184,15 @@ app.get("/search", async (req, res) => {
             method: 'GET',
             headers: {'Content-Type': 'application/json'},
         }
-        while (!searchComplete && searchTime <= 10) {
+        while (!searchComplete && searchTime <= 3) {
             console.log("=== searching ===")
-            console.log(searchTime + " times")
+            console.log("searchTime: " + searchTime)
             await axios(getOptions)
                 .then(response => {
                     apiResult = response.data;
                 })
                 .catch((error) => {
                     console.log("error @ getting hotel ID by filters");
-                    searchTime += 1;
                 });
             if (typeof apiResult === 'undefined' || apiResult["hotels"].length === 0) {
                 console.log("empty hotel list...")
@@ -223,11 +222,21 @@ app.get("/search", async (req, res) => {
                 // 前面只记录id不处理，在这再处理数据
                 currPageRawData = currPageRawData.map(e => [e["id"], e["lowest_price"] + " - " + e["price"]])
                 let resResult = []
+
+                //这里逻辑比较怪 大概是
+                // 一个页面有5个item(或者更少)
+                // 然后对于其中的每一个我都try 4次(每次try的时候判断当前的结果的长度是不是0)
+                // 一共5*4=20次
+                // 如果最后结果长度不是页面的item总数(5) 就给用户error
+                // 但其实吧 只要对于任意一个item 4次不出结果就已经error了
+                // 因为就算其他都出了长度也不够了
+                // 不过懒得改了凑合用吧
                 for (let i = 0;
                      i < currPageRawData.length;
                      // not itemPerPage! sometimes one page not 5 items!
                      i++) {
                     let currID = currPageRawData[i][0];
+                    let currResult = [];
                     let opt = {
                         url: "https://hotelapi.loyalty.dev/api/hotels/" + currID,
                         method: 'GET',
@@ -235,10 +244,12 @@ app.get("/search", async (req, res) => {
                     }
                     let loadComplete = false;
                     let loadTime = 0;
-                    while (!loadComplete && loadTime <= 10) {
+                    // 对于其中的每一个我都try 4次
+                    while (!loadComplete && loadTime <= 3) {
+                        console.log("=== loading ===")
+                        console.log("loadTime: " + loadTime)
                         await axios(opt)
                             .then(response => {
-                                let currResult = [];
                                 currResult.push(currID);
                                 currResult.push(response.data["name"])
                                 currResult.push([currPageRawData[i][1]]) // price
@@ -249,9 +260,9 @@ app.get("/search", async (req, res) => {
                             })
                             .catch((error) => {
                                 console.log("error @ getting hotel detail by ID");
-                                loadTime += 1;
                             });
-                        if (typeof resResult === 'undefined' || resResult.length === 0) {
+                        // (每次try的时候判断当前的结果的长度是不是0)
+                        if (currResult.length === 0) {
                             console.log("wrong")
                             loadTime += 1;
                         } else {
