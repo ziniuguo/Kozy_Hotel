@@ -224,8 +224,8 @@ app.get("/search", async (req, res) => {
                 currPageRawData = currPageRawData.map(e => [e["id"], e["lowest_price"] + " - " + e["price"]])
                 let resResult = []
                 for (let i = 0;
-                     i < itemPerPage;
-                     // namely currPageRawData.length
+                     i < currPageRawData.length;
+                     // not itemPerPage! sometimes one page not 5 items!
                      i++) {
                     let currID = currPageRawData[i][0];
                     let opt = {
@@ -260,7 +260,10 @@ app.get("/search", async (req, res) => {
                         }
                     }
                 }
-                if (resResult.length === itemPerPage) {
+                if (resResult.length ===
+                    currPageRawData.length
+                    // similarly, not itemPerPage!
+                ) {
                     resResult.push(pageNo);
                     res.json(resResult);
                 } else {

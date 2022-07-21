@@ -16,7 +16,7 @@ function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
 }
 
-function formatDate(date) {
+function formatDate(date) { // Date -> YYYY-MM-DD
     return [
         date.getFullYear(),
         padTo2Digits(date.getMonth() + 1),
@@ -24,8 +24,11 @@ function formatDate(date) {
     ].join('-');
 }
 
-function displayedDate(date){
-    return date.toString().split(" ").slice(1, 4).join(" ");
+function displayedDate(date){ //YYYY-MM-DD -> MMM(Jul) DD YYYY
+    let temp_date = new Date(date.split('-')[0],
+        date.split('-')[1] - 1,
+        date.split('-')[2])
+    return temp_date.toString().split(" ").slice(1, 4).join(" ");
 }
 
 class Result extends React.Component {
@@ -48,6 +51,7 @@ class Result extends React.Component {
     }
 
     async componentDidMount() {
+
         socket.onmessage = async ev => {
             console.log(JSON.parse(ev.data).length);
             await this.setState({
@@ -81,12 +85,13 @@ class Result extends React.Component {
     };
 
     getBookingInfo(){
-        sessionStorage.setItem("destID", this.state.locID);
-        sessionStorage.setItem("checkinDate", formatDate(this.state.date1));
-        sessionStorage.setItem("displayCheckin", displayedDate(this.state.date1));
-        sessionStorage.setItem("checkoutDate", formatDate(this.state.date2));
-        sessionStorage.setItem("displayCheckout", displayedDate(this.state.date2));
+        sessionStorage.setItem("destID", this.state.queryParams.locID);
+        sessionStorage.setItem("checkinDate", this.state.queryParams.checkin);
+        sessionStorage.setItem("displayCheckin", displayedDate(this.state.queryParams.checkin));
+        sessionStorage.setItem("checkoutDate", this.state.queryParams.checkout);
+        sessionStorage.setItem("displayCheckout", displayedDate(this.state.queryParams.checkout));
         sessionStorage.setItem("guestCount", this.state.queryParams.guests);
+        console.log(this.state.queryParams)
     }
 
 

@@ -83,13 +83,13 @@ export default function BookingPage() {
       return  <div className={"error"}>{errors ? errors.message : " "}</div>;
     }
 
-    const destID = sessionStorage.getItem("destID");
-    const hotelID = sessionStorage.getItem("hotelID")
-    const displayCheckin = sessionStorage.getItem("displayCheckin");
-    const checkinDate = sessionStorage.getItem("checkinDate");
-    const displayCheckout = sessionStorage.getItem("displayCheckout")
-    const checkoutDate = sessionStorage.getItem("checkoutDate");
-    const guests = sessionStorage.getItem("guestCount");
+    let destID = sessionStorage.getItem("destID");
+    let hotelID = sessionStorage.getItem("hotelID")
+    let displayCheckin = sessionStorage.getItem("displayCheckin");
+    let checkinDate = sessionStorage.getItem("checkinDate");
+    let displayCheckout = sessionStorage.getItem("displayCheckout")
+    let checkoutDate = sessionStorage.getItem("checkoutDate");
+    let guests = sessionStorage.getItem("guestCount");
 
 
     const onSubmit = async (data) => {
