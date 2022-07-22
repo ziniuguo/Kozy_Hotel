@@ -117,7 +117,7 @@ export default function BookingPage() {
         <br/><h1>Hotel booking form</h1>
 
           <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form id="bookingForm" onSubmit={handleSubmit(onSubmit)}>
             
             <div>
               <input id="destID" type="text" value={destID} {...register("destinationID")} readOnly/>
@@ -203,7 +203,8 @@ export default function BookingPage() {
                       <div>
                         <label>Phone number: &nbsp;</label>
                         <input type="text" id="phonenum" size="14" {...register("phoneNumber", {
-                          required: "Phone number is required"}
+                          required: "Phone number is required",
+                          pattern: {value: /^[0-9]+$/i, message: "Invalid phone number!"}}
                           
                           )} />
                         <Error errors={errors.phoneNumber} />
