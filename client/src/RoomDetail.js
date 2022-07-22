@@ -112,7 +112,7 @@ class RoomDetail extends React.Component {
                     backgroundColor: "#F2F8FE",
                     }}
                 >
-                    <Card style={{ width: '100rem' }}>
+                    <Card style={{ width: '80rem' }}>
                     <div className="ImgContainer">
                         <Slider {...settings}>
                             {this.state.images.map(image=>(
@@ -140,7 +140,7 @@ class RoomDetail extends React.Component {
                             <div className="Info" >
                             {/*replace %20 and + by space. */}
                             <br/>
-                            <p style={{fontSize:18}}>
+                            <div style={{fontSize:18}}>
                             <div><b>Address:</b> {this.state.address}</div>
                             <br/>
                             <div><b>Rating:</b> {this.state.rating}</div>
@@ -149,7 +149,7 @@ class RoomDetail extends React.Component {
                             {parse(this.state.description)}
                             <br/>
                             {/* <div>Amenities List:<br></br>{this.state.amenities}</div> */}
-                            </p>
+                            </div>
                             </div> 
                             
                             <div  className="Map">
@@ -163,10 +163,11 @@ class RoomDetail extends React.Component {
                         </Card.Text>
                     </Card.Body>
                     <div className="roomBooking">
-                    <Card>
+                    <Card style={{ width: '65rem' }}>
                     <Card.Body>
+                            <div>
                             <div><b>Room list:</b><br/> </div>
-                            <div >
+                            
                             <ListGroup className="list-group-flush">
                             {this.state.details.roomList.map(room=> (
                                 <ListGroup.Item>
@@ -174,7 +175,7 @@ class RoomDetail extends React.Component {
                                     <div>Room type: {room.type}</div>
                                     <div>Room price: {room.price}</div>
                                     <div>
-                                        <button className = "btn-custom"
+                                        <button className = "bookButton"
                                         // disabled={}
                                         onClick={() => window.open("/booking/"+window.location.pathname.split('/').pop(),"_self")}>Book Now
                                         </button>
