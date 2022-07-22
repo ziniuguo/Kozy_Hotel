@@ -48,3 +48,30 @@ body {
 
     font-size: large;
 }
+.pageButton {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 20px 0px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-family: Arial;
+}
+
+.centerLoc{
+    display:flex;
+    justify-content:center;
+    /* horizontally center */
+    align-items:center;
+    /* vertically center */
+    width: 100%
+}
+.formStyle{
+  border:1px solid #ffffff;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 0 auto;
+  max-width: 500px;
+  padding: 10px 40px;
+}
