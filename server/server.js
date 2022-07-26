@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const axios = require('axios');
+const MongoClient = require('mongodb').MongoClient;
 const WebSocket = require('ws');
 const app = express();
 const fs = require('fs');
@@ -70,27 +71,49 @@ app.get('/hotelsprices_givendest', function (req, res) {
 
 
 app.post('/booking', function (req, res) {
-    let myJson = req.body;
+    let newBooking = req.body;
     console.log('received!');
-    fs.readFile('bookings.json', 'utf8', function readFileCallback(err, data) {
-        if (err) {
-            console.log(err);
 
-        } else {
-            let currentJSON = JSON.parse(data);
-            currentJSON.push(myJson);
-            fs.writeFile('bookings.json', JSON.stringify(currentJSON, null, 4), 'utf8', function (err) {
-                if (err) throw err;
-
-                console.log("writing done.");
-            });
+    const url = "mongodb://localhost:27017/";
+    const client = new MongoClient(url);
 
 
+    async function addBooking(booking){
+
+        try{
+            const bDB = client.db('hotelBookingSystem');
+            const bookingsC = bDB.collection('bookings');
+
+            await bookingsC.insertOne(booking);
+            console.log("New booking added to bookings collection!");
         }
-    });
+        finally{
+            await client.close();
+        }
+
+    }
+    
+    addBooking(newBooking);
+    res.send(newBooking);
+
+        
+    // fs.readFile('bookings.json', 'utf8', function readFileCallback(err, data) {
+    //     if (err) {
+    //         console.log(err);
+
+    //     } else {
+    //         let currentJSON = JSON.parse(data);
+    //         currentJSON.push(myJson);
+    //         fs.writeFile('bookings.json', JSON.stringify(currentJSON, null, 4), 'utf8', function (err) {
+    //             if (err) throw err;
+
+    //             console.log("writing done.");
+    //         });
 
 
-    res.send(myJson);
+    //     }
+    // });
+
 });
 
 
