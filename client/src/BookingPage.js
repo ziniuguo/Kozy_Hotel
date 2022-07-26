@@ -71,7 +71,7 @@ const Styles = styled.div`
     font-size: 16px;
     font-weight: 500;
     margin: 20px 0px;
-
+  }
 `;
 
 

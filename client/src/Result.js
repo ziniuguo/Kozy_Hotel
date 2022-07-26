@@ -134,10 +134,13 @@ class Result extends React.Component {
     render() {
         return (
             <div>
-                <div>
-                    <Link to="/">back to main</Link>
-                </div>
-                <div>
+                {/* <div>
+                    <button onClick={() => window.open("/", "_self")}>Back to main
+                    </button>
+                </div> */}
+                <div className="centerLoc">
+                <Card style={{height: '150px',width:'85rem'}}>
+                <div className="formStyle">
                     <form id={"locForm"}>
                         <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>
                         <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page}
@@ -184,7 +187,7 @@ class Result extends React.Component {
                     />
 
                 </div>
-                <form id={"HotelSearchBar"}>
+                <form className="centerLoc" id={"HotelSearchBar"}>
                     <label
                         style={{display: 'none'}} // temporarily remove search by keyword
                     >Search Hotel:</label>
@@ -228,9 +231,12 @@ class Result extends React.Component {
                     <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date2)}
                            name="checkout"/>
                     <label>No. of Guests:</label>
-                    <Input type="text" defaultValue={this.state.queryParams.guests} name="guests"/>
+                    <Input style={{"width": "50px"}} type="text" defaultValue={this.state.queryParams.guests} name="guests"/>
                     <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
                 </form>
+                </Card>
+                </div>
+
                 {
                     (JSON.stringify(this.state.searchData) === '["empty"]'
                         || JSON.stringify(this.state.searchData) === '["no match"]'
@@ -242,7 +248,7 @@ class Result extends React.Component {
                         ?
                         <p>{this.state.searchData}</p>
                         :
-                        <ListGroup>
+                        <ListGroup className="centerLoc">
                             {this.state.searchData.map((hotel, i) =>
                                 <ListGroupItem key={i}>
                                     <div>
@@ -268,7 +274,8 @@ class Result extends React.Component {
                                             }}>
                                                 <Card
                                                     style={{
-                                                        height: '200px'
+                                                        height: '200px',
+                                                        width:'70rem'
                                                     }}
                                                 >
                                                     <CardBody>
@@ -312,12 +319,12 @@ class Result extends React.Component {
                 }
                 <div style={{"textAlign": "center"}}>
                     <p></p>
-                    <button
+                    <button className="pageButton"
                         disabled={this.state.queryParams.page <= 1}
                         onClick={() => window.open("/search" + this.PageBtn(0), "_self")}>prev page
                     </button>
                     page: {this.state.queryParams.page}/{this.state.pageNo}
-                    <button
+                    <button className="pageButton"
                         disabled={this.state.queryParams.page >= this.state.pageNo}
                         onClick={() => window.open("/search" + this.PageBtn(1), "_self")}>next page
                     </button>
