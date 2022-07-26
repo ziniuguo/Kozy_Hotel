@@ -1,9 +1,19 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import qs from 'query-string';
 import {Autocomplete, TextField} from "@mui/material";
 import errImg from './assets/error-image-generic.png';
-import {Button, Card, CardBody, CardSubtitle, CardText, CardTitle, Input, ListGroup, ListGroupItem} from "reactstrap";
+import {
+    Badge,
+    Button,
+    Card,
+    CardBody,
+    CardSubtitle,
+    CardText,
+    CardTitle,
+    Input,
+    ListGroup,
+    ListGroupItem
+} from "reactstrap";
 import Ratings from "react-ratings-declarative/build/ratings";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
@@ -24,7 +34,7 @@ function formatDate(date) { // Date -> YYYY-MM-DD
     ].join('-');
 }
 
-function displayedDate(date){ //YYYY-MM-DD -> MMM(Jul) DD YYYY
+function displayedDate(date) { //YYYY-MM-DD -> MMM(Jul) DD YYYY
     let temp_date = new Date(date.split('-')[0],
         date.split('-')[1] - 1,
         date.split('-')[2])
@@ -47,6 +57,7 @@ class Result extends React.Component {
             locInputValue: "",
             date1: new Date(),
             date2: new Date(),
+            guestNo: []
         }
     }
 
@@ -71,6 +82,7 @@ class Result extends React.Component {
                 date2: new Date(qs.parse(window.location.search).checkout.split('-')[0],
                     qs.parse(window.location.search).checkout.split('-')[1] - 1,
                     qs.parse(window.location.search).checkout.split('-')[2]),
+                guestNo: this.getGuestRoom(qs.parse(window.location.search).guests),
             });
             fetch("/search" + window.location.search)
                 .then(response => response.json())
@@ -84,7 +96,7 @@ class Result extends React.Component {
         }
     };
 
-    getBookingInfo(){
+    getBookingInfo() {
         sessionStorage.setItem("destID", this.state.queryParams.locID);
         sessionStorage.setItem("checkinDate", this.state.queryParams.checkin);
         sessionStorage.setItem("displayCheckin", displayedDate(this.state.queryParams.checkin));
@@ -94,8 +106,30 @@ class Result extends React.Component {
         console.log(this.state.queryParams)
     }
 
-
-
+    getGuestRoom(guestsParam) {
+        let ls = guestsParam.split('|');
+        let result = [0, 0, 0, 0];
+        for (let i = 0; i < ls.length; i++) {
+            let curr = ls[i];
+            switch (curr) {
+                case "1" :
+                    result[0] += 1;
+                    break;
+                case "2":
+                    result[1] += 1;
+                    break;
+                case "3":
+                    result[2] += 1;
+                    break;
+                case "4":
+                    result[3] += 1;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
+    }
 
     PageBtn(i) {
         if (Object.hasOwnProperty.bind(this.state.queryParams)('q') &&
@@ -130,6 +164,46 @@ class Result extends React.Component {
         }
     }
 
+    handleRoom(roomType, add) {
+        let newState = this.state.guestNo;
+        // check total room no. <= 4
+        let sum = newState.reduce((partialSum, a) => partialSum + a, 0);
+
+        if (add) {
+            if (sum >= 4) {
+                window.alert("You can only book up to 4 rooms.");
+            } else {
+                newState[roomType]++;
+            }
+        } else {
+            // check if room no. is 0
+            if (newState[roomType] <= 0) {
+                window.alert("wtf are you doing??")
+            } else {
+                newState[roomType]--;
+            }
+        }
+        this.setState({
+            guestNo: newState,
+        })
+    }
+
+    handleRoomSubmit(guestNoList) {
+        let retLs = [];
+        for (let i = 1; i <= guestNoList[0]; i++) {
+            retLs.push("1");
+        }
+        for (let i = 1; i <= guestNoList[1]; i++) {
+            retLs.push("2");
+        }
+        for (let i = 1; i <= guestNoList[2]; i++) {
+            retLs.push("3");
+        }
+        for (let i = 1; i <= guestNoList[3]; i++) {
+            retLs.push("4");
+        }
+        return retLs.join('|');
+    }
 
     render() {
         return (
@@ -139,102 +213,167 @@ class Result extends React.Component {
                     </button>
                 </div> */}
                 <div className="centerLoc">
-                <Card style={{height: '150px',width:'85rem'}}>
-                <div className="formStyle">
-                    <form id={"locForm"}>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q} name="q"/>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page}
-                               name="page"/>
-                        <input readOnly={true} style={{display: 'none'}} type="text"
-                               value={this.state.locValue} name="loc"/>
-                        <input readOnly={true} style={{display: 'none'}} type="text"
-                               value={this.state.locID} name="locID"/>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.checkin}
-                               name={"checkin"}/>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.checkout}
-                               name={"checkout"}/>
-                        <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.guests}
-                               name={"guests"}/>
-                    </form>
-                    <Autocomplete
-                        loading={true}
-                        loadingText={"There is nothing..."}
-                        filterOptions={(x) => x}
-                        options={this.state.destinations}
-                        sx={{width: 300}}
-                        value={this.state.locValue}
-                        inputValue={this.state.locInputValue}
-                        // below need to be async because can only setState then fetch or submit form
-                        onInputChange={async (event, newInputValue) => {
-                            await this.setState({locInputValue: newInputValue});
-                            if (this.state.locInputValue.length >= 3) {
+                    <Card style={{height: '150px', width: '85rem'}}>
+                        <div className="formStyle">
+                            <form id={"locForm"}>
+                                <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q}
+                                       name="q"/>
+                                <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.page}
+                                       name="page"/>
+                                <input readOnly={true} style={{display: 'none'}} type="text"
+                                       value={this.state.locValue} name="loc"/>
+                                <input readOnly={true} style={{display: 'none'}} type="text"
+                                       value={this.state.locID} name="locID"/>
+                                <input style={{display: 'none'}} type="text"
+                                       defaultValue={this.state.queryParams.checkin}
+                                       name={"checkin"}/>
+                                <input style={{display: 'none'}} type="text"
+                                       defaultValue={this.state.queryParams.checkout}
+                                       name={"checkout"}/>
+                                <input style={{display: 'none'}} type="text"
+                                       defaultValue={this.state.queryParams.guests}
+                                       name={"guests"}/>
+                            </form>
+                            <Autocomplete
+                                loading={true}
+                                loadingText={"There is nothing..."}
+                                filterOptions={(x) => x}
+                                options={this.state.destinations}
+                                sx={{width: 300}}
+                                value={this.state.locValue}
+                                inputValue={this.state.locInputValue}
+                                // below need to be async because can only setState then fetch or submit form
+                                onInputChange={async (event, newInputValue) => {
+                                    await this.setState({locInputValue: newInputValue});
+                                    if (this.state.locInputValue.length >= 3) {
 
-                                // don't forget to change this localhost:5000 if implement irl...
-                                console.log("asking for destination JSON");
-                                this.handleSocketSend(socket, newInputValue);
-                            }
-                        }}
-                        onChange={async (event: any, newValue: string | null) => {
-                            await this.setState({
-                                locValue: (newValue) ? newValue["label"] : "",
-                                locID: (newValue) ? newValue["id"] : ""
-                            });
-                            if (!(this.state.locValue === "")) {
-                                document.getElementById("locForm").submit();
-                            }
-                        }}
-                        renderInput={(params) => <TextField {...params} label="You are visiting: "/>}
-                    />
+                                        // don't forget to change this localhost:5000 if implement irl...
+                                        console.log("asking for destination JSON");
+                                        this.handleSocketSend(socket, newInputValue);
+                                    }
+                                }}
+                                onChange={async (event: any, newValue: string | null) => {
+                                    await this.setState({
+                                        locValue: (newValue) ? newValue["label"] : "",
+                                        locID: (newValue) ? newValue["id"] : ""
+                                    });
+                                    if (!(this.state.locValue === "")) {
+                                        document.getElementById("locForm").submit();
+                                    }
+                                }}
+                                renderInput={(params) => <TextField {...params} label="You are visiting: "/>}
+                            />
 
-                </div>
-                <form className="centerLoc" id={"HotelSearchBar"}>
-                    <label
-                        style={{display: 'none'}} // temporarily remove search by keyword
-                    >Search Hotel:</label>
-                    <Input
-                        style={{display: 'none'}} // temporarily remove search by keyword
-                        type="search" defaultValue={this.state.queryParams.q} name="q"/>
-                    <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
-                    <input readOnly={true} style={{display: 'none'}} type="text" value={this.state.queryParams.loc}
-                           name="loc"/>
-                    <input readOnly={true} style={{display: 'none'}} type="text"
-                           value={this.state.queryParams.locID}
-                           name="locID"/>
-                    <label>Check-in Date:</label>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            label="Check-in Date"
-                            value={this.state.date1}
-                            onChange={(newValue) => {
-                                this.setState({
-                                    date1: newValue,
-                                })
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
-                    </LocalizationProvider>
-                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date1)}
-                           name="checkin"/>
-                    <label>Check-out Date:</label>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            label="Check-out Date"
-                            value={this.state.date2}
-                            onChange={(newValue) => {
-                                this.setState({
-                                    date2: newValue,
-                                })
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
-                    </LocalizationProvider>
-                    <Input readOnly={true} style={{display: 'none'}} type="text" value={formatDate(this.state.date2)}
-                           name="checkout"/>
-                    <label>No. of Guests:</label>
-                    <Input style={{"width": "50px"}} type="text" defaultValue={this.state.queryParams.guests} name="guests"/>
-                    <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
-                </form>
-                </Card>
+                        </div>
+                        <form className="centerLoc" id={"HotelSearchBar"}>
+                            <label
+                                style={{display: 'none'}} // temporarily remove search by keyword
+                            >Search Hotel:</label>
+                            <Input
+                                style={{display: 'none'}} // temporarily remove search by keyword
+                                type="search" defaultValue={this.state.queryParams.q} name="q"/>
+                            <input style={{display: 'none'}} type="text" defaultValue="1" name="page"/>
+                            <input readOnly={true} style={{display: 'none'}} type="text"
+                                   value={this.state.queryParams.loc}
+                                   name="loc"/>
+                            <input readOnly={true} style={{display: 'none'}} type="text"
+                                   value={this.state.queryParams.locID}
+                                   name="locID"/>
+                            <label>Check-in Date:</label>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    label="Check-in Date"
+                                    value={this.state.date1}
+                                    onChange={(newValue) => {
+                                        this.setState({
+                                            date1: newValue,
+                                        })
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                            <Input readOnly={true} style={{display: 'none'}} type="text"
+                                   value={formatDate(this.state.date1)}
+                                   name="checkin"/>
+                            <label>Check-out Date:</label>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    label="Check-out Date"
+                                    value={this.state.date2}
+                                    onChange={(newValue) => {
+                                        this.setState({
+                                            date2: newValue,
+                                        })
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                            <Input readOnly={true} style={{display: 'none'}} type="text"
+                                   value={formatDate(this.state.date2)}
+                                   name="checkout"/>
+                            <label>No. of Guests:</label>
+                            <Input readOnly={true} style={{"display": "none"}} type="text"
+                                   value={this.handleRoomSubmit(this.state.guestNo)}
+                                   name="guests"/>
+                            <div>
+                                <div
+                                    style={{
+                                        "display": "flex",
+                                        "flexDirection": "row",
+                                        "alignItems": "center"
+                                    }}
+                                >
+                                    1 room <Badge
+                                    onClick={() => this.handleRoom(0, false)}
+                                    style={{"margin": "5px"}} pill>-</Badge>
+                                    <div>{this.state.guestNo[0]}</div>
+                                    <Badge
+                                        onClick={() => this.handleRoom(0, true)}
+                                        style={{"margin": "5px"}} pill>+</Badge>
+                                </div>
+                                <div style={{
+                                    "display": "flex",
+                                    "flexDirection": "row",
+                                    "alignItems": "center"
+                                }}>
+                                    2 room <Badge
+                                    onClick={() => this.handleRoom(1, false)}
+                                    style={{"margin": "5px"}} pill>-</Badge>
+                                    <div>{this.state.guestNo[1]}</div>
+                                    <Badge
+                                        onClick={() => this.handleRoom(1, true)}
+                                        style={{"margin": "5px"}} pill>+</Badge>
+                                </div>
+                                <div style={{
+                                    "display": "flex",
+                                    "flexDirection": "row",
+                                    "alignItems": "center"
+                                }}>
+                                    3 room <Badge
+                                    onClick={() => this.handleRoom(2, false)}
+                                    style={{"margin": "5px"}} pill>-</Badge>
+                                    <div>{this.state.guestNo[2]}</div>
+                                    <Badge
+                                        onClick={() => this.handleRoom(2, true)}
+                                        style={{"margin": "5px"}} pill>+</Badge>
+                                </div>
+                                <div style={{
+                                    "display": "flex",
+                                    "flexDirection": "row",
+                                    "alignItems": "center"
+                                }}>
+                                    4 room <Badge
+                                    onClick={() => this.handleRoom(3, false)}
+                                    style={{"margin": "5px"}} pill>-</Badge>
+                                    <div>{this.state.guestNo[3]}</div>
+                                    <Badge
+                                        onClick={() => this.handleRoom(3, true)}
+                                        style={{"margin": "5px"}} pill>+</Badge>
+                                </div>
+                            </div>
+                            <Button color={"primary"} tag={"input"} type={"submit"} value={"Submit"}/>
+                        </form>
+                    </Card>
                 </div>
 
                 {
@@ -275,7 +414,7 @@ class Result extends React.Component {
                                                 <Card
                                                     style={{
                                                         height: '200px',
-                                                        width:'70rem'
+                                                        width: '70rem'
                                                     }}
                                                 >
                                                     <CardBody>
@@ -304,7 +443,8 @@ class Result extends React.Component {
                                                         <CardText>
                                                             {"Address: " + hotel[3]}
                                                         </CardText>
-                                                        <Button href={"hotel/" + hotel[0]} onClick={() => this.getBookingInfo()}>
+                                                        <Button href={"hotel/" + hotel[0]}
+                                                                onClick={() => this.getBookingInfo()}>
                                                             Book
                                                         </Button>
                                                     </CardBody>
@@ -320,13 +460,13 @@ class Result extends React.Component {
                 <div style={{"textAlign": "center"}}>
                     <p></p>
                     <button className="pageButton"
-                        disabled={this.state.queryParams.page <= 1}
-                        onClick={() => window.open("/search" + this.PageBtn(0), "_self")}>prev page
+                            disabled={this.state.queryParams.page <= 1}
+                            onClick={() => window.open("/search" + this.PageBtn(0), "_self")}>prev page
                     </button>
                     page: {this.state.queryParams.page}/{this.state.pageNo}
                     <button className="pageButton"
-                        disabled={this.state.queryParams.page >= this.state.pageNo}
-                        onClick={() => window.open("/search" + this.PageBtn(1), "_self")}>next page
+                            disabled={this.state.queryParams.page >= this.state.pageNo}
+                            onClick={() => window.open("/search" + this.PageBtn(1), "_self")}>next page
                     </button>
 
                 </div>

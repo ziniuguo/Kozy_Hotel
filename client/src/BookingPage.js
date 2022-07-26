@@ -1,9 +1,7 @@
 import React from "react";
-import {Controller, useForm} from "react-hook-form";
-import DatePicker from 'react-datepicker';
+import {useForm} from "react-hook-form";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
-import { emphasize } from "@mui/material";
 
 
 const Styles = styled.div`
@@ -70,14 +68,14 @@ const Styles = styled.div`
     color: white;
     font-size: 16px;
     font-weight: 500;
-    margin: 20px 0px;
+    margin: 20px 0;
   }
 `;
 
 
 export default function BookingPage() {
 
-    const { control, register, formState: { errors }, handleSubmit, reset } = useForm();
+    const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
     function Error({ errors }) {
       return  <div className={"error"}>{errors ? errors.message : " "}</div>;
@@ -90,6 +88,31 @@ export default function BookingPage() {
     let displayCheckout = sessionStorage.getItem("displayCheckout")
     let checkoutDate = sessionStorage.getItem("checkoutDate");
     let guests = sessionStorage.getItem("guestCount");
+
+    function getGuestRoom(guestsParam) {
+        let ls = guestsParam.split('|');
+        let result = [0, 0, 0, 0];
+        for (let i = 0; i < ls.length; i++) {
+            let curr = ls[i];
+            switch (curr) {
+                case "1" :
+                    result[0] += 1;
+                    break;
+                case "2":
+                    result[1] += 1;
+                    break;
+                case "3":
+                    result[2] += 1;
+                    break;
+                case "4":
+                    result[3] += 1;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
+    }
 
 
     const onSubmit = async (data) => {
@@ -140,7 +163,12 @@ export default function BookingPage() {
                     </td>
 
                     <td>
-                      <label>Number of guests: &nbsp;<b>{guests}</b></label>
+                      <label>Number of guests: <br/><b>
+                          single room: {getGuestRoom(guests)[0]}<br/>
+                          double room: {getGuestRoom(guests)[1]}<br/>
+                          family room: {getGuestRoom(guests)[2]}<br/>
+                          big ass ultra-wide room: {getGuestRoom(guests)[3]}
+                      </b></label>
                       <input id="guestNum" type="text" value={guests} {...register("guests")} readOnly/>
                     </td>
 
