@@ -1,11 +1,13 @@
-const http = require('http');
-const express = require('express');
-const axios = require('axios');
-const MongoClient = require('mongodb').MongoClient;
-const WebSocket = require('ws');
-const app = express();
-const fs = require('fs');
+import http from "http";
+import express from "express";
+import axios from "axios";
+import {MongoClient} from "mongodb";
+import {WebSocketServer} from "ws";
+import fs from "fs";
+import auth from "./auth.js";
 
+
+const app = express();
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
 
@@ -13,62 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
-app.get('/searchhotels', function (req, res) {
-    /*
-    These are hardcoded for now, just to show the API works. Do use these things to figure out how to link to your side of 
-    the project. Add more app.get() for different parts of the API perhaps. This one is '/searchhotels' for hotels given a destination id.
-
-    You can see the output results of the queries below by submitting a booking form first, then opening console to see the output.
-    Imma continue working tomorrow because it's 3am.
-*/
-
-    //This is for searching hotels given a destination id. Hardcoded to have id WD0M.
-    // let tryURL = 'https://hotelapi.loyalty.dev/api/hotels?destination_id=WD0M';
-
-
-    // to be implemented
-})
-
-
-app.get('/hotelsprices_givendest', function (req, res) {
-
-    //This is for searching for hotel prices given the parameters below. Also hardcoded for now.
-    let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/prices?' + new URLSearchParams({
-        destination_id: "WD0M",
-        checkin: "2022-07-22",
-        checkout: "2022-07-25",
-        lang: "en_US",
-        currency: "SGD",
-        country_code: "SG",
-        guests: 2,
-        partner_id: 1
-    })
-
-    console.log(tryURL);
-
-    const getOptions = {
-        url: tryURL,
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-    }
-
-    axios(getOptions)
-    .then(response => {
-        console.log("It's done!");
-        const jsonData = JSON.stringify(response.data);    
-        console.log(jsonData);
-        res.send(jsonData);
-
-    })
-    .catch((error) => {
-        console.log(error);
-    });
-
-
-
-
-})
-
+// app.get('/login', auth);
+// app.get('/manage', auth);
+// app.post('/register', auth);
+// app.post('/authenticate', auth)
+app.use(auth) // auth is router
 
 app.post('/booking', function (req, res) {
     let newBooking = req.body;
@@ -77,9 +28,7 @@ app.post('/booking', function (req, res) {
     const url = "mongodb://localhost:27017/";
     const client = new MongoClient(url);
 
-
     async function addBooking(booking){
-
         try{
             const bDB = client.db('hotelBookingSystem');
             const bookingsC = bDB.collection('bookings');
@@ -92,60 +41,10 @@ app.post('/booking', function (req, res) {
         }
 
     }
-    
-    addBooking(newBooking);
+    addBooking(newBooking).then();
     res.send(newBooking);
-
-        
-    // fs.readFile('bookings.json', 'utf8', function readFileCallback(err, data) {
-    //     if (err) {
-    //         console.log(err);
-
-    //     } else {
-    //         let currentJSON = JSON.parse(data);
-    //         currentJSON.push(myJson);
-    //         fs.writeFile('bookings.json', JSON.stringify(currentJSON, null, 4), 'utf8', function (err) {
-    //             if (err) throw err;
-
-    //             console.log("writing done.");
-    //         });
-
-
-    //     }
-    // });
-
 });
 
-
-// app.get("/hotel/:hotelName", (req, res) => {
-//     let keyword = req.url.split('/').pop().split('%20').join(' ').split('+').join(' ');
-//     console.log(keyword)
-//     let result = [];
-//     for (let i = 0; i < hotels_sg.length; i++) {
-//         if (keyword === hotels_sg[i]["name"]) {
-//             result.push(hotels_sg[i]["latitude"])
-//             result.push(hotels_sg[i]["longitude"])
-//             result.push(hotels_sg[i]["address"])
-//             result.push(hotels_sg[i]["rating"])
-//             result.push(hotels_sg[i]["description"])
-//             result.push(hotels_sg[i]["amenities"])
-//         }
-//     }
-//     if (result.length === 0) {
-//         for (let i = 0; i < hotels_my.length; i++) {
-//             if (keyword === hotels_my[i]["name"]) {
-//                 result.push(hotels_my[i]["latitude"])
-//                 result.push(hotels_my[i]["longitude"])
-//                 result.push(hotels_my[i]["address"])
-//                 result.push(hotels_my[i]["rating"])
-//                 result.push(hotels_my[i]["description"])
-//                 result.push(hotels_my[i]["amenities"])
-//             }
-//         }
-//     }
-//     console.log(result)
-//     res.json(result)
-// })
 
 app.get("/hotel/:hotelName", async function (req, res) {
     let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/' + req.url.split('/').pop();
@@ -214,7 +113,7 @@ app.get("/search", async (req, res) => {
                 .then(response => {
                     apiResult = response.data;
                 })
-                .catch((error) => {
+                .catch(() => {
                     console.log("error @ getting hotel ID by filters");
                 });
             if (typeof apiResult === 'undefined' || apiResult["hotels"].length === 0) {
@@ -281,7 +180,7 @@ app.get("/search", async (req, res) => {
                                 currResult.push(response.data["rating"])
                                 resResult.push(currResult)
                             })
-                            .catch((error) => {
+                            .catch(() => {
                                 console.log("error @ getting hotel detail by ID");
                             });
                         // (每次try的时候判断当前的结果的长度是不是0)
@@ -316,7 +215,7 @@ app.get("/search", async (req, res) => {
 })
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({server})
+const wss = new WebSocketServer({server})
 
 
 wss.on('connection', ws => {
