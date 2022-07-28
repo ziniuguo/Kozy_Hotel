@@ -1,5 +1,6 @@
 import React from "react";
 import './assets/style.css'
+import {Link} from "react-router-dom";
 
 function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
@@ -26,7 +27,7 @@ class MainPage extends React.Component {
                         <div id={"welcomeDesc"}>
                             Book for your travel anywhere
                         </div>
-                        <button id={"mainPageBtn"}
+                        <button className={"mainPageBtn"}
                                 onClick={() => window.open("/search?q=&page=1&loc=Singapore%2C+Singapore&locID=RsBU&checkin=" +
                                     formatDate(new Date()) +
                                     "&checkout=" +
@@ -34,7 +35,11 @@ class MainPage extends React.Component {
                                     "&guests=2", "_self")}>
                             Book&nbsp;Now
                         </button>
-
+                        <button className={"mainPageBtn"}
+                                onClick={() => window.open("/profile", "_self")}
+                        >
+                            Manage
+                        </button>
 
                     </div>
                 </div>
