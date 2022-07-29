@@ -217,7 +217,7 @@ class Result extends React.Component {
                 </div> */}
                 <br/>
                 <div className="centerLoc">
-                    <Card style={{height: '220px', width: '84.5rem'}}>
+                    <Card style={{height: '220px', width: '84.5rem'}} className="boxShadow">
                         <div className="formStyle">
                             <form id={"locForm"}>
                                 <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q}
@@ -394,7 +394,7 @@ class Result extends React.Component {
                         :
                         <ListGroup className="centerLoc">
                             {this.state.searchData.map((hotel, i) =>
-                                <ListGroupItem key={i}>
+                                <ListGroupItem key={i} className="boxShadow">
                                     <div>
                                         <div
                                             style={{
@@ -462,7 +462,7 @@ class Result extends React.Component {
                         </ListGroup>
 
                 }
-                <div style={{"textAlign": "center"}}>
+                <div style={{"textAlign": "center"}} >
                     <p></p>
                     <button className="pageButton"
                             disabled={this.state.queryParams.page <= 1}

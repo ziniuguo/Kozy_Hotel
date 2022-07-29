@@ -112,7 +112,7 @@ class RoomDetail extends React.Component {
                      backgroundColor: "#F2F8FE",
                  }}
             >
-                <Card style={{ width: '80rem' }}>
+                <Card style={{ width: '80rem' }} className="boxShadow">
                     <div className="ImgContainer">
                         <Slider {...settings}>
                             {this.state.images.map(image=>(

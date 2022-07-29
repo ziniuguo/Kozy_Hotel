@@ -11,7 +11,7 @@ import otpGenerator from "otp-generator";
 const secret = 'mySecret';
 // should not be hardcoded. irl should use env variable
 
-const mongo_uri = 'mongodb://localhost:27017/auth';
+const mongo_uri = 'mongodb://127.0.0.1:27017/auth';
 mongoose.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true}, function (err) {
     if (err) {
         throw err;

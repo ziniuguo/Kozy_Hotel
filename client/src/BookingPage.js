@@ -136,12 +136,9 @@ export default function BookingPage() {
 
     return (
       <Styles>
-
-        <br/><h1>Hotel booking form</h1>
-
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-            
+          <div style={{backgroundColor: "#F2F8FE"}}>
+            <form onSubmit={handleSubmit(onSubmit)} className="boxShadow">
+            <h1 >Hotel booking form</h1>
             <div>
               <input id="destID" type="text" value={destID} {...register("destinationID")} readOnly/>
               <input id="hotelID" type="text" value={hotelID} {...register("hotelID")} readOnly/>
