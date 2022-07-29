@@ -1,10 +1,10 @@
 # ESC C2G6
-### To start server (nodemon):
+### To start server:
+nodemon:
 ```
 npm run dev
 ```
-
-### To start server:
+normal:
 ```
 npm run start
 ```
@@ -15,6 +15,7 @@ npm run start
 ```
 
 ### To register a user without using OTP:
+**UPDATE: You cannot use OTP from ```sprCatRoll@gmail.com``` now. Please register manually following the steps below.**
 ```
 curl -X POST \
   http://localhost:5000/register \
