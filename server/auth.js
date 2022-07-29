@@ -6,17 +6,23 @@ import withAuth from "./middleware.js";
 import cookieParser from "cookie-parser";
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
+import {MongoClient} from "mongodb";
 
 
 const secret = 'mySecret';
 // should not be hardcoded. irl should use env variable
 
+<<<<<<< HEAD
 const mongo_uri = 'mongodb://127.0.0.1:27017/auth';
 mongoose.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true}, function (err) {
+=======
+const mongo_auth_uri = 'mongodb://localhost:27017/auth';
+mongoose.connect(mongo_auth_uri, {useNewUrlParser: true, useUnifiedTopology: true}, function (err) {
+>>>>>>> main
     if (err) {
         throw err;
     } else {
-        console.log(`Successfully connected to ${mongo_uri}`);
+        console.log(`Successfully connected to ${mongo_auth_uri}`);
     }
 });
 
@@ -26,11 +32,42 @@ router.use(cookieParser());
 
 router.get('/manage', withAuth, function (req, res) {
     // 先withAuth，不通过直接给401
-    res.send('ni deng lu le. zai zhe li chu li database de stuff.');
-})
+    const client = new MongoClient("mongodb://localhost:27017/")
+    let bookingInfo = [];
+    async function run() {
+        try {
+            function myFunc (obj) {
+                if (obj["emailAddress"] === req.email) {
+                    delete obj["creditCardNumber"];
+                    delete obj["_id"];
+                    delete obj["billingAddress"];
+                    delete obj["CVV_CVC"];
+                    delete obj["cardExpiry"];
+                    delete obj["emailAddress"];
+                    delete obj["creditCardNumber"];
+                    bookingInfo.push(obj);
+                }
+            }
+            await client.connect();
+            // database and collection code goes here
+            const db = client.db("hotelBookingSystem");
+            const coll = db.collection("bookings");
+            // find code goes here
+            const cursor = coll.find();
+            // iterate code goes here
+            await cursor.forEach(myFunc);
+        } finally {
+            // Ensures that the client will close when you finish/error
+            await client.close();
+        }
+    }
+    run().catch(console.dir).then(
+        () => {
+            res.send(bookingInfo);
+        }
+    );
 
-router.get('/checkToken', withAuth, function (req, res) {
-    res.sendStatus(200);
+
 })
 
 router.get('/login', function (req, res) {
@@ -121,7 +158,7 @@ router.post('/authenticate', function (req, res) {
                     const token = jwt.sign(payload, secret, {
                         // login status expire after 3 min
                         // cookie
-                        expiresIn: 60 * 3
+                        expiresIn: 60 * 3 * 2000
                     });
                     // use cookie
                     res.cookie('token', token, {
