@@ -18,6 +18,8 @@ import Ratings from "react-ratings-declarative/build/ratings";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import Form from 'react-bootstrap/Form';
+
 
 const socket = new WebSocket('ws://localhost:5000')
 
@@ -207,13 +209,15 @@ class Result extends React.Component {
 
     render() {
         return (
-            <div>
+            <div style={{backgroundColor: "#F2F8FE"}} >
+            {/* style={{backgroundImage: `url("http://localhost:3000/coverImg.jpg")` }} */}
                 {/* <div>
                     <button onClick={() => window.open("/", "_self")}>Back to main
                     </button>
                 </div> */}
+                <br/>
                 <div className="centerLoc">
-                    <Card style={{height: '150px', width: '85rem'}}>
+                    <Card style={{height: '220px', width: '84.5rem'}}>
                         <div className="formStyle">
                             <form id={"locForm"}>
                                 <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q}
@@ -311,7 +315,7 @@ class Result extends React.Component {
                             <Input readOnly={true} style={{display: 'none'}} type="text"
                                    value={formatDate(this.state.date2)}
                                    name="checkout"/>
-                            <label>No. of Guests:</label>
+                            <label>Room type:</label>
                             <Input readOnly={true} style={{"display": "none"}} type="text"
                                    value={this.handleRoomSubmit(this.state.guestNo)}
                                    name="guests"/>
@@ -320,10 +324,10 @@ class Result extends React.Component {
                                     style={{
                                         "display": "flex",
                                         "flexDirection": "row",
-                                        "alignItems": "center"
+                                        "alignItems": "center",
                                     }}
                                 >
-                                    1 room <Badge
+                                    Single<Badge
                                     onClick={() => this.handleRoom(0, false)}
                                     style={{"margin": "5px"}} pill>-</Badge>
                                     <div>{this.state.guestNo[0]}</div>
@@ -336,7 +340,7 @@ class Result extends React.Component {
                                     "flexDirection": "row",
                                     "alignItems": "center"
                                 }}>
-                                    2 room <Badge
+                                    Double <Badge
                                     onClick={() => this.handleRoom(1, false)}
                                     style={{"margin": "5px"}} pill>-</Badge>
                                     <div>{this.state.guestNo[1]}</div>
@@ -349,7 +353,7 @@ class Result extends React.Component {
                                     "flexDirection": "row",
                                     "alignItems": "center"
                                 }}>
-                                    3 room <Badge
+                                    Suite<Badge
                                     onClick={() => this.handleRoom(2, false)}
                                     style={{"margin": "5px"}} pill>-</Badge>
                                     <div>{this.state.guestNo[2]}</div>
@@ -362,7 +366,7 @@ class Result extends React.Component {
                                     "flexDirection": "row",
                                     "alignItems": "center"
                                 }}>
-                                    4 room <Badge
+                                    Executive Suite <Badge
                                     onClick={() => this.handleRoom(3, false)}
                                     style={{"margin": "5px"}} pill>-</Badge>
                                     <div>{this.state.guestNo[3]}</div>
@@ -375,6 +379,7 @@ class Result extends React.Component {
                         </form>
                     </Card>
                 </div>
+                <br/>
 
                 {
                     (JSON.stringify(this.state.searchData) === '["empty"]'

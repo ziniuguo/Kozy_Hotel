@@ -56,6 +56,16 @@ body {
     border-radius: 10px;
     font-family: Arial;
 }
+.bookButton {
+    background-color: #6976d9;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 20px 0px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-family: Arial;
+}
 
 .centerLoc{
     display:flex;
@@ -66,12 +76,12 @@ body {
     width: 100%
 }
 .formStyle{
-  border:1px solid #ffffff;
+  /* border:1px solid #ffffff; */
   background: white;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   margin: 0 auto;
   max-width: 500px;
-  padding: 10px 40px;
+  padding: 10px;
 }
