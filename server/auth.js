@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import withAuth from "./middleware.js";
 import cookieParser from "cookie-parser";
+import nodemailer from "nodemailer";
+import otpGenerator from "otp-generator";
+
 
 const secret = 'mySecret';
 // should not be hardcoded. irl should use env variable
@@ -35,6 +38,7 @@ router.get('/login', function (req, res) {
 });
 
 // POST route to register a user
+// this is a testing function
 router.post('/register', function (req, res) {
     const {email, password} = req.body;
     const user = new User({email, password});
@@ -49,12 +53,57 @@ router.post('/register', function (req, res) {
     });
 });
 
+router.post('/OTP', async function (req, res) {
+    const {email} = req.body;
+    const transporter = nodemailer.createTransport({
+        port: 465,               // true for 465, false for other ports
+        host: "smtp.gmail.com",
+        auth: {
+            user: 'sprcatroll@gmail.com',
+            pass: 'dlmlgufzngomfqof', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
+        },
+        secure: true,
+    });
+    const password = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false
+    });
+    const mailOptions = {
+        from: 'sprcatroll@gmail.com',
+        to: email,
+        subject: 'Your one time password for login',
+        text: '[Expiring in 3 minutes] Your one time password is: ' + password
+    };
+
+    // delete if it exists already
+    await User.deleteOne({email});
+    // add to database
+    const user = new User({email, password});
+    user.save(function (err) {
+        if (err) {
+            console.log(err)
+            res.status(500).json({error: 'Error saving {email, otp}'});
+        } else {
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                    res.status(500).json({error: 'error sending email, internal server err'});
+                } else {
+                    console.log('Email sent: ' + info.response);
+                    res.sendStatus(200);
+                }
+            });
+        }
+    });
+});
+
 router.post('/authenticate', function (req, res) {
     const {email, password} = req.body;
     User.findOne({email}, function (err, user) {
         if (err) {
             console.log(err);
-            res.status(500).json({error: 'error User.findOne'});
+            res.status(500).json({error: 'error User.findOne @Auth'});
         } else if (!user) {
             // no existence of user
             res.status(401).json({error: 'Incorrect email or password'});
@@ -70,6 +119,8 @@ router.post('/authenticate', function (req, res) {
                     // Issue token
                     const payload = {email};
                     const token = jwt.sign(payload, secret, {
+                        // login status expire after 3 min
+                        // cookie
                         expiresIn: 60 * 3
                     });
                     // use cookie

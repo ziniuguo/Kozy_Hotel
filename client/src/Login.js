@@ -1,5 +1,6 @@
 import React from "react";
 import {Navigate} from 'react-router-dom';
+import {Button} from "reactstrap";
 
 class Login extends React.Component {
     constructor() {
@@ -9,7 +10,13 @@ class Login extends React.Component {
             email: '',
             password: '',
             nav: false,
+            btnDisabled: false,
+            countdown: 0,
         }
+    }
+
+    componentDidMount() {
+
     }
 
     handleInputChange = (event) => {
@@ -18,6 +25,7 @@ class Login extends React.Component {
             [name]: value
         });
     }
+
     onSubmit = (event) => {
         event.preventDefault();
         fetch('/authenticate', {
@@ -29,12 +37,48 @@ class Login extends React.Component {
         }).then(res => {
             if (res.status === 200) {
                 this.setState({nav: true})
+            } else if (res.status === 401) {
+                window.alert('Incorrect email or password, please try again.')
             } else {
                 throw new Error(res.error);
             }
         }).catch(err => {
             console.log(err);
-            window.alert('Error logging in, please try again.')
+            window.alert('Error logging in, please try again later.')
+        })
+    }
+
+    handleOTP() {
+        this.setState({btnDisabled: true})
+        fetch('/OTP', {
+            method: 'POST',
+            body: JSON.stringify({email: this.state.email}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            if (res.status === 200) {
+                window.alert('OTP sent.');
+            } else {
+                throw new Error(res.error);
+            }
+            this.setState({countdown: 30})
+            setTimeout(function () {
+                this.setState({btnDisabled: false})
+            }.bind(this), 30000)
+            const interval = setInterval(function () {
+                if (this.state.countdown === 0) {
+                    clearInterval(interval);
+                } else {
+                    const temp = this.state.countdown;
+                    this.setState({
+                        countdown: temp - 1
+                    })
+                }
+            }.bind(this), 1000);
+        }).catch(err => {
+            console.log(err);
+            window.alert('Error sending OTP, please try again later.')
         })
     }
 
@@ -53,6 +97,19 @@ class Login extends React.Component {
                         onChange={this.handleInputChange}
                         required
                     />
+                    <Button
+                        style={{
+                            "width": "120px"
+                        }}
+                        disabled={this.state.btnDisabled}
+                        onClick={() => this.handleOTP()}
+                    >
+                        GetOTP
+                        {(this.state.countdown === 0)
+                            ? ""
+                            : "(" + this.state.countdown + ")"}
+                    </Button>
+                    <br/>
                     <input
                         type="password"
                         name="password"
@@ -61,6 +118,7 @@ class Login extends React.Component {
                         onChange={this.handleInputChange}
                         required
                     />
+                    <br/>
                     <input type="submit" value="Submit"/>
                 </form>
             </div>
