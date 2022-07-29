@@ -41,8 +41,7 @@ app.post('/booking', function (req, res) {
         }
 
     }
-    addBooking(newBooking).then();
-    res.send(newBooking);
+    addBooking(newBooking).then(() => res.send(newBooking));
 });
 
 
