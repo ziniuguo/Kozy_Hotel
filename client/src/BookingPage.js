@@ -163,11 +163,11 @@ export default function BookingPage() {
                     </td>
 
                     <td>
-                      <label>Number of guests: <br/><b>
-                          single room: {getGuestRoom(guests)[0]}<br/>
-                          double room: {getGuestRoom(guests)[1]}<br/>
-                          family room: {getGuestRoom(guests)[2]}<br/>
-                          big ass ultra-wide room: {getGuestRoom(guests)[3]}
+                      <label>Room booking list: <br/><b>
+                          Single: {getGuestRoom(guests)[0]}<br/>
+                          Double: {getGuestRoom(guests)[1]}<br/>
+                          Suite: {getGuestRoom(guests)[2]}<br/>
+                          Executive Suite: {getGuestRoom(guests)[3]}
                       </b></label>
                       <input id="guestNum" type="text" value={guests} {...register("guests")} readOnly/>
                     </td>
