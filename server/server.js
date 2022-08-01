@@ -99,7 +99,7 @@ app.get("/search", async (req, res) => {
                 lang: "en_US",
                 currency: "SGD",
                 country_code: "SG",
-                guests: req.query.guests,
+                guests: req.query.guests.replaceAll('%7C', '|'),
                 partner_id: 1,
             }),
             method: 'GET',
