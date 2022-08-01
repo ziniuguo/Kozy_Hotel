@@ -95,7 +95,7 @@ router.post('/OTP', async function (req, res) {
         host: "smtp.gmail.com",
         auth: {
             user: 'sprcatroll@gmail.com',
-            pass: 'dlmlgufzngomfqof', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
+            pass: 'ItsHiddenNow', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
         },
         secure: true,
     });
