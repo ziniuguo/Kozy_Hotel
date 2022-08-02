@@ -14,6 +14,26 @@ npm run start
 npm run start
 ```
 
+### MongoDB localhost:
+Sometimes MongoDB localhost is resolved to ::1 although IPv6 is not enabled. To prevent that from happening:
+#### Enable IPv6 for MongoDB:
+```
+sudo nano /etc/mongodb.conf
+```
+```
+# network interfaces:
+net:
+  port: 27017
+  bindIp: ::1, 127.0.0.1 # ::1 is IPv6
+  ipv6: true # enable IPv6
+```
+I suppose your local network config be like:
+```
+127.0.0.1 localhost
+::1 localhost
+127.0.0.1 yourhostname
+```
+
 ### To register a user without using OTP:
 **UPDATE: You cannot use OTP from ```sprCatRoll@gmail.com``` now. Please register manually following the steps below.**
 ```
