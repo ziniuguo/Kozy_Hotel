@@ -1,10 +1,10 @@
 import http from "http";
 import express from "express";
 import axios from "axios";
-import {MongoClient} from "mongodb";
 import {WebSocketServer} from "ws";
 import fs from "fs";
 import auth from "./auth.js";
+import booking from "./makeBooking.js";
 
 
 const app = express();
@@ -19,30 +19,42 @@ app.use(express.urlencoded({extended: false}));
 // app.get('/manage', auth);
 // app.post('/register', auth);
 // app.post('/authenticate', auth)
-app.use(auth) // auth is router
 
-app.post('/booking', function (req, res) {
-    let newBooking = req.body;
-    console.log('received!');
+app.use(auth); // auth is router
+app.use(booking); //booking is also a router
 
-    const url = "mongodb://localhost:27017/";
-    const client = new MongoClient(url);
+// app.post('/booking', function (req, res) {
+//     let newBooking = req.body;
+//     console.log('received!');
 
-    async function addBooking(booking){
-        try{
-            const bDB = client.db('hotelBookingSystem');
-            const bookingsC = bDB.collection('bookings');
+//     // const client = new MongoClient(url);
 
-            await bookingsC.insertOne(booking);
-            console.log("New booking added to bookings collection!");
-        }
-        finally{
-            await client.close();
-        }
+//     async function addBooking(booking){
 
-    }
-    addBooking(newBooking).then(() => res.send(newBooking));
-});
+//         await mongoose.createConnection('mongodb://localhost:27017/hotelBookingSystem', {useNewUrlParser: true, useUnifiedTopology: true}, function (err) {
+//             if (err) {
+//                 throw err;
+//             } else {
+//                 console.log(`Successfully connected to hotelBookingSystem!`);
+//             }
+//         });
+
+//         // const bDB = client.db('hotelBookingSystem');
+//         // const bookingsC = bDB.collection('bookings');
+
+//         const nextBooking = new Booking(booking);
+
+//         await nextBooking.save().then(() => console.log("New booking added!"));
+//         console.log(nextBooking);
+
+//         mongoose.disconnect();
+
+//     }
+
+//     addBooking(newBooking)
+//     .then(() => res.send(newBooking))
+//     .catch(err => console.log(err));
+// });
 
 
 app.get("/hotel/:hotelName", async function (req, res) {

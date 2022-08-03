@@ -128,7 +128,10 @@ export default function BookingPage() {
                 console.log(error)
             });
         console.log("POST done!")
-        const jsonData = await response.json();
+        const jsonData = await response.json()
+        .catch((error) => {
+            console.log(error)
+        });
         console.log(jsonData);
 
         alert("Booking confirmed! Enjoy your trip!");
