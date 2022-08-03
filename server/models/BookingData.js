@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
-import Cryptr from "Cryptr";
+import Cryptr from "cryptr";
+
 
 const cryptr = new Cryptr('bookingSecret');
 
 const BookingSchema = new mongoose.Schema({
     imgUri: {type: String},
     hotelName: {type: String, required: true},
+    hotelAddress: {type: String, required: true},
     destinationID: {type: String, required: true},
     hotelID: {type: String, required: true},
     checkinDate: {type: String, required: true},
@@ -23,9 +25,9 @@ const BookingSchema = new mongoose.Schema({
     billingAddress: {type: String, required: true}
 });
 
-BookingSchema.post('find', function(result) {
-    
-    result.forEach(function(doc){
+BookingSchema.post('find', function (result) {
+
+    result.forEach(function (doc) {
         doc.firstName = cryptr.decrypt(doc.firstName);
         doc.lastName = cryptr.decrypt(doc.lastName);
         doc.phoneNumber = cryptr.decrypt(doc.phoneNumber);
@@ -38,7 +40,7 @@ BookingSchema.post('find', function(result) {
 })
 
 
-BookingSchema.pre('save', function(next){
+BookingSchema.pre('save', function (next) {
     const doc = this;
 
 
@@ -50,9 +52,6 @@ BookingSchema.pre('save', function(next){
 
     const phoneNumber = doc.phoneNumber;
     doc.phoneNumber = cryptr.encrypt(phoneNumber);
-    
-    // const emailAddress = doc.emailAddress;
-    // doc.emailAddress = cryptr.encrypt(emailAddress);
 
     const creditCardNumber = doc.creditCardNumber;
     doc.creditCardNumber = cryptr.encrypt(creditCardNumber);
@@ -67,7 +66,7 @@ BookingSchema.pre('save', function(next){
     doc.billingAddress = cryptr.encrypt(billingAddress);
 
     next();
-    
+
 });
 
 

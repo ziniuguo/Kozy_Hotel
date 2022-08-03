@@ -4,10 +4,6 @@ import "./RoomDetail.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-// import coverImg from "./assets/coverImg.jpg";
-// import testImg1 from "./assets/test1.jpg" ;
-// import testImg2 from "./assets/test2.jpg" 
-// import testImg3 from "./assets/EVA.jfif" 
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 
@@ -82,6 +78,7 @@ class RoomDetail extends React.Component {
                 console.log(json);
                 sessionStorage.setItem("hotelName", json[0]);
                 sessionStorage.setItem("imgUri", json[6] + "1.jpg");
+                sessionStorage.setItem("hotelAddress", json[3]);
                 this.setState({
                     name: json[0],
                     lat: JSON.stringify(json[1]),
