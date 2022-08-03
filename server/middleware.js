@@ -5,7 +5,7 @@ const withAuth = function (req, res, next) {
     const token = req.cookies.token;
 
     if (!token) {
-        // auth以后会有cookie，如果没cookie就send这个
+        // There will be cookie after auth. Otherwise, send 401.
         res.status(401).send('Unauthorized: No token provided');
     } else {
         jwt.verify(token, secret, function (err, decoded) {

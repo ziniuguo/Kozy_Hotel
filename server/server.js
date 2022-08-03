@@ -14,13 +14,10 @@ const destination = JSON.parse(fs.readFileSync('destinations.json'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-
-// app.get('/login', auth);
-// app.get('/manage', auth);
-// app.post('/register', auth);
-// app.post('/authenticate', auth)
+// authentication router
 app.use(auth) // auth is router
 
+// handle booking POST request
 app.post('/booking', function (req, res) {
     let newBooking = req.body;
     console.log('received!');
@@ -44,14 +41,14 @@ app.post('/booking', function (req, res) {
     addBooking(newBooking).then(() => res.send(newBooking));
 });
 
-
+// handle hotel detail page GET request
 app.get("/hotel/:hotelName", async function (req, res) {
-    let tryURL = 'https://hotelapi.loyalty.dev/api/hotels/' + req.url.split('/').pop();
+    let queryURL = 'https://hotelapi.loyalty.dev/api/hotels/' + req.url.split('/').pop();
     let apiResult;
     let result = [];
-    console.log(tryURL)
+    console.log(queryURL)
     const getOptions = {
-        url: tryURL,
+        url: queryURL,
         method: 'GET',
         headers: {'Content-Type': 'application/json'},
     }
@@ -75,7 +72,9 @@ app.get("/hotel/:hotelName", async function (req, res) {
     res.json(result)
 })
 
+// handle search GET request. Search params are in URL
 app.get("/search", async (req, res) => {
+    // q is not currently implemented
     if (req.query.hasOwnProperty('q') &&
         req.query.hasOwnProperty('page') &&
         req.query.hasOwnProperty("loc") &&

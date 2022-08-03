@@ -26,12 +26,13 @@ const router = Router();
 router.use(cookieParser());
 
 router.get('/manage', withAuth, function (req, res) {
-    // 先withAuth，不通过直接给401
+    // withAuth first. If not pass, cannot connect.
+    // It is connected with fetch. The data returned iS [] if no booking exists.
     const client = new MongoClient("mongodb://localhost:27017/")
     let bookingInfo = [];
     async function run() {
         try {
-            function myFunc (obj) {
+            function handleBookingItem (obj) {
                 if (obj["emailAddress"] === req.email) {
                     delete obj["creditCardNumber"];
                     delete obj["_id"];
@@ -50,7 +51,7 @@ router.get('/manage', withAuth, function (req, res) {
             // find code goes here
             const cursor = coll.find();
             // iterate code goes here
-            await cursor.forEach(myFunc);
+            await cursor.forEach(handleBookingItem);
         } finally {
             // Ensures that the client will close when you finish/error
             await client.close();
@@ -65,12 +66,8 @@ router.get('/manage', withAuth, function (req, res) {
 
 })
 
-router.get('/login', function (req, res) {
-    res.send('welcome!');
-});
-
 // POST route to register a user
-// this is a testing function
+// this is a testing function, users are not expected to use it to register.
 router.post('/register', function (req, res) {
     const {email, password} = req.body;
     const user = new User({email, password});
@@ -92,7 +89,7 @@ router.post('/OTP', async function (req, res) {
         host: "smtp.gmail.com",
         auth: {
             user: 'sprcatroll@gmail.com',
-            pass: 'ItsHiddenNow', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
+            pass: 'dlmlgufzngomfqof', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
         },
         secure: true,
     });
@@ -153,7 +150,7 @@ router.post('/authenticate', function (req, res) {
                     const token = jwt.sign(payload, secret, {
                         // login status expire after 3 min
                         // cookie
-                        expiresIn: 60 * 3 * 2000
+                        expiresIn: 60 * 3 * 2000000000
                     });
                     // use cookie
                     res.cookie('token', token, {
