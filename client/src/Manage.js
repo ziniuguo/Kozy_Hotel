@@ -31,11 +31,11 @@ class Manage extends React.Component{
     render() {
         return (
             <div>
-                <h1>Home</h1>
+                <h1>List: </h1><br/>
                 <p>{this.state.message}</p>
                 <div>
                     <ListGroup className="centerLoc">
-                            {this.state.message.map((hotel, i) =>
+                            {/* {this.state.message.map((hotel, i) =>
                                 <ListGroupItem key={i} className="boxShadow">
                                     <div>
                                         <div
@@ -100,7 +100,7 @@ class Manage extends React.Component{
                                         </div>
                                     </div>
                                 </ListGroupItem>
-                            )}
+                            )} */}
                         </ListGroup>            
                 </div>
             </div>
