@@ -89,6 +89,7 @@ export default function BookingPage() {
     let guests = sessionStorage.getItem("guestCount");
     let hotelName = sessionStorage.getItem("hotelName");
     let imgUri = sessionStorage.getItem("imgUri");
+    let hotelAddress = sessionStorage.getItem("hotelAddress");
 
     function getGuestRoom(guestsParam) {
         let ls = guestsParam.split('|');
@@ -134,7 +135,7 @@ export default function BookingPage() {
         });
         console.log(jsonData);
 
-        alert("Booking confirmed! Enjoy your trip!");
+        window.alert("Booking confirmed! Enjoy your trip!");
         reset();
     }
 
@@ -149,6 +150,7 @@ export default function BookingPage() {
                     <div>
                         <input value={imgUri} {...register("imgUri")} readOnly style={{"display": "none"}}/>
                         <input value={hotelName} {...register("hotelName")} readOnly style={{"display": "none"}}/>
+                        <input value={hotelAddress} {...register("hotelAddress")} readOnly style={{"display": "none"}}/>
 
 
                         <input id="destID" type="text" value={destID} {...register("destinationID")} readOnly/>
