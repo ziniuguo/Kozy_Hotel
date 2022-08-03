@@ -1,11 +1,12 @@
 import {Router} from "express";
-import User from "./models/User.js";
+import UserSchema from "./models/User.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import withAuth from "./middleware.js";
 import cookieParser from "cookie-parser";
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
+import axios from "axios";
 import {MongoClient} from "mongodb";
 
 
@@ -13,7 +14,7 @@ const secret = 'mySecret';
 // should not be hardcoded. irl should use env variable
 
 const mongo_auth_uri = 'mongodb://localhost:27017/auth';
-mongoose.connect(mongo_auth_uri, {useNewUrlParser: true, useUnifiedTopology: true}, function (err) {
+const authConn = mongoose.createConnection(mongo_auth_uri, {useNewUrlParser: true, useUnifiedTopology: true}, function (err) {
     if (err) {
         throw err;
     } else {
@@ -25,42 +26,57 @@ const router = Router();
 
 router.use(cookieParser());
 
+
 router.get('/manage', withAuth, function (req, res) {
     // 先withAuth，不通过直接给401
-    const client = new MongoClient("mongodb://localhost:27017/")
+    // const client = new MongoClient("mongodb://localhost:27017/")
+    // let bookingInfo = [];
+    // async function run() {
+    //     try {
+    //         function myFunc (obj) {
+    //             if (obj["emailAddress"] === req.email) {
+    //                 delete obj["creditCardNumber"];
+    //                 delete obj["_id"];
+    //                 delete obj["billingAddress"];
+    //                 delete obj["CVV_CVC"];
+    //                 delete obj["cardExpiry"];
+    //                 delete obj["emailAddress"];
+    //                 delete obj["creditCardNumber"];
+    //                 bookingInfo.push(obj);
+    //             }
+    //         }
+    //         await client.connect();
+    //         // database and collection code goes here
+    //         const db = client.db("hotelBookingSystem");
+    //         const coll = db.collection("bookings");
+    //         // find code goes here
+    //         const cursor = coll.find();
+    //         // iterate code goes here
+    //         await cursor.forEach(myFunc);
+    //     } finally {
+    //         // Ensures that the client will close when you finish/error
+    //         await client.close();
+    //     }
+    // }
+    // run().catch(console.dir).then(
+    //     () => {
+    //         res.send(bookingInfo);
+    //     }
+    // );
+
+
+    // currently a hardcoded email, do replace it with the queried email.
     let bookingInfo = [];
-    async function run() {
-        try {
-            function myFunc (obj) {
-                if (obj["emailAddress"] === req.email) {
-                    delete obj["creditCardNumber"];
-                    delete obj["_id"];
-                    delete obj["billingAddress"];
-                    delete obj["CVV_CVC"];
-                    delete obj["cardExpiry"];
-                    delete obj["emailAddress"];
-                    delete obj["creditCardNumber"];
-                    bookingInfo.push(obj);
-                }
-            }
-            await client.connect();
-            // database and collection code goes here
-            const db = client.db("hotelBookingSystem");
-            const coll = db.collection("bookings");
-            // find code goes here
-            const cursor = coll.find();
-            // iterate code goes here
-            await cursor.forEach(myFunc);
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
-    }
-    run().catch(console.dir).then(
-        () => {
-            res.send(bookingInfo);
-        }
-    );
+
+    axios.get('http://localhost:5000/getbookings/' + 'testing.out@gmail.com')
+    .then(response => {
+        console.log('requested data received!')
+        bookingInfo = response.data
+        console.log(bookingInfo);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 
 
 })
@@ -73,6 +89,7 @@ router.get('/login', function (req, res) {
 // this is a testing function
 router.post('/register', function (req, res) {
     const {email, password} = req.body;
+    const User = authConn.model('Users', UserSchema)
     const user = new User({email, password});
     user.save(function (err) {
         console.log(err)
