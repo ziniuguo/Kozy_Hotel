@@ -24,9 +24,9 @@ const BookingSchema = new mongoose.Schema({
     billingAddress: {type: String, required: true}
 });
 
-BookingSchema.post('find', function(result) {
-    
-    result.forEach(function(doc){
+BookingSchema.post('find', function (result) {
+
+    result.forEach(function (doc) {
         doc.firstName = cryptr.decrypt(doc.firstName);
         doc.lastName = cryptr.decrypt(doc.lastName);
         doc.phoneNumber = cryptr.decrypt(doc.phoneNumber);
@@ -39,7 +39,7 @@ BookingSchema.post('find', function(result) {
 })
 
 
-BookingSchema.pre('save', function(next){
+BookingSchema.pre('save', function (next) {
     const doc = this;
 
 
@@ -51,7 +51,7 @@ BookingSchema.pre('save', function(next){
 
     const phoneNumber = doc.phoneNumber;
     doc.phoneNumber = cryptr.encrypt(phoneNumber);
-    
+
     // const emailAddress = doc.emailAddress;
     // doc.emailAddress = cryptr.encrypt(emailAddress);
 
@@ -68,7 +68,7 @@ BookingSchema.pre('save', function(next){
     doc.billingAddress = cryptr.encrypt(billingAddress);
 
     next();
-    
+
 });
 
 

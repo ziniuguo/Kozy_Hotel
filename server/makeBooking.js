@@ -4,7 +4,10 @@ import BookingSchema from "./models/BookingData.js";
 
 
 const bookings_uri = 'mongodb://localhost:27017/hotelBookingSystem';
-const bookingsConn = mongoose.createConnection(bookings_uri, {useNewUrlParser: true, useUnifiedTopology: true}, function (err) {
+const bookingsConn = mongoose.createConnection(bookings_uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}, function (err) {
     if (err) {
         throw err;
     } else {
@@ -20,16 +23,17 @@ router.post('/booking', function (req, res) {
     newBooking.emailChecking = newBooking.emailAddress;
     console.log('received!');
 
-    async function addBooking(booking){
-        
+    async function addBooking(booking) {
+
         const nextBooking = new Booking(booking);
         await nextBooking.save().then(() => console.log("New booking added!"));
         console.log(nextBooking);
     }
+
     addBooking(newBooking)
-    .then(() => res.send(newBooking))
-    // .then(() => console.log(newBooking))
-    .catch(err => console.log(err));
+        .then(() => res.send(newBooking))
+        // .then(() => console.log(newBooking))
+        .catch(err => console.log(err));
 
     // let bookInfo = [];
 
@@ -52,17 +56,18 @@ router.get('/getbookings/:email', function (req, res) {
     let retrievedBookings = [];
     console.log(userEmail);
 
-    async function findBooking(email){
+    async function findBooking(email) {
 
         console.log(email)
         const cursor = await Booking.find({'emailAddress': email});
-        cursor.forEach(function(doc){
+        cursor.forEach(function (doc) {
             retrievedBookings.push(doc);
         });
     }
+
     findBooking(userEmail)
-    .then(() => res.json(retrievedBookings))
-    .catch(err => console.log(err));
+        .then(() => res.json(retrievedBookings))
+        .catch(err => console.log(err));
 
 })
 

@@ -129,7 +129,7 @@ app.get("/search", async (req, res) => {
                 // 不过懒得改了凑合用吧
                 for (let i = 0;
                      i < currPageRawData.length;
-                     // not itemPerPage! sometimes one page not 5 items!
+                    // not itemPerPage! sometimes one page not 5 items!
                      i++) {
                     let currID = currPageRawData[i][0];
                     let currResult = [];
