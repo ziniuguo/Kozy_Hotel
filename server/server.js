@@ -1,10 +1,10 @@
 import http from "http";
 import express from "express";
 import axios from "axios";
-import {MongoClient} from "mongodb";
 import {WebSocketServer} from "ws";
 import fs from "fs";
 import auth from "./auth.js";
+import booking from "./makeBooking.js";
 
 
 const app = express();
@@ -14,32 +14,8 @@ const destination = JSON.parse(fs.readFileSync('destinations.json'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-// authentication router
-app.use(auth) // auth is router
-
-// handle booking POST request
-app.post('/booking', function (req, res) {
-    let newBooking = req.body;
-    console.log('received!');
-
-    const url = "mongodb://localhost:27017/";
-    const client = new MongoClient(url);
-
-    async function addBooking(booking){
-        try{
-            const bDB = client.db('hotelBookingSystem');
-            const bookingsC = bDB.collection('bookings');
-
-            await bookingsC.insertOne(booking);
-            console.log("New booking added to bookings collection!");
-        }
-        finally{
-            await client.close();
-        }
-
-    }
-    addBooking(newBooking).then(() => res.send(newBooking));
-});
+app.use(auth); // auth is router
+app.use(booking); //booking is also a router
 
 // handle hotel detail page GET request
 app.get("/hotel/:hotelName", async function (req, res) {
