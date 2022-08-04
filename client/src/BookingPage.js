@@ -263,7 +263,8 @@ export default function BookingPage() {
                                 <div>
                                     <label>Phone number: &nbsp;</label>
                                     <input type="text" id="phonenum" size="14" {...register("phoneNumber", {
-                                            required: "Phone number is required"
+                                            required: "Phone number is required",
+                                            pattern: {value: /^\d+$/, message: "Invalid phone number!"}
                                         }
                                     )} />
                                     <Error errors={errors.phoneNumber}/>
@@ -303,9 +304,7 @@ export default function BookingPage() {
                         <input type="text" id="creditcardNo" size="20"
                                placeholder="**** **** **** ****" {...register("creditCardNumber", {
                                 required: "Credit card number is required",
-                                minLength: 16,
-                                maxLength: 16,
-                                pattern: {value: /^[0-9]+$/i, message: "Invalid credit card number!"}
+                                pattern: {value: /^\d{16}$/, message: "Invalid credit card number!"}
                             }
                         )} />
                         <Error errors={errors.creditCardNumber}/>

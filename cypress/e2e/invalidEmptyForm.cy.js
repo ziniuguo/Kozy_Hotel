@@ -1,5 +1,5 @@
-describe('Valid form inputs', () => {
-  it('fills up valid booking form', () => {
+describe('Invalid empty form', () => {
+  it('leaves booking form empty', () => {
     cy.visit('http://localhost:3000/booking/WaXd')
 
     cy.wait(2000)
