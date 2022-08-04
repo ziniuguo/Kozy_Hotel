@@ -18,7 +18,6 @@ import Ratings from "react-ratings-declarative/build/ratings";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-import Form from 'react-bootstrap/Form';
 
 
 const socket = new WebSocket('ws://localhost:5000')
@@ -209,11 +208,6 @@ class Result extends React.Component {
     render() {
         return (
             <div style={{backgroundColor: "#F2F8FE"}} >
-            {/* style={{backgroundImage: `url("http://localhost:3000/coverImg.jpg")` }} */}
-                {/* <div>
-                    <button onClick={() => window.open("/", "_self")}>Back to main
-                    </button>
-                </div> */}
                 <br/>
                 <div className="centerLoc">
                     <Card style={{height: '220px', width: '84.5rem'}}>
@@ -448,6 +442,7 @@ class Result extends React.Component {
                                                             {"Address: " + hotel[3]}
                                                         </CardText>
                                                         <Button href={"hotel/" + hotel[0]}
+                                                                target={"_blank"}
                                                                 onClick={() => this.getBookingInfo()}>
                                                             Book
                                                         </Button>
