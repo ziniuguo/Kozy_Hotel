@@ -7,6 +7,7 @@ const cryptr = new Cryptr('bookingSecret');
 const BookingSchema = new mongoose.Schema({
     imgUri: {type: String},
     hotelName: {type: String, required: true},
+    hotelAddress: {type: String, required: true},
     destinationID: {type: String, required: true},
     hotelID: {type: String, required: true},
     checkinDate: {type: String, required: true},
@@ -51,9 +52,6 @@ BookingSchema.pre('save', function (next) {
 
     const phoneNumber = doc.phoneNumber;
     doc.phoneNumber = cryptr.encrypt(phoneNumber);
-
-    // const emailAddress = doc.emailAddress;
-    // doc.emailAddress = cryptr.encrypt(emailAddress);
 
     const creditCardNumber = doc.creditCardNumber;
     doc.creditCardNumber = cryptr.encrypt(creditCardNumber);
