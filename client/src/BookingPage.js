@@ -2,6 +2,7 @@ import React from "react";
 import {useForm} from "react-hook-form";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
+import {getGuestRoom} from "./GuestRoomConverter";
 
 
 const Styles = styled.div`
@@ -90,32 +91,6 @@ export default function BookingPage() {
     let hotelName = localStorage.getItem("hotelName");
     let imgUri = localStorage.getItem("imgUri");
     let hotelAddress = localStorage.getItem("hotelAddress");
-
-    function getGuestRoom(guestsParam) {
-        let ls = guestsParam.split('|');
-        let result = [0, 0, 0, 0];
-        for (let i = 0; i < ls.length; i++) {
-            let curr = ls[i];
-            switch (curr) {
-                case "1" :
-                    result[0] += 1;
-                    break;
-                case "2":
-                    result[1] += 1;
-                    break;
-                case "3":
-                    result[2] += 1;
-                    break;
-                case "4":
-                    result[3] += 1;
-                    break;
-                default:
-                    break;
-            }
-        }
-        return result;
-    }
-
 
     const onSubmit = async (data) => {
 
