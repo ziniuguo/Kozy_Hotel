@@ -163,7 +163,7 @@ export default function BookingPage() {
             <br/><h1>Hotel booking form</h1>
 
             <div>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form id="bookingForm" onSubmit={handleSubmit(onSubmit)}>
 
                     <div>
                         <input value={imgUri} {...register("imgUri")} readOnly style={{"display": "none"}}/>
