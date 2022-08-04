@@ -16,7 +16,7 @@ class Profile extends Component {
                 }
             }
             >
-                <div className="border d-flex align-items-center justify-content-center" style={{height: 920}}>
+                <div className="d-flex align-items-center justify-content-center" style={{height: 920}}>
                 <form className="form">
                     <h3>Login to manage your account</h3>
                     <br/>
