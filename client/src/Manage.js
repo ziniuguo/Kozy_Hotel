@@ -45,8 +45,8 @@ function getGuestRoom(guestsParam) {
 }
 
 class Manage extends React.Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         //Set default message
         this.state = {
             modal:false,

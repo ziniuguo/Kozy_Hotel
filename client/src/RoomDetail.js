@@ -69,16 +69,16 @@ class RoomDetail extends React.Component {
 
     componentDidMount() {
 
-        console.log(window.location.pathname);
-        sessionStorage.setItem("hotelID", window.location.pathname.split('/').at(-1));
+
+        localStorage.setItem("hotelID", window.location.pathname.split('/').at(-1));
 
 
         fetch(window.location.pathname).then(response => response.json())
             .then((json) => {
                 console.log(json);
-                sessionStorage.setItem("hotelName", json[0]);
-                sessionStorage.setItem("imgUri", json[6] + "1.jpg");
-                sessionStorage.setItem("hotelAddress", json[3]);
+                localStorage.setItem("hotelName", json[0]);
+                localStorage.setItem("imgUri", json[6] + "1.jpg");
+                localStorage.setItem("hotelAddress", json[3]);
                 this.setState({
                     name: json[0],
                     lat: JSON.stringify(json[1]),

@@ -32,7 +32,7 @@ class MainPage extends React.Component {
                                     formatDate(new Date()) +
                                     "&checkout=" +
                                     formatDate(new Date((new Date()).valueOf() + 1000 * 3600 * 24)) +
-                                    "&guests=2", "_self")}>
+                                    "&guests=2")}>
                             Book&nbsp;Now
                         </button>
                         <button className={"mainPageBtn"}

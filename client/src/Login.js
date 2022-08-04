@@ -5,8 +5,8 @@ import Form from 'react-bootstrap/Form';
 import background from "./assets/0.jpg";
 
 class Login extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         //Set default message
         this.state = {
             email: '',
