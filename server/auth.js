@@ -35,7 +35,7 @@ router.get('/manage', withAuth, function (req, res) {
 
     axios.get('http://localhost:5000/getbookings/' + req.email)
         .then(response => {
-            console.log('requested data received!')
+            console.log('get booking: requested data received!')
             bookingInfo = response.data;
             console.log(bookingInfo);
             res.send(bookingInfo);
@@ -72,7 +72,7 @@ router.post('/OTP', async function (req, res) {
         },
         secure: true,
     });
-    const password = otpGenerator.generate(6, {
+    const OTP_password = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
         specialChars: false
@@ -81,29 +81,36 @@ router.post('/OTP', async function (req, res) {
         from: 'sprcatroll@gmail.com',
         to: email,
         subject: 'Your one time password for login',
-        text: '[Expiring in 3 minutes] Your one time password is: ' + password
+        text: '[Expiring in 3 minutes] Your one time password is: ' + OTP_password
     };
 
     // delete if it exists already
-    await User.deleteOne({email});
-    // add to database
-    const user = new User({email, password});
-    user.save(function (err) {
+    User.deleteOne({email: email}, function (err) {
+        console.log("deleting existing OTP email: " + email + "...")
         if (err) {
-            console.log(err)
-            res.status(500).json({error: 'Error saving {email, otp}'});
+            res.sendStatus(500);
         } else {
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.log(error);
-                    res.status(500).json({error: 'error sending email, internal server err'});
+            // add to database
+            const user = new User({email: email, password: OTP_password});
+            user.save(function (err) {
+                if (err) {
+                    console.log(err)
+                    res.status(500).json({error: 'Error saving {email, otp}'});
                 } else {
-                    console.log('Email sent: ' + info.response);
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            console.log(error);
+                            res.status(500).json({error: 'error sending email, internal server err'});
+                        } else {
+                            console.log('Email sent: ' + info.response);
                     res.sendStatus(200);
+                        }
+                    });
                 }
             });
         }
     });
+
 });
 
 router.post('/authenticate', function (req, res) {
