@@ -36,11 +36,15 @@ class MainPage extends React.Component {
                             Book&nbsp;Now
                         </button>
                         <button className={"mainPageBtn"}
+                                style={{
+                                    position: 'relative',
+                                    left: 30,
+                                }}
                                 onClick={() => window.open("/profile", "_self")}
-                        >
-                            Manage
+                        > 
+                            My Bookings
                         </button>
-
+ 
                     </div>
                 </div>
             </div>

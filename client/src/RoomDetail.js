@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-
+import background from "./assets/0.jpg";
 class RoomDetail extends React.Component {
     state = {
         display: true,
@@ -108,11 +108,14 @@ class RoomDetail extends React.Component {
         };
         return (
             <div className="centerLoc"
-                 style={{
-                     backgroundColor: "#F2F8FE",
-                 }}
+            style={{ 
+                backgroundImage: `url(${background})`, 
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover' ,
+                minHeight:'100vh'
+            }}
             >
-                <Card style={{width: '80rem'}}>
+                <Card style={{ width: '80rem' }} className="boxShadow">
                     <div className="ImgContainer">
                         <Slider {...settings}>
                             {this.state.images.map(image => (

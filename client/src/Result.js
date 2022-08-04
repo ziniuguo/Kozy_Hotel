@@ -18,7 +18,9 @@ import Ratings from "react-ratings-declarative/build/ratings";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import background from "./assets/0.jpg";
 import {displayedDate, getGuestRoom, formatDate} from "./GuestRoomConverter";
+
 
 
 const socket = new WebSocket('ws://localhost:5000')
@@ -164,10 +166,20 @@ class Result extends React.Component {
 
     render() {
         return (
-            <div style={{backgroundColor: "#F2F8FE"}} >
+            <div 
+            style={
+                // {backgroundColor: "#F2F8FE"}
+                { 
+                backgroundImage: `url(${background})`, 
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover' ,
+                minHeight:'100vh'
+                }
+            }
+            >
                 <br/>
                 <div className="centerLoc">
-                    <Card style={{height: '220px', width: '84.5rem'}}>
+                    <Card style={{height: '220px', width: '84.5rem'}} className="boxShadow">
                         <div className="formStyle">
                             <form id={"locForm"}>
                                 <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q}
@@ -344,7 +356,7 @@ class Result extends React.Component {
                         :
                         <ListGroup className="centerLoc">
                             {this.state.searchData.map((hotel, i) =>
-                                <ListGroupItem key={i}>
+                                <ListGroupItem key={i} className="boxShadow">
                                     <div>
                                         <div
                                             style={{
@@ -413,7 +425,7 @@ class Result extends React.Component {
                         </ListGroup>
 
                 }
-                <div style={{"textAlign": "center"}}>
+                <div style={{"textAlign": "center"}} >
                     <p></p>
                     <button className="pageButton"
                             disabled={this.state.queryParams.page <= 1}

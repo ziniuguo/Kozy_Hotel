@@ -1,6 +1,8 @@
 import React from "react";
 import {Navigate} from 'react-router-dom';
 import {Button} from "reactstrap";
+import Form from 'react-bootstrap/Form';
+import background from "./assets/0.jpg";
 
 class Login extends React.Component {
     constructor(props) {
@@ -85,10 +87,22 @@ class Login extends React.Component {
 
     render() {
         return (
-            <div>
-                <form onSubmit={this.onSubmit}>
+            <div 
+            style={
+                // {backgroundColor: "#F2F8FE"}
+                { 
+                backgroundImage: `url(${background})`, 
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover' ,
+                minHeight:'100vh'
+                }
+            }
+            >
+                <div className="border d-flex align-items-center justify-content-center" style={{height: 920}}>
+                <form onSubmit={this.onSubmit} className="form">
                     {this.state.nav && <Navigate to={"/profile"} replace={true}/>}
                     <h1>Login Below!</h1>
+                    <br/>
                     <input
                         type="email"
                         name="email"
@@ -97,10 +111,11 @@ class Login extends React.Component {
                         onChange={this.handleInputChange}
                         required
                     />
+                    <br/>
                     <Button
-                        style={{
-                            "width": "120px"
-                        }}
+                        // style={{
+                        //     "width": "120px"
+                        // }}
                         disabled={this.state.btnDisabled}
                         onClick={() => this.handleOTP()}
                     >
@@ -113,7 +128,7 @@ class Login extends React.Component {
                     <input
                         type="password"
                         name="password"
-                        placeholder="Enter password"
+                        placeholder="Enter OTP"
                         value={this.state.password}
                         onChange={this.handleInputChange}
                         required
@@ -121,6 +136,7 @@ class Login extends React.Component {
                     <br/>
                     <input type="submit" value="Submit"/>
                 </form>
+                </div>
             </div>
         );
     }

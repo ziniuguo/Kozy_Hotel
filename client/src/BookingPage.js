@@ -2,8 +2,8 @@ import React from "react";
 import {useForm} from "react-hook-form";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
+import background from "./assets/0.jpg";
 import {getGuestRoom} from "./GuestRoomConverter";
-
 
 const Styles = styled.div`
 
@@ -121,12 +121,21 @@ export default function BookingPage() {
     }
 
     return (
-        <Styles>
-
-            <br/><h1>Hotel booking form</h1>
-
+      <Styles>
+          <div 
+          style={
+            // {backgroundColor: "#F2F8FE"}
+            { 
+            backgroundImage: `url(${background})`, 
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover' ,
+            minHeight:'100vh'
+            }
+        }
+          >
             <div>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)} className="boxShadow">
+                    <h1 >Hotel booking form</h1>
 
                     <div>
                         <input value={imgUri} {...register("imgUri")} readOnly style={{"display": "none"}}/>
@@ -320,7 +329,7 @@ export default function BookingPage() {
                     <input type="submit" className="submitButton" value="Make Booking"/>
                 </form>
             </div>
-            <p></p>
+            </div>
         </Styles>
     );
 
