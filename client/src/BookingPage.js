@@ -80,6 +80,9 @@ export default function BookingPage() {
         return <div className={"error"}>{errors ? errors.message : " "}</div>;
     }
 
+
+
+
     let destID = sessionStorage.getItem("destID");
     let hotelID = sessionStorage.getItem("hotelID")
     let displayCheckin = sessionStorage.getItem("displayCheckin");
@@ -90,6 +93,21 @@ export default function BookingPage() {
     let hotelName = sessionStorage.getItem("hotelName");
     let imgUri = sessionStorage.getItem("imgUri");
     let hotelAddress = sessionStorage.getItem("hotelAddress");
+
+    //default values for testing purposes
+    if(guests == null){
+        guests = "0|1|2|0"
+        destID = "RsBU"
+        hotelID = "WaXd"
+        checkinDate = "2022-08-05"
+        checkoutDate = "2022-08-06"
+        hotelName = "InterContinental Singapore"
+        imgUri = "https://www.kaligo-staging.xyz/images/new/WaXd/i1.jpg"
+        hotelAddress = "80 Middle Road"
+    }
+    
+
+    
 
     function getGuestRoom(guestsParam) {
         let ls = guestsParam.split('|');
