@@ -1,5 +1,5 @@
-describe('Smooth, valid test', () => {
-  it('goes through entire process', () => {
+describe('Valid form inputs', () => {
+  it('fills up valid booking form', () => {
     cy.visit('http://localhost:3000/booking/WaXd')
     
 

@@ -18,39 +18,39 @@ describe('Smooth, valid test', () => {
     cy.wait(2000)
 
 
-    cy.get('#firstname').type("Billy")
+    cy.get('#firstname').type("Warren")
 
     cy.wait(500)
 
-    cy.get('#lastname').type("Yeo")
+    cy.get('#lastname').type("Lee")
 
     cy.wait(500)
 
-    cy.get('#phonenum').type("88883333")
+    cy.get('#phonenum').type("99992222")
 
     cy.wait(500)
 
-    cy.get('#email').type("billy.yeo@hotmail.com")
+    cy.get('#email').type("warren.fake@hotmail.com")
 
     cy.wait(500)
 
-    cy.get('#sprequests').type("An extra blanket")
+    cy.get('#sprequests').type("One more pillow")
 
     cy.wait(500)
 
-    cy.get('#creditcardNo').type("3333333355556666")
+    cy.get('#creditcardNo').type("5555222277778888")
 
     cy.wait(500)
 
-    cy.get('#cardexpiry').type("02/2022")
+    cy.get('#cardexpiry').type("05/2055")
 
     cy.wait(500)
 
-    cy.get('#cvvcvc').type("222")
+    cy.get('#cvvcvc').type("777")
 
     cy.wait(500)
 
-    cy.get('#billing').type("55 SendHelp Road")
+    cy.get('#billing').type("55 SendTherapy Road")
 
     cy.wait(1000)
 
