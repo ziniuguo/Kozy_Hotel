@@ -32,24 +32,21 @@ router.post('/booking', function (req, res) {
 
     addBooking(newBooking)
         .then(() => res.send(newBooking))
-        // .then(() => console.log(newBooking))
         .catch(err => console.log(err));
-
-    // let bookInfo = [];
-
-    // axios.get('http://localhost:5000/getbookings/' + 'testing.out@gmail.com')
-    // .then(response => {
-    //     console.log('requested data received!')
-    //     bookInfo = response.data
-    //     console.log(bookInfo);
-    // })
-    // .catch((error) => {
-    //     console.log(error);
-    // });
-
-
 });
 
+router.post('/cancelBooking', function (req, res) {
+    const {bookingID} = req.body
+    console.log(bookingID);
+    Booking.deleteOne({_id: bookingID}, function (err) {
+        console.log("deleting booking: " + bookingID + "...")
+        if (err) {
+            res.sendStatus(500);
+        } else {
+            res.sendStatus(200);
+        }
+    });
+});
 
 router.get('/getbookings/:email', function (req, res) {
     let userEmail = req.params.email;
