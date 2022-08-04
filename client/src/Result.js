@@ -97,12 +97,12 @@ class Result extends React.Component {
     };
 
     getBookingInfo() {
-        sessionStorage.setItem("destID", this.state.queryParams.locID);
-        sessionStorage.setItem("checkinDate", this.state.queryParams.checkin);
-        sessionStorage.setItem("displayCheckin", displayedDate(this.state.queryParams.checkin));
-        sessionStorage.setItem("checkoutDate", this.state.queryParams.checkout);
-        sessionStorage.setItem("displayCheckout", displayedDate(this.state.queryParams.checkout));
-        sessionStorage.setItem("guestCount", this.state.queryParams.guests);
+        localStorage.setItem("destID", this.state.queryParams.locID);
+        localStorage.setItem("checkinDate", this.state.queryParams.checkin);
+        localStorage.setItem("displayCheckin", displayedDate(this.state.queryParams.checkin));
+        localStorage.setItem("checkoutDate", this.state.queryParams.checkout);
+        localStorage.setItem("displayCheckout", displayedDate(this.state.queryParams.checkout));
+        localStorage.setItem("guestCount", this.state.queryParams.guests);
         console.log(this.state.queryParams)
     }
 

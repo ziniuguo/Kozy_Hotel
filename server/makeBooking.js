@@ -36,7 +36,7 @@ router.post('/booking', function (req, res) {
 });
 
 router.post('/cancelBooking', function (req, res) {
-    const {bookingID} = req.body
+    const {bookingID} = req.body;
     Booking.deleteOne({_id: bookingID}, function (err) {
         console.log("deleting booking: " + bookingID + "...")
         if (err) {

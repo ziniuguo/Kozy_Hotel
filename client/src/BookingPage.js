@@ -80,16 +80,16 @@ export default function BookingPage() {
         return <div className={"error"}>{errors ? errors.message : " "}</div>;
     }
 
-    let destID = sessionStorage.getItem("destID");
-    let hotelID = sessionStorage.getItem("hotelID")
-    let displayCheckin = sessionStorage.getItem("displayCheckin");
-    let checkinDate = sessionStorage.getItem("checkinDate");
-    let displayCheckout = sessionStorage.getItem("displayCheckout")
-    let checkoutDate = sessionStorage.getItem("checkoutDate");
-    let guests = sessionStorage.getItem("guestCount");
-    let hotelName = sessionStorage.getItem("hotelName");
-    let imgUri = sessionStorage.getItem("imgUri");
-    let hotelAddress = sessionStorage.getItem("hotelAddress");
+    let destID = localStorage.getItem("destID");
+    let hotelID = localStorage.getItem("hotelID")
+    let displayCheckin = localStorage.getItem("displayCheckin");
+    let checkinDate = localStorage.getItem("checkinDate");
+    let displayCheckout = localStorage.getItem("displayCheckout")
+    let checkoutDate = localStorage.getItem("checkoutDate");
+    let guests = localStorage.getItem("guestCount");
+    let hotelName = localStorage.getItem("hotelName");
+    let imgUri = localStorage.getItem("imgUri");
+    let hotelAddress = localStorage.getItem("hotelAddress");
 
     function getGuestRoom(guestsParam) {
         let ls = guestsParam.split('|');

@@ -60,6 +60,16 @@ Then, go to mongodb ```auth/users```, and delete ```createdAt``` so that it wll 
 
 Always use this email and OTP combination for login.
 
+### To cancel booking:
+```
+curl -X POST \
+  http://localhost:5000/cancelBooking \
+  -H 'Content-Type: application/json' \
+  -d '{
+ "bookingID": "_your_id_here"
+}'
+```
+
 ### To change expiration time:
  - OTP expiration time:
 ```javascript
