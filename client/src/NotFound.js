@@ -1,27 +1,18 @@
 import React from "react";
 
-class Manage extends React.Component{
-    constructor() {
-        super();
+class NotFound extends React.Component{
+    constructor(props) {
+        super(props);
         //Set default message
-        this.state = {
-            message: 'Loading...'
-        }
     }
-    componentDidMount() {
-        //GET message from server using fetch api
-        fetch('/manage')
-            .then(res => res.text())
-            .then(res => this.setState({message: res}));
-    }
+
     render() {
         return (
             <div>
-                <h1>Home</h1>
-                <p>{this.state.message}</p>
+                <h1>404 Not Found</h1>
             </div>
         );
     }
 }
 
-export default Manage;
+export default NotFound;
