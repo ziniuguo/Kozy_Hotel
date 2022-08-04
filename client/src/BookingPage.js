@@ -2,6 +2,7 @@ import React from "react";
 import {useForm} from "react-hook-form";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
+import {getGuestRoom} from "./GuestRoomConverter";
 
 
 const Styles = styled.div`
@@ -80,42 +81,16 @@ export default function BookingPage() {
         return <div className={"error"}>{errors ? errors.message : " "}</div>;
     }
 
-    let destID = sessionStorage.getItem("destID");
-    let hotelID = sessionStorage.getItem("hotelID")
-    let displayCheckin = sessionStorage.getItem("displayCheckin");
-    let checkinDate = sessionStorage.getItem("checkinDate");
-    let displayCheckout = sessionStorage.getItem("displayCheckout")
-    let checkoutDate = sessionStorage.getItem("checkoutDate");
-    let guests = sessionStorage.getItem("guestCount");
-    let hotelName = sessionStorage.getItem("hotelName");
-    let imgUri = sessionStorage.getItem("imgUri");
-    let hotelAddress = sessionStorage.getItem("hotelAddress");
-
-    function getGuestRoom(guestsParam) {
-        let ls = guestsParam.split('|');
-        let result = [0, 0, 0, 0];
-        for (let i = 0; i < ls.length; i++) {
-            let curr = ls[i];
-            switch (curr) {
-                case "1" :
-                    result[0] += 1;
-                    break;
-                case "2":
-                    result[1] += 1;
-                    break;
-                case "3":
-                    result[2] += 1;
-                    break;
-                case "4":
-                    result[3] += 1;
-                    break;
-                default:
-                    break;
-            }
-        }
-        return result;
-    }
-
+    let destID = localStorage.getItem("destID");
+    let hotelID = localStorage.getItem("hotelID")
+    let displayCheckin = localStorage.getItem("displayCheckin");
+    let checkinDate = localStorage.getItem("checkinDate");
+    let displayCheckout = localStorage.getItem("displayCheckout")
+    let checkoutDate = localStorage.getItem("checkoutDate");
+    let guests = localStorage.getItem("guestCount");
+    let hotelName = localStorage.getItem("hotelName");
+    let imgUri = localStorage.getItem("imgUri");
+    let hotelAddress = localStorage.getItem("hotelAddress");
 
     const onSubmit = async (data) => {
 
@@ -137,6 +112,12 @@ export default function BookingPage() {
 
         window.alert("Booking confirmed! Enjoy your trip!");
         reset();
+        const closeTab = () => {
+            window.opener = null;
+            window.open("", "_self");
+            window.close();
+        };
+        closeTab();
     }
 
     return (
