@@ -5,17 +5,34 @@ import {WebSocketServer} from "ws";
 import fs from "fs";
 import auth from "./auth.js";
 import booking from "./makeBooking.js";
-
+import m_cache from "memory-cache";
 
 const app = express();
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
 
-
+const cache = (duration) => { // duration is in second here
+    return (req, res, next) => {
+        let key = '__express__' + req.originalUrl || req.url;
+        let cachedBody = m_cache.get(key);
+        if (cachedBody) {
+            res.send(cachedBody);
+            return
+        } else {
+            res.sendResponse = res.send;
+            res.send = (body) => {
+                m_cache.put(key, body, duration * 1000);
+                res.sendResponse(body);
+            }
+            next();
+        }
+    }
+};
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+// The two above is helpful for POST request. GET request no need
 
 app.use(auth); // auth is router
-app.use(booking); //booking is also a router
+app.use(booking); // booking is also a router
 
 // handle hotel detail page GET request
 app.get("/hotel/:hotelName", async function (req, res) {
@@ -44,12 +61,11 @@ app.get("/hotel/:hotelName", async function (req, res) {
     result.push(apiResult["description"])
     result.push(apiResult["cloudflare_image_url"] + "/" + apiResult["id"] + "/i")
     result.push(apiResult["number_of_images"])
-    console.log(result)
     res.json(result)
 })
 
 // handle search GET request. Search params are in URL
-app.get("/search", async (req, res) => {
+app.get("/search", cache(10), async (req, res) => {
     // q is not currently implemented
     if (req.query.hasOwnProperty('q') &&
         req.query.hasOwnProperty('page') &&
@@ -200,19 +216,15 @@ wss.on('connection', ws => {
         for (let i = 0; i < destination.length; i++) {
             if ((typeof destination[i]["term"] === 'undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
                 if (!searchResult.some(el => el.label === destination[i]["term"])) {
-                    // searchResult.push(destination[i]["term"])
-                    searchResult.push({"label": destination[i]["term"], "id": destination[i]["uid"]})
+                    searchResult.push({"label": destination[i]["term"], "id": destination[i]["uid"]});
                 }
             }
         }
         ws.send(JSON.stringify(searchResult));
     })
-})
+});
 
 
 server.listen(5000, () => {
     console.log(`Listening at http://localhost:5000`)
-})
-// app.listen(5000, () => {
-//     console.log("Server started on port 5000");
-// });
+});
