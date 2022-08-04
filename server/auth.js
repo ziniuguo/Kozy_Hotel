@@ -69,6 +69,7 @@ router.post('/OTP', async function (req, res) {
         auth: {
             user: 'sprcatroll@gmail.com',
             pass: 'dlmlgufzngomfqof', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
+            // However, I will still just leave it here.
         },
         secure: true,
     });
@@ -110,7 +111,6 @@ router.post('/OTP', async function (req, res) {
             });
         }
     });
-
 });
 
 router.post('/authenticate', function (req, res) {

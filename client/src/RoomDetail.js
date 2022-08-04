@@ -69,7 +69,7 @@ class RoomDetail extends React.Component {
 
     componentDidMount() {
 
-        console.log(window.location.pathname);
+
         sessionStorage.setItem("hotelID", window.location.pathname.split('/').at(-1));
 
 
