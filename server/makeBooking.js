@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import BookingSchema from "./models/BookingData.js";
 
 
-const bookings_uri = 'mongodb://localhost:27017/hotelBookingSystem';
+const bookings_uri = 'mongodb://127.0.0.1:27017/hotelBookingSystem';
 const bookingsConn = mongoose.createConnection(bookings_uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true

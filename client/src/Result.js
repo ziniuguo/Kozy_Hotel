@@ -19,6 +19,7 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import Form from 'react-bootstrap/Form';
+import background from "./assets/0.jpg";
 
 
 const socket = new WebSocket('ws://localhost:5000')
@@ -209,7 +210,17 @@ class Result extends React.Component {
 
     render() {
         return (
-            <div style={{backgroundColor: "#F2F8FE"}} >
+            <div 
+            style={
+                // {backgroundColor: "#F2F8FE"}
+                { 
+                backgroundImage: `url(${background})`, 
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover' ,
+                minHeight:'100vh'
+                }
+            }
+            >
             {/* style={{backgroundImage: `url("http://localhost:3000/coverImg.jpg")` }} */}
                 {/* <div>
                     <button onClick={() => window.open("/", "_self")}>Back to main

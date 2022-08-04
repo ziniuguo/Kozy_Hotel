@@ -2,6 +2,7 @@ import React from "react";
 import {Navigate} from 'react-router-dom';
 import {Button} from "reactstrap";
 import Form from 'react-bootstrap/Form';
+import background from "./assets/0.jpg";
 
 class Login extends React.Component {
     constructor() {
@@ -86,7 +87,17 @@ class Login extends React.Component {
 
     render() {
         return (
-            <div style={{backgroundColor: "#F2F8FE"}}>
+            <div 
+            style={
+                // {backgroundColor: "#F2F8FE"}
+                { 
+                backgroundImage: `url(${background})`, 
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover' ,
+                minHeight:'100vh'
+                }
+            }
+            >
                 <div className="border d-flex align-items-center justify-content-center" style={{height: 920}}>
                 <form onSubmit={this.onSubmit} className="form">
                     {this.state.nav && <Navigate to={"/profile"} replace={true}/>}
