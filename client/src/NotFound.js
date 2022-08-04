@@ -1,8 +1,8 @@
 import React from "react";
 
 class Manage extends React.Component{
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         //Set default message
         this.state = {
             message: 'Loading...'

@@ -23,7 +23,6 @@ import Form from 'react-bootstrap/Form';
 
 const socket = new WebSocket('ws://localhost:5000')
 
-
 function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
 }
@@ -64,7 +63,7 @@ class Result extends React.Component {
     }
 
     async componentDidMount() {
-
+        // when socket receives destination data from server
         socket.onmessage = async ev => {
             console.log(JSON.parse(ev.data).length);
             await this.setState({

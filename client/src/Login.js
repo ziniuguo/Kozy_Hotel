@@ -3,8 +3,8 @@ import {Navigate} from 'react-router-dom';
 import {Button} from "reactstrap";
 
 class Login extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         //Set default message
         this.state = {
             email: '',
