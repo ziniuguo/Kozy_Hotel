@@ -112,6 +112,12 @@ export default function BookingPage() {
 
         window.alert("Booking confirmed! Enjoy your trip!");
         reset();
+        const closeTab = () => {
+            window.opener = null;
+            window.open("", "_self");
+            window.close();
+        };
+        closeTab();
     }
 
     return (
