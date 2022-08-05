@@ -16,7 +16,7 @@ const cache = (duration) => { // duration is in second here
         let cachedBody = m_cache.get(key);
         if (cachedBody) {
             res.send(cachedBody);
-            return
+            return;
         } else {
             res.sendResponse = res.send;
             res.send = (body) => {
@@ -27,6 +27,7 @@ const cache = (duration) => { // duration is in second here
         }
     }
 };
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 // The two above is helpful for POST request. GET request no need
