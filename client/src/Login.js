@@ -1,7 +1,6 @@
 import React from "react";
 import {Navigate} from 'react-router-dom';
 import {Button} from "reactstrap";
-import Form from 'react-bootstrap/Form';
 import background from "./assets/0.jpg";
 
 class Login extends React.Component {
@@ -47,7 +46,6 @@ class Login extends React.Component {
     }
 
     handleOTP() {
-        this.setState({btnDisabled: true})
         fetch('/OTP', {
             method: 'POST',
             body: JSON.stringify({email: this.state.email}),
@@ -57,27 +55,32 @@ class Login extends React.Component {
         }).then(res => {
             if (res.status === 200) {
                 window.alert('OTP sent.');
+            } else if (res.status === 429) {
+                window.alert('You can only receive OTP every 30 seconds.');
+                throw new Error(res.error);
             } else {
                 throw new Error(res.error);
             }
-            this.setState({countdown: 30})
-            setTimeout(function () {
-                this.setState({btnDisabled: false})
-            }.bind(this), 30000)
-            const interval = setInterval(function () {
-                if (this.state.countdown === 0) {
-                    clearInterval(interval);
-                } else {
-                    const temp = this.state.countdown;
-                    this.setState({
-                        countdown: temp - 1
-                    })
-                }
-            }.bind(this), 1000);
         }).catch(err => {
             console.log(err);
             window.alert('Error sending OTP, please try again later.')
         })
+
+        this.setState({btnDisabled: true});
+        this.setState({countdown: 30});
+        setTimeout(function () {
+            this.setState({btnDisabled: false})
+        }.bind(this), 30000);
+        const interval = setInterval(function () {
+            if (this.state.countdown === 0) {
+                clearInterval(interval);
+            } else {
+                const temp = this.state.countdown;
+                this.setState({
+                    countdown: temp - 1
+                })
+            }
+        }.bind(this), 1000);
     }
 
 
@@ -109,9 +112,6 @@ class Login extends React.Component {
                     />
                     <br/>
                     <Button
-                        // style={{
-                        //     "width": "120px"
-                        // }}
                         disabled={this.state.btnDisabled}
                         onClick={() => this.handleOTP()}
                     >

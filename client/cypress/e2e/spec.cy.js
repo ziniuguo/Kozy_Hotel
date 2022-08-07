@@ -14,6 +14,7 @@ function getRandomItem(arr) {
     return arr[randomIndex];
 }
 
+// testing OTP with random email address
 describe('spec.cy.js', () => {
     it('passes', () => {
         cy.request('POST', 'http://localhost:5000/OTP', {

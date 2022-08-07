@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
 import axios from "axios";
+import rateLimit from "express-rate-limit";
 
 
 const secret = 'mySecret';
@@ -61,7 +62,18 @@ router.post('/register', function (req, res) {
     });
 });
 
-router.post('/OTP', async function (req, res) {
+// create limiter for OTP
+const OtpLimiter = rateLimit({
+    windowMs: 30 * 1000, // 30 secs
+    max: 1, // Limit each IP to 5 create account requests per `window` (here, per hour)
+    message:
+        'Too many accounts created from this IP, please try again later',
+    statusCode: 429, // this is actually by default
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+router.post('/OTP', OtpLimiter, async function (req, res) {
     const {email} = req.body;
     const transporter = nodemailer.createTransport({
         port: 465,               // true for 465, false for other ports
