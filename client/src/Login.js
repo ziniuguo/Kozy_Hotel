@@ -17,10 +17,6 @@ class Login extends React.Component {
         }
     }
 
-    componentDidMount() {
-
-    }
-
     handleInputChange = (event) => {
         const {value, name} = event.target;
         this.setState({

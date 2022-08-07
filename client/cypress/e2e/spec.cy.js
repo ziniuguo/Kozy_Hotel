@@ -16,27 +16,14 @@ function getRandomItem(arr) {
 
 describe('spec.cy.js', () => {
     it('passes', () => {
-        cy.visit(
-            "localhost:3000/"
-            + "search?q=" +
-            q +
-            "&page=" +
-            getRandomItem(page) +
-            "&loc=" +
-            loc +
-            "&locID=" +
-            locID +
-            "&checkin=" +
-            checkin +
-            "&checkout=" +
-            checkout +
-            "&guests=" +
-            guests
-        );
-        cy.log("hello")
-        cy.get('#locForm').within(() => {
-            // cy.get('input[name=q]').type("question")
-        })
+        cy.request('POST', 'http://localhost:5000/OTP', {
+            email: 'guo.ziniu.1003@gmail.com'
+        }).then(
+            (response) => {
+                // response.body is automatically serialized into JSON
+                expect(response.status).to.eq(200) // true
+            }
+        )
     })
 })
 

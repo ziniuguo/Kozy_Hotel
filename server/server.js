@@ -66,7 +66,7 @@ app.get("/hotel/:hotelName", async function (req, res) {
 })
 
 // handle search GET request. Search params are in URL
-app.get("/search", cache(10), async (req, res) => {
+app.get("/search", cache(60), async (req, res) => {
     // q is not currently implemented
     if (req.query.hasOwnProperty('q') &&
         req.query.hasOwnProperty('page') &&
