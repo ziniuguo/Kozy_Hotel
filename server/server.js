@@ -6,6 +6,7 @@ import fs from "fs";
 import auth from "./auth.js";
 import booking from "./makeBooking.js";
 import m_cache from "memory-cache";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
@@ -65,8 +66,18 @@ app.get("/hotel/:hotelName", async function (req, res) {
     res.json(result)
 })
 
+// limit search frequency
+const searchLimiter = rateLimit({
+    windowMs: 3 * 1000, // 3 sec
+    max: 15, //
+    message:
+        'Too many search requests',
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
 // handle search GET request. Search params are in URL
-app.get("/search", cache(60), async (req, res) => {
+app.get("/search", searchLimiter, cache(60), async (req, res) => {
     // q is not currently implemented
     if (req.query.hasOwnProperty('q') &&
         req.query.hasOwnProperty('page') &&
@@ -113,8 +124,8 @@ app.get("/search", cache(60), async (req, res) => {
             } else {
                 console.log("got hotel list! length: " + apiResult["hotels"].length)
                 searchComplete = true;
-                // searchTime += 1;
             }
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         if (searchComplete) {
             result = apiResult["hotels"];
@@ -182,6 +193,7 @@ app.get("/search", cache(60), async (req, res) => {
                             console.log("get detail by id success! length: " + resResult.length)
                             loadComplete = true;
                         }
+                        await new Promise(resolve => setTimeout(resolve, 500));
                     }
                 }
                 if (resResult.length ===
@@ -194,8 +206,6 @@ app.get("/search", cache(60), async (req, res) => {
                     console.log("error_loading_detail_by_ID");
                     res.json(["error_loading_detail_by_ID", 1]);
                 }
-
-
             } else {
                 res.json(["page_exceeded", 1]);
             }
