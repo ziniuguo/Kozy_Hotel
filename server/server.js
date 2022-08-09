@@ -7,6 +7,7 @@ import auth from "./auth.js";
 import booking from "./makeBooking.js";
 import m_cache from "memory-cache";
 import rateLimit from "express-rate-limit";
+import Fuse from 'fuse.js';
 
 const app = express();
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
@@ -223,6 +224,22 @@ wss.on('connection', ws => {
 
     ws.on('message', message => {
         console.log(`Received message => ${message}`)
+
+        // The code below is for further improvement
+        // const options = {
+        //     keys: ["term"]
+        // };
+        // const fuse = new Fuse(destination, options);
+        //
+        // let result = fuse.search(message.toString());
+        // result = result.slice(0, 10).map(e => [e["item"]["term"], e["item"]["uid"]]);
+        // let searchResult=[];
+        // for (let r of result) {
+        //     if (!searchResult.some(el => el.label === r[0])){
+        //         searchResult.push({ "label": r[0], "id": r[1] });
+        //     }
+        // }
+
         let searchResult = [];
         for (let i = 0; i < destination.length; i++) {
             if ((typeof destination[i]["term"] === 'undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
@@ -231,6 +248,7 @@ wss.on('connection', ws => {
                 }
             }
         }
+
         ws.send(JSON.stringify(searchResult));
     })
 });
