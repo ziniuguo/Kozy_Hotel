@@ -1,41 +1,154 @@
-// testing for search
-let q = "";
-let page = ['1', '2', '3', '4', '5'];
-let loc = "Singapore%2C+Singapore";
-let locID = "RsBU";
-let checkin = formatDate(new Date());
-let checkout = formatDate(new Date((new Date()).valueOf() + 1000 * 3600 * 24));
-let guests = '2'
-
-function getRandomItem(arr) {
-    // get random index value
-    const randomIndex = Math.floor(Math.random() * arr.length);
-    // get random item
-    return arr[randomIndex];
+function generateInput(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
 }
 
-// testing OTP with random email address
+console.log(generateInput(5));
+
 describe('spec.cy.js', () => {
-    it('passes', () => {
-        cy.request('POST', 'http://localhost:5000/OTP', {
-            email: 'guo.ziniu.1003@gmail.com'
+    it('passes', async () => {
+
+        // testing OTP with random email address
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/OTP',
+            body: {
+                email: 'guo.ziniu.1003@gmail.com'
+            },
+            failOnStatusCode: false
         }).then(
             (response) => {
-                // response.body is automatically serialized into JSON
-                expect(response.status).to.eq(200) // true
+                expect(response.status).to.eq(200);
             }
-        )
+        );
+
+        cy.wait(1000 * 31);
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/OTP',
+            body: {
+                email: 'ziniu_guo@mymail.sutd.edu.sg'
+            },
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(200);
+            }
+        );
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/OTP',
+            body: {
+                email: 'guo.ziniu.1003@gmail.com'
+            },
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(429);
+            }
+        );
+
+        cy.wait(1000 * 31);
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/OTP',
+            body: {
+                email: generateInput(5)
+            },
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(500);
+            }
+        );
+
+        cy.wait(1000 * 31);
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/OTP',
+            body: {
+                email: generateInput(5)
+            },
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(500);
+            }
+        );
+
+        cy.request({
+            method: 'GET',
+            url: 'http://localhost:5000/manage',
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(401);
+            }
+        );
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/authenticate',
+            body: {
+                email: "me@example.com",
+                password: generateInput(5)
+            },
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(401);
+            }
+        );
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/authenticate',
+            body: {
+                email: generateInput(5),
+                password: generateInput(5)
+            },
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(401);
+            }
+        );
+
+        cy.request({
+            method: 'POST',
+            url: 'http://localhost:5000/authenticate',
+            body: {
+                email: "me@example.com",
+                password: "000000"
+            },
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(200);
+            }
+        );
+
+        cy.request({
+            method: 'GET',
+            url: 'http://localhost:5000/manage',
+            failOnStatusCode: false
+        }).then(
+            (response) => {
+                expect(response.status).to.eq(200);
+            }
+        );
+
+
     })
 })
-
-function padTo2Digits(num) {
-    return num.toString().padStart(2, '0');
-}
-
-function formatDate(date) {
-    return [
-        date.getFullYear(),
-        padTo2Digits(date.getMonth() + 1),
-        padTo2Digits(date.getDate()),
-    ].join('-');
-}
