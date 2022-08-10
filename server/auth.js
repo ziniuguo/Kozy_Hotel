@@ -147,7 +147,11 @@ router.post('/authenticate', function (req, res) {
                     const token = jwt.sign(payload, secret, {
                         // login status expire after 3 min
                         // cookie
-                        expiresIn: 60 * 3 * 2000000000
+                        expiresIn: "2h"
+                        // Eg: 60, "2 days", "10h", "7d".
+                        // A numeric value is interpreted as a seconds count.
+                        // If you use a string be sure you provide the time units (days, hours, etc),
+                        // otherwise milliseconds unit is used by default ("120" is equal to "120ms").
                     });
                     // use cookie
                     res.cookie('token', token, {
