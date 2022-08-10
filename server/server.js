@@ -7,7 +7,6 @@ import auth from "./auth.js";
 import booking from "./makeBooking.js";
 import m_cache from "memory-cache";
 import rateLimit from "express-rate-limit";
-import Fuse from 'fuse.js';
 
 const app = express();
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
@@ -225,7 +224,9 @@ wss.on('connection', ws => {
     ws.on('message', message => {
         console.log(`Received message => ${message}`)
 
-        // The code below is for further improvement
+        // The commented out code below is for further improvement
+        // Performance improvement is needed
+
         // const options = {
         //     keys: ["term"]
         // };

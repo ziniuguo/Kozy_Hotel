@@ -52,10 +52,9 @@ router.post('/register', function (req, res) {
     const {email, password} = req.body;
     const user = new User({email, password});
     user.save(function (err) {
-        console.log(err)
         if (err) {
-            res.status(500)
-                .send("Error registering");
+            console.log(err);
+            res.status(500).send("Error registering");
         } else {
             res.status(200).send("register success");
         }
@@ -101,7 +100,7 @@ router.post('/OTP', OtpLimiter, async function (req, res) {
     User.deleteOne({email: email}, function (err) {
         console.log("deleting existing OTP email: " + email + "...")
         if (err) {
-            res.sendStatus(500);
+            res.status(500).json({error: 'Error deleting {email, otp}'});
         } else {
             // add to database
             const user = new User({email: email, password: OTP_password});
@@ -116,7 +115,7 @@ router.post('/OTP', OtpLimiter, async function (req, res) {
                             res.status(500).json({error: 'error sending email, internal server err'});
                         } else {
                             console.log('Email sent: ' + info.response);
-                    res.sendStatus(200);
+                            res.sendStatus(200);
                         }
                     });
                 }
