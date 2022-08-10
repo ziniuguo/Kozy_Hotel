@@ -76,7 +76,7 @@ class Manage extends React.Component{
     componentDidMount() {
         fetch('/manage')
         .then((res) => {
-            if(res.status !== 200) throw new Error(response.status);
+            if(res.status !== 200) throw new Error(res.error);
             else return res.json();
         })
         .then((json) => {
@@ -159,11 +159,27 @@ class Manage extends React.Component{
                         this.state.login_status===0
                     )
                     ?
-                    <p>{this.state.message}</p>
+                    <Card
+                        className="centerLoc"
+                        style={{
+                            height: '80px',
+                            width: '30rem'
+                            }}
+                    >
+                    <p style={{fontSize: "30px",color:"black",}}>{this.state.message}</p>
+                    </Card>
                     :
                     (this.state.message==="Loading...")
                     ?
-                    <p>No booking information yet.</p>
+                    <Card
+                        className="centerLoc"
+                        style={{
+                            height: '80px',
+                            width: '30rem'
+                            }}
+                    >
+                    <p style={{fontSize: "30px",color:"white",border: "5px solid white"}}>No booking information yet.</p>
+                    </Card>
                     :
                     <div>
                     <br/>
