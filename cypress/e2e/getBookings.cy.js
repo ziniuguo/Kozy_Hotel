@@ -1,7 +1,7 @@
 describe('empty spec', () => {
   it('passes', () => {
 
-    cy.request("http://localhost:5000/getbookings/testing.out@gmail.com").as('getbook')
+    cy.request("http://localhost:5000/getbookings/guo.ziniu.1003@gmail.com").as('getbook')
 
     cy.get('@getbook').should((response) => {
 
@@ -11,7 +11,7 @@ describe('empty spec', () => {
         expect((response.body)[e]).to.have.property('lastName')
         expect((response.body)[e]).to.have.property('phoneNumber')
         expect((response.body)[e]).to.have.property('emailAddress')
-        expect((response.body)[e].emailAddress).to.equal("testing.out@gmail.com")
+        expect((response.body)[e].emailAddress).to.equal("guo.ziniu.1003@gmail.com")
         expect((response.body)[e]).to.have.property('creditCardNumber')
         expect((response.body)[e]).to.have.property('cardExpiry')
         expect((response.body)[e]).to.have.property('CVV_CVC')

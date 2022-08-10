@@ -79,7 +79,7 @@ router.post('/OTP', OtpLimiter, async function (req, res) {
         host: "smtp.gmail.com",
         auth: {
             user: 'sprcatroll@gmail.com',
-            pass: 'dlmlgufzngomfqof', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
+            pass: 'ukjgzwvmzxchabov', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
             // However, I will still just leave it here.
         },
         secure: true,
