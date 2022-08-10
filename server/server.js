@@ -68,13 +68,13 @@ app.get("/hotel/:hotelName", async function (req, res) {
 
 // limit search frequency
 const searchLimiter = rateLimit({
-    windowMs: 3 * 1000, // 3 sec
-    max: 15, //
+    windowMs: 1000, // 1 sec
+    max: 5, //
     message:
         'Too many search requests',
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-})
+});
 
 // handle search GET request. Search params are in URL
 app.get("/search", searchLimiter, cache(60), async (req, res) => {
