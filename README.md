@@ -1,7 +1,7 @@
 # ESC C2G6
 
-## Start Project:
-### Start Server:
+## Start Project
+### Start Server
 nodemon:
 ```
 npm run dev
@@ -11,7 +11,7 @@ start:
 npm run start
 ```
 
-### Start React:
+### Start React
 ```
 npm run start
 ```
@@ -47,7 +47,7 @@ sudo nano /etc/hosts
 ```
 
 And I don't think it's appropriate to change ```/etc/hosts```.
-## Register a user without using OTP:
+## Register a user without using OTP
 **UPDATE: You cannot use OTP from ```sprCatRoll@gmail.com``` now. Please register manually following the steps below.**
 ```
 curl -X POST \
@@ -62,7 +62,7 @@ Then, go to mongodb ```auth/users```, and delete ```createdAt``` so that it will
 
 Always use this email and OTP combination for login.
 
-## To cancel booking:
+## Cancel booking
 ```
 curl -X POST \
   http://localhost:5000/cancelBooking \
@@ -72,7 +72,7 @@ curl -X POST \
 }'
 ```
 
-## OTP expiration time:
+## OTP expiration time
 ```javascript
 // Users.js
 const UserSchema = new mongoose.Schema({
@@ -84,7 +84,7 @@ const UserSchema = new mongoose.Schema({
 ```
 This is expected to change expected expiration time for users. For development, you can also delete ```createdAt``` as mentioned above.
 
-## Login status (cookie) expiration time:
+## Login status (cookie) expiration time
 ```javascript
 // auth.js
 router.post('/authenticate', function (req, res) {
@@ -110,7 +110,8 @@ router.post('/authenticate', function (req, res) {
 ```
 
 ## Caching
-Server side caching is currently used for hotel search function. However, it is suitable for other GET request as well.
+### Usage
+Server side caching is currently used for hotel search function. However, it is suitable for other GET requests as well.
 
 Cache expiration time can be set when used.
 ```javascript
@@ -135,14 +136,19 @@ const cache = (duration) => { // duration is in second here
     }
 };
 ```
-Usage:
+
 ```javascript
-app.get("/search", cache(10), // in second
+app.get("/yourAPI", cache(10), // in second
     async (req, res) => {
     // code implementation
 })
 ```
 
-## Credentials exposure:
+### Improvement
+This is a server side caching and the browser does not show cache control method. The server will memorise the result and return to frontend.
+![Without_Caching](assets/no_cache.png)
+![With_Caching](assets/w_cache.png)
+
+## Credentials exposure
  - [ ] OTP sender email & pwd
  - [ ] ```secret = "mySecret"```
