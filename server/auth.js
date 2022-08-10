@@ -38,11 +38,11 @@ router.get('/manage', withAuth, function (req, res) {
         .then(response => {
             console.log('get booking: requested data received!')
             bookingInfo = response.data;
-            console.log(bookingInfo);
-            res.send(bookingInfo);
+            res.status(200).send(bookingInfo);
         })
         .catch((error) => {
-            console.log(error);
+            console.log('internal error @ getBooking in Manage ' + error);
+            res.sendStatus(500);
         });
 });
 
