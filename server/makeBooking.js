@@ -59,6 +59,8 @@ router.get('/getbookings/:email', function (req, res) {
         cursor.forEach(function (doc) {
             retrievedBookings.push(doc);
         });
+        // console.log(retrievedBookings);
+
     }
 
     findBooking(userEmail)

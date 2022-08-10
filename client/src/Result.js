@@ -22,7 +22,6 @@ import background from "./assets/0.jpg";
 import {displayedDate, getGuestRoom, formatDate} from "./GuestRoomConverter";
 
 
-
 const socket = new WebSocket('ws://localhost:5000')
 
 class Result extends React.Component {

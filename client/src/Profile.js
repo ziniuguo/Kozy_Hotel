@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Button} from 'react-bootstrap';
 import background from "./assets/0.jpg";
 
@@ -17,19 +16,19 @@ class Profile extends Component {
                 }
             }
             >
-                <div className="border d-flex align-items-center justify-content-center" style={{height: 920}}>
+                <div className="d-flex align-items-center justify-content-center" style={{height: 920}}>
                 <form className="form">
                     <h3>Login to manage your account</h3>
                     <br/>
                     <br/>
-                    <Button type="button" class="btn btn-primary btn-lg"
+                    <Button type="button" className="btn btn-primary btn-lg"
                         onClick={() => window.open("/profile/login", "_self")}>Login
                     </Button>
                     <br/>
                     
                     <br/>
                     <p>Login already?</p>
-                    <Button type="button" class="btn btn-primary btn-lg"
+                    <Button type="button" className="btn btn-primary btn-lg"
                         onClick={() => window.open("/profile/manage","_self")}>Manage
                     </Button>
                 </form>

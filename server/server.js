@@ -6,6 +6,7 @@ import fs from "fs";
 import auth from "./auth.js";
 import booking from "./makeBooking.js";
 import m_cache from "memory-cache";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 const destination = JSON.parse(fs.readFileSync('destinations.json'));
@@ -16,7 +17,7 @@ const cache = (duration) => { // duration is in second here
         let cachedBody = m_cache.get(key);
         if (cachedBody) {
             res.send(cachedBody);
-            return
+            return;
         } else {
             res.sendResponse = res.send;
             res.send = (body) => {
@@ -27,6 +28,7 @@ const cache = (duration) => { // duration is in second here
         }
     }
 };
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 // The two above is helpful for POST request. GET request no need
@@ -64,8 +66,18 @@ app.get("/hotel/:hotelName", async function (req, res) {
     res.json(result)
 })
 
+// limit search frequency
+const searchLimiter = rateLimit({
+    windowMs: 1000, // 1 sec
+    max: 5, //
+    message:
+        'Too many search requests',
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
 // handle search GET request. Search params are in URL
-app.get("/search", cache(10), async (req, res) => {
+app.get("/search", searchLimiter, cache(60), async (req, res) => {
     // q is not currently implemented
     if (req.query.hasOwnProperty('q') &&
         req.query.hasOwnProperty('page') &&
@@ -112,8 +124,8 @@ app.get("/search", cache(10), async (req, res) => {
             } else {
                 console.log("got hotel list! length: " + apiResult["hotels"].length)
                 searchComplete = true;
-                // searchTime += 1;
             }
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         if (searchComplete) {
             result = apiResult["hotels"];
@@ -181,6 +193,7 @@ app.get("/search", cache(10), async (req, res) => {
                             console.log("get detail by id success! length: " + resResult.length)
                             loadComplete = true;
                         }
+                        await new Promise(resolve => setTimeout(resolve, 500));
                     }
                 }
                 if (resResult.length ===
@@ -193,8 +206,6 @@ app.get("/search", cache(10), async (req, res) => {
                     console.log("error_loading_detail_by_ID");
                     res.json(["error_loading_detail_by_ID", 1]);
                 }
-
-
             } else {
                 res.json(["page_exceeded", 1]);
             }
@@ -212,6 +223,24 @@ wss.on('connection', ws => {
 
     ws.on('message', message => {
         console.log(`Received message => ${message}`)
+
+        // The commented out code below is for further improvement
+        // Performance improvement is needed
+
+        // const options = {
+        //     keys: ["term"]
+        // };
+        // const fuse = new Fuse(destination, options);
+        //
+        // let result = fuse.search(message.toString());
+        // result = result.slice(0, 10).map(e => [e["item"]["term"], e["item"]["uid"]]);
+        // let searchResult=[];
+        // for (let r of result) {
+        //     if (!searchResult.some(el => el.label === r[0])){
+        //         searchResult.push({ "label": r[0], "id": r[1] });
+        //     }
+        // }
+
         let searchResult = [];
         for (let i = 0; i < destination.length; i++) {
             if ((typeof destination[i]["term"] === 'undefined' ? "" : destination[i]["term"]).toUpperCase().includes(message.toString().toUpperCase())) {
@@ -220,6 +249,7 @@ wss.on('connection', ws => {
                 }
             }
         }
+
         ws.send(JSON.stringify(searchResult));
     })
 });

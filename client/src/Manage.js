@@ -2,47 +2,17 @@ import React from "react";
 import errImg from './assets/error-image-generic.png';
 import background from "./assets/0.jpg";
 import {
-    Badge,
     Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
     Card,
     CardBody,
     CardSubtitle,
     CardText,
     CardTitle,
-    Input,
     ListGroup,
     ListGroupItem
 } from "reactstrap";
+import {getGuestRoom} from "./GuestRoomConverter";
 
-
-function getGuestRoom(guestsParam) {
-    let ls = guestsParam.split('|');
-    let result = [0, 0, 0, 0];
-    for (let i = 0; i < ls.length; i++) {
-        let curr = ls[i];
-        switch (curr) {
-            case "1" :
-                result[0] += 1;
-                break;
-            case "2":
-                result[1] += 1;
-                break;
-            case "3":
-                result[2] += 1;
-                break;
-            case "4":
-                result[3] += 1;
-                break;
-            default:
-                break;
-        }
-    }
-    return result;
-}
 
 class Manage extends React.Component{
     constructor(props) {
@@ -139,12 +109,6 @@ class Manage extends React.Component{
         })
     }
 
-    toggle(){
-        let temp = !this.state.modal
-        this.setState({
-            modal:temp
-        })
-    }
     render() {
         return (
             <div className="border d-flex align-items-center justify-content-center" 
