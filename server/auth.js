@@ -12,7 +12,7 @@ import axios from "axios";
 const secret = 'mySecret';
 // should not be hardcoded. irl should use env variable
 
-const mongo_auth_uri = 'mongodb://localhost:27017/auth';
+const mongo_auth_uri = 'mongodb://127.0.0.1:27017/auth';
 const authConn = mongoose.createConnection(mongo_auth_uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
