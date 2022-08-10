@@ -1,10 +1,11 @@
 import React from "react";
 import {Navigate} from 'react-router-dom';
 import {Button} from "reactstrap";
+import background from "./assets/0.jpg";
 
 class Login extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         //Set default message
         this.state = {
             email: '',
@@ -13,10 +14,6 @@ class Login extends React.Component {
             btnDisabled: false,
             countdown: 0,
         }
-    }
-
-    componentDidMount() {
-
     }
 
     handleInputChange = (event) => {
@@ -49,7 +46,6 @@ class Login extends React.Component {
     }
 
     handleOTP() {
-        this.setState({btnDisabled: true})
         fetch('/OTP', {
             method: 'POST',
             body: JSON.stringify({email: this.state.email}),
@@ -59,36 +55,53 @@ class Login extends React.Component {
         }).then(res => {
             if (res.status === 200) {
                 window.alert('OTP sent.');
+            } else if (res.status === 429) {
+                window.alert('You can only receive OTP every 30 seconds.');
+                throw new Error(res.error);
             } else {
                 throw new Error(res.error);
             }
-            this.setState({countdown: 30})
-            setTimeout(function () {
-                this.setState({btnDisabled: false})
-            }.bind(this), 30000)
-            const interval = setInterval(function () {
-                if (this.state.countdown === 0) {
-                    clearInterval(interval);
-                } else {
-                    const temp = this.state.countdown;
-                    this.setState({
-                        countdown: temp - 1
-                    })
-                }
-            }.bind(this), 1000);
         }).catch(err => {
             console.log(err);
             window.alert('Error sending OTP, please try again later.')
         })
+
+        this.setState({btnDisabled: true});
+        this.setState({countdown: 30});
+        setTimeout(function () {
+            this.setState({btnDisabled: false})
+        }.bind(this), 30000);
+        const interval = setInterval(function () {
+            if (this.state.countdown === 0) {
+                clearInterval(interval);
+            } else {
+                const temp = this.state.countdown;
+                this.setState({
+                    countdown: temp - 1
+                })
+            }
+        }.bind(this), 1000);
     }
 
 
     render() {
         return (
-            <div>
-                <form onSubmit={this.onSubmit}>
+            <div 
+            style={
+                // {backgroundColor: "#F2F8FE"}
+                { 
+                backgroundImage: `url(${background})`, 
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover' ,
+                minHeight:'100vh'
+                }
+            }
+            >
+                <div className="border d-flex align-items-center justify-content-center" style={{height: 920}}>
+                <form onSubmit={this.onSubmit} className="form">
                     {this.state.nav && <Navigate to={"/profile"} replace={true}/>}
                     <h1>Login Below!</h1>
+                    <br/>
                     <input
                         type="email"
                         name="email"
@@ -97,10 +110,8 @@ class Login extends React.Component {
                         onChange={this.handleInputChange}
                         required
                     />
+                    <br/>
                     <Button
-                        style={{
-                            "width": "120px"
-                        }}
                         disabled={this.state.btnDisabled}
                         onClick={() => this.handleOTP()}
                     >
@@ -113,7 +124,7 @@ class Login extends React.Component {
                     <input
                         type="password"
                         name="password"
-                        placeholder="Enter password"
+                        placeholder="Enter OTP"
                         value={this.state.password}
                         onChange={this.handleInputChange}
                         required
@@ -121,6 +132,7 @@ class Login extends React.Component {
                     <br/>
                     <input type="submit" value="Submit"/>
                 </form>
+                </div>
             </div>
         );
     }

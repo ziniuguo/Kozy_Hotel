@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
 import axios from "axios";
+import rateLimit from "express-rate-limit";
 
 
 const secret = 'mySecret';
@@ -37,11 +38,11 @@ router.get('/manage', withAuth, function (req, res) {
         .then(response => {
             console.log('get booking: requested data received!')
             bookingInfo = response.data;
-            console.log(bookingInfo);
-            res.send(bookingInfo);
+            res.status(200).send(bookingInfo);
         })
         .catch((error) => {
-            console.log(error);
+            console.log('internal error @ getBooking in Manage ' + error);
+            res.sendStatus(500);
         });
 });
 
@@ -51,17 +52,27 @@ router.post('/register', function (req, res) {
     const {email, password} = req.body;
     const user = new User({email, password});
     user.save(function (err) {
-        console.log(err)
         if (err) {
-            res.status(500)
-                .send("Error registering");
+            console.log(err);
+            res.status(500).send("Error registering");
         } else {
             res.status(200).send("register success");
         }
     });
 });
 
-router.post('/OTP', async function (req, res) {
+// create limiter for OTP
+const OtpLimiter = rateLimit({
+    windowMs: 30 * 1000, // 30 secs
+    max: 1, // Limit each IP to 5 create account requests per `window` (here, per hour)
+    message:
+        'Too many accounts created from this IP, please try again later',
+    statusCode: 429, // this is actually by default
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+router.post('/OTP', OtpLimiter, async function (req, res) {
     const {email} = req.body;
     const transporter = nodemailer.createTransport({
         port: 465,               // true for 465, false for other ports
@@ -69,6 +80,7 @@ router.post('/OTP', async function (req, res) {
         auth: {
             user: 'sprcatroll@gmail.com',
             pass: 'dlmlgufzngomfqof', // I believe this should not be hardcoded. Not to mention UPLOAD IT TO GITHUB!
+            // However, I will still just leave it here.
         },
         secure: true,
     });
@@ -88,7 +100,7 @@ router.post('/OTP', async function (req, res) {
     User.deleteOne({email: email}, function (err) {
         console.log("deleting existing OTP email: " + email + "...")
         if (err) {
-            res.sendStatus(500);
+            res.status(500).json({error: 'Error deleting {email, otp}'});
         } else {
             // add to database
             const user = new User({email: email, password: OTP_password});
@@ -103,14 +115,13 @@ router.post('/OTP', async function (req, res) {
                             res.status(500).json({error: 'error sending email, internal server err'});
                         } else {
                             console.log('Email sent: ' + info.response);
-                    res.sendStatus(200);
+                            res.sendStatus(200);
                         }
                     });
                 }
             });
         }
     });
-
 });
 
 router.post('/authenticate', function (req, res) {
@@ -136,7 +147,11 @@ router.post('/authenticate', function (req, res) {
                     const token = jwt.sign(payload, secret, {
                         // login status expire after 3 min
                         // cookie
-                        expiresIn: 60 * 3 * 2000000000
+                        expiresIn: "2h"
+                        // Eg: 60, "2 days", "10h", "7d".
+                        // A numeric value is interpreted as a seconds count.
+                        // If you use a string be sure you provide the time units (days, hours, etc),
+                        // otherwise milliseconds unit is used by default ("120" is equal to "120ms").
                     });
                     // use cookie
                     res.cookie('token', token, {

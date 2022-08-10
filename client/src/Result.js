@@ -18,30 +18,11 @@ import Ratings from "react-ratings-declarative/build/ratings";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-import Form from 'react-bootstrap/Form';
+import background from "./assets/0.jpg";
+import {displayedDate, getGuestRoom, formatDate} from "./GuestRoomConverter";
 
 
 const socket = new WebSocket('ws://localhost:5000')
-
-
-function padTo2Digits(num) {
-    return num.toString().padStart(2, '0');
-}
-
-function formatDate(date) { // Date -> YYYY-MM-DD
-    return [
-        date.getFullYear(),
-        padTo2Digits(date.getMonth() + 1),
-        padTo2Digits(date.getDate()),
-    ].join('-');
-}
-
-function displayedDate(date) { //YYYY-MM-DD -> MMM(Jul) DD YYYY
-    let temp_date = new Date(date.split('-')[0],
-        date.split('-')[1] - 1,
-        date.split('-')[2])
-    return temp_date.toString().split(" ").slice(1, 4).join(" ");
-}
 
 class Result extends React.Component {
     constructor(props) {
@@ -64,7 +45,7 @@ class Result extends React.Component {
     }
 
     async componentDidMount() {
-
+        // when socket receives destination data from server
         socket.onmessage = async ev => {
             console.log(JSON.parse(ev.data).length);
             await this.setState({
@@ -84,7 +65,7 @@ class Result extends React.Component {
                 date2: new Date(qs.parse(window.location.search).checkout.split('-')[0],
                     qs.parse(window.location.search).checkout.split('-')[1] - 1,
                     qs.parse(window.location.search).checkout.split('-')[2]),
-                guestNo: this.getGuestRoom(qs.parse(window.location.search).guests),
+                guestNo: getGuestRoom(qs.parse(window.location.search).guests),
             });
             fetch("/search" + window.location.search)
                 .then(response => response.json())
@@ -99,38 +80,13 @@ class Result extends React.Component {
     };
 
     getBookingInfo() {
-        sessionStorage.setItem("destID", this.state.queryParams.locID);
-        sessionStorage.setItem("checkinDate", this.state.queryParams.checkin);
-        sessionStorage.setItem("displayCheckin", displayedDate(this.state.queryParams.checkin));
-        sessionStorage.setItem("checkoutDate", this.state.queryParams.checkout);
-        sessionStorage.setItem("displayCheckout", displayedDate(this.state.queryParams.checkout));
-        sessionStorage.setItem("guestCount", this.state.queryParams.guests);
+        localStorage.setItem("destID", this.state.queryParams.locID);
+        localStorage.setItem("checkinDate", this.state.queryParams.checkin);
+        localStorage.setItem("displayCheckin", displayedDate(this.state.queryParams.checkin));
+        localStorage.setItem("checkoutDate", this.state.queryParams.checkout);
+        localStorage.setItem("displayCheckout", displayedDate(this.state.queryParams.checkout));
+        localStorage.setItem("guestCount", this.state.queryParams.guests);
         console.log(this.state.queryParams)
-    }
-
-    getGuestRoom(guestsParam) {
-        let ls = guestsParam.split('|');
-        let result = [0, 0, 0, 0];
-        for (let i = 0; i < ls.length; i++) {
-            let curr = ls[i];
-            switch (curr) {
-                case "1" :
-                    result[0] += 1;
-                    break;
-                case "2":
-                    result[1] += 1;
-                    break;
-                case "3":
-                    result[2] += 1;
-                    break;
-                case "4":
-                    result[3] += 1;
-                    break;
-                default:
-                    break;
-            }
-        }
-        return result;
     }
 
     PageBtn(i) {
@@ -209,15 +165,20 @@ class Result extends React.Component {
 
     render() {
         return (
-            <div style={{backgroundColor: "#F2F8FE"}} >
-            {/* style={{backgroundImage: `url("http://localhost:3000/coverImg.jpg")` }} */}
-                {/* <div>
-                    <button onClick={() => window.open("/", "_self")}>Back to main
-                    </button>
-                </div> */}
+            <div 
+            style={
+                // {backgroundColor: "#F2F8FE"}
+                { 
+                backgroundImage: `url(${background})`, 
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover' ,
+                minHeight:'100vh'
+                }
+            }
+            >
                 <br/>
                 <div className="centerLoc">
-                    <Card style={{height: '220px', width: '84.5rem'}}>
+                    <Card style={{height: '220px', width: '84.5rem'}} className="boxShadow">
                         <div className="formStyle">
                             <form id={"locForm"}>
                                 <input style={{display: 'none'}} type="text" defaultValue={this.state.queryParams.q}
@@ -394,7 +355,7 @@ class Result extends React.Component {
                         :
                         <ListGroup className="centerLoc">
                             {this.state.searchData.map((hotel, i) =>
-                                <ListGroupItem key={i}>
+                                <ListGroupItem key={i} className="boxShadow">
                                     <div>
                                         <div
                                             style={{
@@ -449,6 +410,7 @@ class Result extends React.Component {
                                                             {"Address: " + hotel[3]}
                                                         </CardText>
                                                         <Button href={"hotel/" + hotel[0]}
+                                                                target={"_blank"}
                                                                 onClick={() => this.getBookingInfo()}>
                                                             Book
                                                         </Button>
@@ -462,7 +424,7 @@ class Result extends React.Component {
                         </ListGroup>
 
                 }
-                <div style={{"textAlign": "center"}}>
+                <div style={{"textAlign": "center"}} >
                     <p></p>
                     <button className="pageButton"
                             disabled={this.state.queryParams.page <= 1}

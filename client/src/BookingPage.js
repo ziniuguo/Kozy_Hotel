@@ -5,7 +5,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import background from "./assets/0.jpg";
 import {getGuestRoom} from "./GuestRoomConverter";
 
-
 const Styles = styled.div`
 
   h1 {
@@ -82,7 +81,6 @@ export default function BookingPage() {
         return <div className={"error"}>{errors ? errors.message : " "}</div>;
     }
 
-
     let destID = sessionStorage.getItem("destID");
     let hotelID = sessionStorage.getItem("hotelID")
     let displayCheckin = sessionStorage.getItem("displayCheckin");
@@ -105,7 +103,6 @@ export default function BookingPage() {
         imgUri = "https://www.kaligo-staging.xyz/images/new/WaXd/i1.jpg"
         hotelAddress = "80 Middle Road"
     }
-    
 
     const onSubmit = async (data) => {
 

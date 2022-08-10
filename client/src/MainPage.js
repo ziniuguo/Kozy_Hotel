@@ -32,15 +32,19 @@ class MainPage extends React.Component {
                                     formatDate(new Date()) +
                                     "&checkout=" +
                                     formatDate(new Date((new Date()).valueOf() + 1000 * 3600 * 24)) +
-                                    "&guests=2", "_self")}>
+                                    "&guests=2")}>
                             Book&nbsp;Now
                         </button>
                         <button className={"mainPageBtn"}
+                                style={{
+                                    position: 'relative',
+                                    left: 30,
+                                }}
                                 onClick={() => window.open("/profile", "_self")}
-                        >
-                            Manage
+                        > 
+                            My Bookings
                         </button>
-
+ 
                     </div>
                 </div>
             </div>
