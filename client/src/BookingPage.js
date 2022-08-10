@@ -2,6 +2,8 @@ import React from "react";
 import {useForm} from "react-hook-form";
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
+import background from "./assets/0.jpg";
+import {getGuestRoom} from "./GuestRoomConverter";
 
 
 const Styles = styled.div`
@@ -81,8 +83,6 @@ export default function BookingPage() {
     }
 
 
-
-
     let destID = sessionStorage.getItem("destID");
     let hotelID = sessionStorage.getItem("hotelID")
     let displayCheckin = sessionStorage.getItem("displayCheckin");
@@ -107,34 +107,6 @@ export default function BookingPage() {
     }
     
 
-    
-
-    function getGuestRoom(guestsParam) {
-        let ls = guestsParam.split('|');
-        let result = [0, 0, 0, 0];
-        for (let i = 0; i < ls.length; i++) {
-            let curr = ls[i];
-            switch (curr) {
-                case "1" :
-                    result[0] += 1;
-                    break;
-                case "2":
-                    result[1] += 1;
-                    break;
-                case "3":
-                    result[2] += 1;
-                    break;
-                case "4":
-                    result[3] += 1;
-                    break;
-                default:
-                    break;
-            }
-        }
-        return result;
-    }
-
-
     const onSubmit = async (data) => {
 
         const requestOptions = {
@@ -155,15 +127,31 @@ export default function BookingPage() {
 
         window.alert("Booking confirmed! Enjoy your trip!");
         reset();
+        const closeTab = () => {
+            window.opener = null;
+            window.open("", "_self");
+            window.close();
+        };
+        closeTab();
     }
 
+
     return (
-        <Styles>
-
-            <br/><h1>Hotel booking form</h1>
-
+      <Styles>
+          <div 
+          style={
+            // {backgroundColor: "#F2F8FE"}
+            { 
+            backgroundImage: `url(${background})`, 
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover' ,
+            minHeight:'100vh'
+            }
+        }
+          >
             <div>
-                <form id="bookingForm" onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)} className="boxShadow">
+                    <h1 >Hotel booking form</h1>
 
                     <div>
                         <input value={imgUri} {...register("imgUri")} readOnly style={{"display": "none"}}/>
@@ -230,7 +218,7 @@ export default function BookingPage() {
                             <td>
                                 <div>
                                     <label>First name: &nbsp;</label>
-                                    <input type="text" id="firstname" size="20" {...register("firstName", {
+                                    <input type="text" size="20" {...register("firstName", {
                                             required: "First name is required!",
                                             maxLength: 100
                                         }
@@ -243,7 +231,7 @@ export default function BookingPage() {
                             <td>
                                 <div>
                                     <label>Last name: &nbsp;</label>
-                                    <input type="text" id="lastname" size="20" {...register("lastName", {
+                                    <input type="text" size="20" {...register("lastName", {
                                             required: "Last name is required!",
                                             maxLength: 100
                                         }
@@ -262,9 +250,8 @@ export default function BookingPage() {
                             <td>
                                 <div>
                                     <label>Phone number: &nbsp;</label>
-                                    <input type="text" id="phonenum" size="14" {...register("phoneNumber", {
-                                            required: "Phone number is required",
-                                            pattern: {value: /^\d+$/, message: "Invalid phone number!"}
+                                    <input type="text" size="14" {...register("phoneNumber", {
+                                            required: "Phone number is required"
                                         }
                                     )} />
                                     <Error errors={errors.phoneNumber}/>
@@ -275,7 +262,7 @@ export default function BookingPage() {
                             <td>
                                 <div>
                                     <label>Email address: &nbsp;</label>
-                                    <input type="text" id="email" size="26" {...register("emailAddress", {
+                                    <input type="text" size="26" {...register("emailAddress", {
                                             required: "Email address is required",
                                             pattern: {value: /^\S+@\S+$/i, message: "Invalid email address!"}
                                         }
@@ -291,7 +278,7 @@ export default function BookingPage() {
 
                     <div>
                         <label>Special requests (if any):  &nbsp;</label>
-                        <input type="textarea" id="sprequests" size="40" {...register("specialRequests", {
+                        <input type="textarea" size="40" {...register("specialRequests", {
                                 required: false
                             }
                         )} />
@@ -301,10 +288,12 @@ export default function BookingPage() {
 
                     <div>
                         <label>Credit card number: &nbsp;</label>
-                        <input type="text" id="creditcardNo" size="20"
+                        <input type="text" size="20"
                                placeholder="**** **** **** ****" {...register("creditCardNumber", {
                                 required: "Credit card number is required",
-                                pattern: {value: /^\d{16}$/, message: "Invalid credit card number!"}
+                                minLength: 16,
+                                maxLength: 16,
+                                pattern: {value: /^[0-9]+$/i, message: "Invalid credit card number!"}
                             }
                         )} />
                         <Error errors={errors.creditCardNumber}/>
@@ -317,7 +306,7 @@ export default function BookingPage() {
                             <td>
                                 <div>
                                     <label>Credit card expiry date: &nbsp;</label>
-                                    <input type="text" id="cardexpiry" size="8" placeholder="MM/YYYY" {...register("cardExpiry", {
+                                    <input type="text" size="8" placeholder="MM/YYYY" {...register("cardExpiry", {
                                             required: "Credit card expiry date is required",
                                             pattern: {value: /^(0[1-9]|1[0-2])\/\d{4}$/, message: "Invalid expiry date!"}
                                         }
@@ -330,7 +319,7 @@ export default function BookingPage() {
                             <td>
                                 <div>
                                     <label>CVV/CVC: &nbsp;</label>
-                                    <input type="password" id="cvvcvc" size="8" placeholder="***" {...register("CVV_CVC", {
+                                    <input type="password" size="8" placeholder="***" {...register("CVV_CVC", {
                                             required: "CVV/CVC is required",
                                             pattern: {value: /^\d{3}$/, message: "Invalid CVV/CVC!"}
                                         }
@@ -345,7 +334,7 @@ export default function BookingPage() {
 
                     <div>
                         <label>Billing address: &nbsp;</label>
-                        <input type="text" id="billing" size="40" {...register("billingAddress",
+                        <input type="text" size="40" {...register("billingAddress",
                             {required: "Billing address is required"}
                         )} />
                         <Error errors={errors.billingAddress}/>
@@ -353,10 +342,10 @@ export default function BookingPage() {
                     <br/>
 
 
-                    <input type="submit" id="submitbooking" className="submitButton" value="Make Booking"/>
+                    <input type="submit" className="submitButton" value="Make Booking"/>
                 </form>
             </div>
-            <p></p>
+            </div>
         </Styles>
     );
 
