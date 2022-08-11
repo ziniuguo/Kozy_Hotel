@@ -18,12 +18,8 @@ describe('empty spec', () => {
         expect((response.body)[e]).to.have.property('billingAddress')
 
       }
-
-
-
       
     })
-
     
   })
 })
