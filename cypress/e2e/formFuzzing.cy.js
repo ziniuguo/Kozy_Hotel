@@ -73,7 +73,34 @@ describe('fuzzing booking form inputs', () => {
     .and("contain", "Invalid expiry date!")
     .and("contain", "Invalid CVV/CVC!")
 
-    
+
+    cy.wait(500)
+
+    cy.get('#firstname').clear().type(genRandString(500))
+
+    cy.get('#lastname').clear().type(genRandString(500))
+
+    cy.get('#phonenum').clear().type(genRandString(500))
+
+    cy.get('#email').clear().type(genRandString(500))
+
+    cy.get('#creditcardNo').clear().type(genRandString(500))
+
+    cy.get('#cardexpiry').clear().type(genRandString(500))
+
+    cy.get('#cvvcvc').clear().type(genRandString(500))
+
+    cy.get('#billing').clear().type(genRandString(500))
+
+    cy.wait(500)
+
+    cy.get('#submitbooking').click()
+
+    cy.get('#bookingForm').should("contain", "Invalid phone number!")
+    .and("contain", "Invalid email address!")
+    .and("contain", "Invalid credit card number!")
+    .and("contain", "Invalid expiry date!")
+    .and("contain", "Invalid CVV/CVC!")
 
 
   })
