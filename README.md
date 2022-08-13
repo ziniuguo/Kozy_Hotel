@@ -17,7 +17,7 @@ npm run start
 ```
 
 ## MongoDB Config
-Sometimes MongoDB localhost is resolved to ::1 although IPv6 is not enabled.
+Sometimes MongoDB localhost is resolved to ```::1``` although IPv6 is not enabled.
 
 If you get this error:```
 connect ECONNREFUSED ::1:27017```, it means that MongoDB is trying resolving localhost as IPv6 address ```::1```, rather than ```127.0.0.1```. However, your IPv6 is disabled for MongoDB, and that's the reason you get this error message.
